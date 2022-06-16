@@ -278,6 +278,63 @@ var true false function
 return if else for
 ```
 
+## Tricks  
+
+### Helpers Functions   
+
+#### Array Map  
+
+```
+function map(arr, f) {
+     function iter(arr, accumulated) { 
+          if (len(arr) == 0) {
+               return accumulated
+          } else {
+               return iter(rest(arr), push(accumulated, f(first(arr))));
+          } 
+     };
+     iter(arr, []);
+};
+```  
+
+Usage:  
+```
+var a = [1, 2, 3, 4];
+function double(x) { 
+    return x * 2; 
+}
+puts(map(a, double)); // prints [2, 4, 6, 8]  
+```  
+
+#### Array Reduce  
+
+```
+function reduce(arr, initial, f) { 
+     function iter(arr, result) { 
+          if (len(arr) == 0) {
+               return result
+          } else {
+               return iter(rest(arr), f(result, first(arr)));
+          } 
+     };
+
+     iter(arr, initial);
+};
+```  
+
+#### Array Sum  
+
+```
+function sum(arr) {
+     return reduce(arr, 0, function(initial, acumulated) {
+          return initial + acumulated;
+     })
+}
+
+puts([1, 2, 3, 4]); // prints 10  
+
+```
+
 ## Tests  
 
 ```
