@@ -9,7 +9,7 @@ type ForStatement struct {
 	Token            token.Token // The 'for' token
 	InitialCondition *VarStatement
 	Condition        Expression
-	Iteration        *VarStatement
+	Iteration        Statement
 	Body             *BlockStatement
 }
 

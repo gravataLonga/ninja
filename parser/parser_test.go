@@ -44,6 +44,23 @@ func TestLetStatements(t *testing.T) {
 	}
 }
 
+func TestReassignmentStatement(t *testing.T) {
+	l := lexer.New(`var a = a + 1; a = a + 1; a;`)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
+	}
+
+	stmt := program.Statements[1]
+	if !testReassingLetStatement(t, stmt, "a") {
+		return
+	}
+
+}
+
 func TestLetStatementErrors(t *testing.T) {
 	input := `
 var x true;
@@ -1151,7 +1168,7 @@ func TestLoopStatement(t *testing.T) {
 		{input: "for (var i = 0; i <= 3; var i = i + 1) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: ""},
 		{input: "for (var i = 0; i <= 3; var i = i + 1) { puts(i); }", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: "puts(i)"},
 		{input: "for(;i <= 3;) {}", initialStatement: "", condition: "(i <= 3)", iterationExpression: "", block: ""},
-		{input: "for(;;var i = i + 1) {}", initialStatement: "", condition: "", iterationExpression: "var i = (i + 1);", block: ""},
+		{input: "for(;;i = i + 1) {}", initialStatement: "", condition: "", iterationExpression: "i = (i + 1);", block: ""},
 		{input: "for(;i <= 10 && a <= 10;) {}", initialStatement: "", condition: "((i <= 10) && (a <= 10))", iterationExpression: "", block: ""},
 	}
 
@@ -1203,6 +1220,30 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	letStmt, ok := s.(*ast.VarStatement)
 	if !ok {
 		t.Errorf("s not *ast.VarStatement. got=%T", s)
+		return false
+	}
+
+	if letStmt.Name.Value != name {
+		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, letStmt.Name.Value)
+		return false
+	}
+
+	if letStmt.Name.TokenLiteral() != name {
+		t.Errorf("s.Name not '%s'. got=%s", name, letStmt.Name)
+		return false
+	}
+	return true
+}
+
+func testReassingLetStatement(t *testing.T, s ast.Statement, name string) bool {
+	if s.TokenLiteral() != name {
+		t.Errorf("s.TokenLiteral not 'var'. got=%q", s.TokenLiteral())
+		return false
+	}
+
+	letStmt, ok := s.(*ast.ReassignmentVarStatement)
+	if !ok {
+		t.Errorf("s not *ast.ReassignmentVarStatement. got=%T", s)
 		return false
 	}
 

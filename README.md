@@ -59,6 +59,13 @@ var j = true;
 var k = !j;
 ```  
 
+It's possible to reassign variable for example:  
+
+```
+var a = 1;
+a = a + 1;  
+puts(a);  
+```
 
 ## Data Types Availables  
 
@@ -256,6 +263,10 @@ for(;i<=3;++i) {
 
 var a = [1, 2, 3];
 for(var i = 0; i <= len(a); ++i) {
+    puts(a[i]);
+}
+
+for(var i = 0; i <= len(a); i = i + 1) {
     puts(a[i]);
 }
 ```  

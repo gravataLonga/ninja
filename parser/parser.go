@@ -84,6 +84,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
 	p.registerPrefix(token.LOOP, p.parseLoopLiteral)
+	p.registerPrefix(token.ASSIGN, p.parsePrefixExpression)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -182,6 +183,11 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
+	case token.IDENT:
+		if p.peekTokenIs(token.ASSIGN) {
+			return p.parseAssignStatement()
+		}
+		return p.parseExpressionStatement()
 	case token.VAR:
 		return p.parseLetStatement()
 	case token.RETURN:
@@ -207,6 +213,24 @@ func (p *Parser) parseLetStatement() *ast.VarStatement {
 
 	p.nextToken()
 
+	stmt.Value = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseAssignStatement() *ast.ReassignmentVarStatement {
+	stmt := &ast.ReassignmentVarStatement{Token: p.curToken}
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	p.nextToken()
 	stmt.Value = p.parseExpression(LOWEST)
 
 	if p.peekTokenIs(token.SEMICOLON) {
@@ -569,7 +593,7 @@ func (p *Parser) parseLoopLiteral() ast.Expression {
 
 	if !p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
-		fr.Iteration = p.parseLetStatement()
+		fr.Iteration = p.parseStatement()
 		p.nextToken()
 	} else {
 		p.nextToken()

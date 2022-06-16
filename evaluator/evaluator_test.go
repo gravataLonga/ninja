@@ -342,6 +342,7 @@ if (10 > 1) {
 	}
 }
 
+// @todo reassign values we need to check for same type values?
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -353,6 +354,8 @@ func TestLetStatements(t *testing.T) {
 		{"var a = 5; var b = a; var c = a + b + 5; c;", 15},
 		{"var a = 5; ++a;", 6},
 		{"var a = 5; --a;", 4},
+		{"var a = 5; a = a + 5; a;", 10},
+		{"var a = 5; var b = 10; a = a + b * a; a", 55},
 		// {"var a = 5; a++;", 5},
 		// {"var a = 5; a--;", 5},
 	}
@@ -695,15 +698,15 @@ func TestForStatement(t *testing.T) {
 		expected interface{}
 	}{
 		{
-			`for(var i = 0; i <= 1; var i = i + 1) { i; }`,
+			`for(var i = 0; i <= 1; i = i + 1) { i; }`,
 			2,
 		},
 		{
-			`for(var i = 0; i > 100; var i = i + 1) { i; }`,
+			`for(var i = 0; i > 100; i = i + 1) { i; }`,
 			nil,
 		},
 		{
-			`var i = 0; for(; i <= 1; var i = i + 1) { i; }`,
+			`var i = 0; for(; i <= 1; i = i + 1) { i; }`,
 			2,
 		},
 		{
