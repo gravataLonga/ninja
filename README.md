@@ -1,5 +1,4 @@
-# Ninja Programming Language
-
+# Ninja Programming Language  
 
 
 ```
@@ -31,77 +30,242 @@
 .                                         .          .         .
 ```
 
-## Syntax Overview    
+# How to use  
+
+Download binary for your OS  
+Execute like normal binary  
+
+
+# Syntax  
+
+## Variable  
+
+`var <identifier> = <expression>;`  
+
+Examples  
 
 ```
-var x = 10;
-var y = 20.3;
-
-function add(a, y) {
-    return a + y;
-}
-
-if (add(x, y) > 30) {
-    x = add(x, add(x, y))
-} else {
-    x = 100;
-}
-
-// Comment
-var numbers = [0, 10, 100, 500];
-
-/**
- * Multiple Line Comments
- Asterisk is optional here <-
- */
-function loop(array, callback) {
-    var item = end(array)
-    if (!item) {
-        return;
-    }
-    callback(item)
-    loop(array)
-}
-
-
-loop(numbers, function (item) {
-    println(item);
-});
-
-var total = 100 * 50 / 4.6 + (4 + 4);
-
-var total = total + add(total, 100.50);
-
-
-var hashMe = {"name":"Jonathan Fontes", "age":"31"};
-
-puts(hashMe["name"]);  
+var a = 1;
+var a1 = "Name";
+var b = 2.0;
+var c = a + 1;
+var d = a + b;
+var e = ++a;
+var f = function () {};
+var g = [1, 2, 3, "hello", function() {}];
+var h = {"me":"Jonathan Fontes","age":1,"likes":["php","golang","ninja"]}
+var i = a < b;
+var j = true;
+var k = !j;
 ```  
 
-## Builtin Functions  
 
- - **len** (string, array): Count how many character or many items have an array  
- - **first** (array): Get first item of array E.g.: `first(["ola", 2, 3, 4]); // prints "ola"`    
- - **puts** (mixed): Display any information on screen E.g.: `puts("Hello World"); // print Hello World`  
- - **last** (array): Get last item of array E.g.:  `last([1, 2, 3, "5", false, 0]); // prints 0`  
- - **rest** (array): Get after current item until last one E.g.: `rest([1, 2, 3]); // prints [2, 3]`  
- - **push** (array): Push item to array. E.g.: `push([1, 2, 3], "4"); // print [1, 2, 3, 4]`  
+## Data Types Availables  
+
+```
+ /**
+  * Booleans
+  */
+ 
+ true;
+ false;
+
+ /**
+  * Integer
+  */
+ 
+ 1;
+ 20000;
+ 
+ /**
+  * Floats
+  */
+  
+ 100.20;
+ 5.20;
+  
+ /**
+  * Strings
+  */
+   
+ "ola"
+ "ola" + " " + "mundo";
+   
+ /**
+  * array
+  */
+    
+ [1, "a", true, function() {}]
+    
+ /**
+  * Objects  
+  */
+     
+ {"key":"value","arr":[],"other":{}}
+    
+```  
+
+## Comments  
+
+`// <...>` or `/* <...> */`  
+
+Comments can start with double slash `//` ou multiple lines with `\* *\`  
+
+## Functions  
+
+`var <identifier> = function (<identifierarguments>?) { <statements> }`  
+`function <identifier> (<identifierarguments>?) { <statements> }`
+
+Functions is where power of language reside, it's a first-citizen function, which mean it can accept function as arguments
+or returning function. We got two ways declaring functions, literal or block.  
+
+```
+function say(name) {
+    puts("Hello: " + name);
+}
+```
+
+Or  
+
+```
+var say = function(name) {
+    puts("Hello: " + name);
+}
+```  
+
+They are exactly same, but this is illegal:  
+
+```
+var say = function say(name) {
+    puts("Hello: " + name);  
+}
+```  
+
+### Builtin Functions  
+There are severals builtin functions that you can use:  
+
+```
+var a = [1, 2, 3, 4];
+puts(len(a)); // print 4
+
+puts(len("Hello!")); // print 5  
+```
+
+```
+var a = [1, 2, 3, 4];
+puts(first(a)); // print 1
+```
+
+```
+puts("Hello World"); // print in screen  
+```
+
+```
+var a = [1, 2, 3, 4];
+puts(last(a)); // print 4
+```  
+
+```
+var a = [1, 2, 3, 4];
+puts(rest(a)); // print [2, 3, 4]; (all but not first)  
+```
+
+```
+var a = [1, 2, 3, 4];
+puts(push(a, 5)); // print [1, 2, 3, 4, 5];
+```
+
+## Operators && Operators Logics    
+
+`<expression> <operator> <expression>`  
+
+Logic's Operators  
+```
+10 < 10;
+10 > 10;
+10 == 10;
+10 != 10;
+10 <= 10;
+10 >= 10;
+10 && 10;
+10 || 10;
+!10;
+
+```
+
+`<expression>? <operator> <expression>`  
+Arithmetics Operators  
+
+```  
+1 + 1;
+1 - 1;
+1 / 1;
+1 * 1;  
+++1;
+--1;
+
+// we take in account procedences  
+1 + 1 * 1; // this will be interpreted as (1 + (1 * 1))  
+```  
+
+## Data Structures  
+
+### Array  
+
+`var <identifier> = [<expressions>...]`  
+
+```
+var a = [1 + 1, 2, 4, function() {}, ["a", "b"]];  
+```  
+
+### Object  
+
+`var <identifier> = {<expression>:<expression>,....}`
+
+```
+var a = {"key":"hello","key" + "key":"hello2", "other":["nice", "other"], 2: true};  
+```  
+
+## Conditions  
+
+`if (<condition>) { <consequence> } else { <alternative> }`  
+
+```
+if (true) {
+    puts("Hello");
+} else {
+    puts("Yes");
+}  
+```  
+
+> Note: a value is Truth if isn't null or false, 0 will evaulated like true.  
 
 
- > Hint: With above functions you can create array map, array reduce, array filter functions, etc.  
+## Loop  
 
-## How to install / use  
+`for (<initial>?;<condition>?;<iteration>?) { <statements> }`  
 
+> **Heads Up!!** Any of this conditions isn't required, but advice you always put a condition, because there aren't yet a break 
+keyword. 
 
-`.... TODO .....`  
+```
+var i = 0;
+for(;i<=3;++i) {
+    puts(i);
+}
 
+var a = [1, 2, 3];
+for(var i = 0; i <= len(a); ++i) {
+    puts(a[i]);
+}
+```  
 
-## TODO   
+## Keywords  
 
- - Adding more testings or complete 100% coverage testing  
- - Implements "Loop"  
- - Implements more builtin functions to handle Hash  
- - Implement a way to import another scripts  
+```
+var true false function
+return if else for
+```
 
 ## Tests  
 
@@ -109,7 +273,7 @@ puts(hashMe["name"]);
 go test -v -race ./...  
 ```
 
----- 
+# Technical don't read below this line.  
 
 This is for future me...  
 

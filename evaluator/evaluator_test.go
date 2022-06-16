@@ -351,6 +351,10 @@ func TestLetStatements(t *testing.T) {
 		{"var a = 5 * 5; a;", 25},
 		{"var a = 5; var b = a; b;", 5},
 		{"var a = 5; var b = a; var c = a + b + 5; c;", 15},
+		{"var a = 5; ++a;", 6},
+		{"var a = 5; --a;", 4},
+		// {"var a = 5; a++;", 5},
+		// {"var a = 5; a--;", 5},
 	}
 
 	for _, tt := range tests {
