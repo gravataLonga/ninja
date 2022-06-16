@@ -1,12 +1,11 @@
 package ast
 
 import (
-	"ninja/token"
 	"testing"
 )
 
 func TestBoolean_String(t *testing.T) {
-	test := Boolean{Token: token.Token{Type: token.TRUE, Literal: "true"}, Value: true}
+	test := createBoolean(true)
 
 	if test.String() != "true" {
 		t.Errorf("ArrayLiteral isnt equal to %s. Got: %s", "true", test.String())

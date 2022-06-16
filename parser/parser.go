@@ -351,11 +351,6 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 		return nil
 	}
 
-	if p.peekTokenIs(token.IDENT) {
-		p.nextToken()
-		lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-	}
-
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}

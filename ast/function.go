@@ -7,7 +7,7 @@ import (
 )
 
 type Function struct {
-	Token      token.Token // The 'fn' token
+	Token      token.Token // The 'function' token
 	Name       *Identifier
 	Parameters []*Identifier
 	Body       *BlockStatement
@@ -21,7 +21,8 @@ func (fl *Function) String() string {
 	for _, p := range fl.Parameters {
 		params = append(params, p.String())
 	}
-	out.WriteString(fl.TokenLiteral())
+	out.WriteString(fl.TokenLiteral() + " ")
+	out.WriteString(fl.Name.String())
 	out.WriteString("(")
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(") ")

@@ -1,24 +1,40 @@
 package ast
 
 import (
-	"ninja/token"
 	"testing"
 )
 
 func TestBlockStatement_String(t *testing.T) {
-	stmts := []Statement{
-		&ReturnStatement{Token: token.Token{Type: token.RETURN, Literal: "return"}, ReturnValue: &IntegerLiteral{
-			Token: token.Token{Type: token.INT, Literal: "1"}, Value: 1,
-		}},
-	}
-	block := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: "{"}, Statements: stmts}
 
-	if block.String() != "return 1;" {
-		t.Errorf("ReturnStatment isnt equal to %s. Got: %s", "return 1;", block.String())
+	tests := []struct {
+		stmts    []Statement
+		expected string
+	}{
+		{
+			[]Statement{
+				createReturnStatement(createIntegerLiteral(1)),
+			},
+			"return 1;",
+		},
+		{
+			[]Statement{
+				createVarStatement("me", createIntegerLiteral(1)),
+				createReturnStatement(createIdentifier("me")),
+			},
+			"var me = 1;return me;",
+		},
 	}
 
-	if block.TokenLiteral() != "{" {
-		t.Errorf("ReturnStatment.TokenLiteral() isnt equal to %s. Got: %s", "{", block.TokenLiteral())
+	for _, tt := range tests {
+		block := createBlockStatements(tt.stmts)
+
+		if block.String() != tt.expected {
+			t.Errorf("ReturnStatment isnt equal to %s. Got: %s", tt.expected, block.String())
+		}
+
+		if block.TokenLiteral() != "{" {
+			t.Errorf("ReturnStatment.TokenLiteral() isnt equal to %s. Got: %s", "{", block.TokenLiteral())
+		}
 	}
 
 }
