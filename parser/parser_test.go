@@ -44,11 +44,11 @@ func TestLetStatements(t *testing.T) {
 	}
 }
 
-// @todo add more test
 func TestLetStatementErrors(t *testing.T) {
 	input := `
 var x true;
-var = "123"
+var = "123";
+var var;
 `
 
 	l := lexer.New(input)
@@ -65,17 +65,8 @@ var = "123"
 	}{
 		{fmt.Sprintf("expected next token to be [%s], got %s instead", token.ASSIGN, token.TRUE)},
 		{fmt.Sprintf("expected next token to be [%s], got %s instead", token.IDENT, token.ASSIGN)},
-		// {fmt.Sprintf("expected next token to be [%s], got %s instead", token.IDENT, token.SEMICOLON)},
-		// {fmt.Sprintf("expected next token to be [%s], got %s instead", token.IDENT, token.SEMICOLON)},
-		// {fmt.Sprintf("expected next token to be %s, got %s instead", token.IDENT, token.ASSIGN)},
-		// {fmt.Sprintf("expected next token to be %s, got %s instead", token.IDENT, token.INT)},
-		// {fmt.Sprintf("expected next token to be %s, got %s instead", token.IDENT, token.VAR)},
-		// {fmt.Sprintf("expected next token to be %s, got %s instead", token.IDENT, token.SEMICOLON)},
+		{fmt.Sprintf("expected next token to be [%s], got %s instead", token.IDENT, token.VAR)},
 	}
-
-	// if len(p.Errors()) != 8 {
-	//	t.Fatalf("p.Errors() does not contain 5 errors. got=%d", len(p.Errors()))
-	//}
 
 	errors := p.Errors()
 
@@ -403,6 +394,8 @@ func TestParsingInfixExpressions(t *testing.T) {
 		{"5 <= 5;", 5, "<=", 5},
 		{"5 == 5;", 5, "==", 5},
 		{"5 != 5;", 5, "!=", 5},
+		{"5 && 5;", 5, "&&", 5},
+		{"5 || 5;", 5, "||", 5},
 		{"foobar + barfoo", "foobar", "+", "barfoo"},
 		{"foobar - barfoo", "foobar", "-", "barfoo"},
 		{"foobar * barfoo", "foobar", "*", "barfoo"},
@@ -413,9 +406,13 @@ func TestParsingInfixExpressions(t *testing.T) {
 		{"foobar <= barfoo", "foobar", "<=", "barfoo"},
 		{"foobar == barfoo", "foobar", "==", "barfoo"},
 		{"foobar != barfoo", "foobar", "!=", "barfoo"},
+		{"foobar && barfoo", "foobar", "&&", "barfoo"},
+		{"foobar || barfoo", "foobar", "||", "barfoo"},
 		{"true == false", true, "==", false},
 		{"true != false", true, "!=", false},
 		{"false == false", false, "==", false},
+		{"false || false", false, "||", false},
+		{"false && false", false, "&&", false},
 	}
 
 	for _, tt := range infixTests {
@@ -568,6 +565,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{
 			"add(a * b[2], b[1], 2 * [1, 2][1])",
 			"add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))",
+		},
+		{
+			"a && b",
+			"(a && b)",
+		},
+		{
+			"a || b && c",
+			"((a || b) && c)",
+		},
+		{
+			"a && b || c",
+			"((a && b) || c)",
 		},
 	}
 
@@ -1083,6 +1092,51 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 		}
 		testFunc(value)
 
+	}
+}
+
+func TestLoopStatement(t *testing.T) {
+	tests := []struct {
+		input               string
+		initialStatement    string
+		condition           string
+		iterationExpression string
+		block               string
+	}{
+		{input: "for (;;) {}", initialStatement: "", condition: "", iterationExpression: "", block: ""},
+		{input: "for (var i = 0;;) {}", initialStatement: "var i = 0;", condition: "", iterationExpression: "", block: ""},
+		{input: "for (var i = 0; i <= 3;) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "", block: ""},
+		{input: "for (var i = 0; i <= 3; var i = i + 1) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: ""},
+		{input: "for (var i = 0; i <= 3; var i = i + 1) { puts(i); }", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: "puts(i)"},
+		{input: "for(;i <= 3;) {}", initialStatement: "", condition: "(i <= 3)", iterationExpression: "", block: ""},
+		{input: "for(;;var i = i + 1) {}", initialStatement: "", condition: "", iterationExpression: "var i = (i + 1);", block: ""},
+		{input: "for(;i <= 10 && a <= 10;) {}", initialStatement: "", condition: "((i <= 10) && (a <= 10))", iterationExpression: "", block: ""},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		stmt := program.Statements[0].(*ast.ExpressionStatement)
+		fr := stmt.Expression.(*ast.ForStatement)
+
+		if fr.InitialCondition != nil && fr.InitialCondition.String() != tt.initialStatement {
+			t.Errorf("For.InitialCondition.String() isn't %s. Got: %s", tt.initialStatement, fr.InitialCondition.String())
+		}
+
+		if fr.Condition != nil && fr.Condition.String() != tt.condition {
+			t.Errorf("For.Condition.String() isn't %s. Got: %s", tt.condition, fr.Condition.String())
+		}
+
+		if fr.Iteration != nil && fr.Iteration.String() != tt.iterationExpression {
+			t.Errorf("For.Iteration.String() isn't %s. Got: %s", tt.iterationExpression, fr.Iteration.String())
+		}
+
+		if fr.Body != nil && fr.Body.String() != tt.block {
+			t.Errorf("For.Body.String() isn't %s. Got: %s", tt.block, fr.Body.String())
+		}
 	}
 }
 

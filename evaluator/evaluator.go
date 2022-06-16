@@ -134,6 +134,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// Hash
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
+	case *ast.ForStatement:
+		return evalForStatement(node, env)
 	}
 	return nil
 }

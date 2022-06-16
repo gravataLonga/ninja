@@ -27,8 +27,12 @@ function saySomething(name) {
     return "Said: " + name;
 }
 
+// Single Comment
 saySomething("Hello " + name);
 
+/*
+Multiple Comment
+*/
 if (five > 10) {
     saySomething("Ups");
 } elseif (five == 10) {
@@ -45,9 +49,12 @@ if (statusCode[0] != 200) {
 
 var hashesResponse = {"nope":"an error happend", "ok":"everthing is ok"}
 
-for (index in statusCode) {
-	var item = statusCode[index];
+for (var i = 0; i <= len(statusCode); var i = i + 1) {
+	puts(statusCode[i])
 }
+
+5 && 10
+10 || 20
 
 `
 	tests := []struct {
@@ -204,20 +211,41 @@ for (index in statusCode) {
 		{token.RBRACE, "}"},
 		{token.LOOP, "for"},
 		{token.LPAREN, "("},
-		{token.IDENT, "index"},
-		{token.IN, "in"},
+		{token.VAR, "var"},
+		{token.IDENT, "i"},
+		{token.ASSIGN, "="},
+		{token.INT, "0"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "i"},
+		{token.LTE, "<="},
+		{token.IDENT, "len"},
+		{token.LPAREN, "("},
 		{token.IDENT, "statusCode"},
 		{token.RPAREN, ")"},
-		{token.LBRACE, "{"},
+		{token.SEMICOLON, ";"},
 		{token.VAR, "var"},
-		{token.IDENT, "item"},
+		{token.IDENT, "i"},
 		{token.ASSIGN, "="},
+		{token.IDENT, "i"},
+		{token.PLUS, "+"},
+		{token.INT, "1"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.IDENT, "puts"},
+		{token.LPAREN, "("},
 		{token.IDENT, "statusCode"},
 		{token.LBRACKET, "["},
-		{token.IDENT, "index"},
+		{token.IDENT, "i"},
 		{token.RBRACKET, "]"},
-		{token.SEMICOLON, ";"},
+		{token.RPAREN, ")"},
 		{token.RBRACE, "}"},
+		{token.INT, "5"},
+		{token.AND, "&&"},
+		{token.INT, "10"},
+		{token.INT, "10"},
+		{token.OR, "||"},
+		{token.INT, "20"},
+
 		{token.EOF, ""},
 	}
 

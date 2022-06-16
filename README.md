@@ -47,8 +47,13 @@ if (add(x, y) > 30) {
     x = 100;
 }
 
+// Comment
 var numbers = [0, 10, 100, 500];
 
+/**
+ * Multiple Line Comments
+ Asterisk is optional here <-
+ */
 function loop(array, callback) {
     var item = end(array)
     if (!item) {

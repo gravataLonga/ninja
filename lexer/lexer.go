@@ -47,7 +47,34 @@ func (l *Lexer) NextToken() token.Token {
 	case '*':
 		tok = newToken(token.ASTERISK, l.ch)
 	case '/':
+		if l.peekChar() == '/' {
+			l.skipSingleLineComment()
+			return l.NextToken()
+		}
+
+		if l.peekChar() == '*' {
+			l.skipMultiLineComment()
+			return l.NextToken()
+		}
 		tok = newToken(token.SLASH, l.ch)
+	case '&':
+		if l.peekChar() != '&' {
+			tok = newToken(token.ILLEGAL, l.ch)
+			return tok
+		}
+		ch := l.ch
+		l.readChar()
+		literal := string(ch) + string(l.ch)
+		tok = token.Token{Type: token.AND, Literal: literal}
+	case '|':
+		if l.peekChar() != '|' {
+			tok = newToken(token.ILLEGAL, l.ch)
+			return tok
+		}
+		ch := l.ch
+		l.readChar()
+		literal := string(ch) + string(l.ch)
+		tok = token.Token{Type: token.OR, Literal: literal}
 	case '-':
 		if l.peekChar() == '-' {
 			ch := l.ch
@@ -160,6 +187,32 @@ func (l *Lexer) readDigit() string {
 		l.readChar()
 	}
 	return l.input[position:l.position]
+}
+
+func (l *Lexer) skipSingleLineComment() {
+	for l.ch != '\n' && l.ch != 0 {
+		l.readChar()
+	}
+	l.skipWhitespace()
+}
+
+func (l *Lexer) skipMultiLineComment() {
+	endFound := false
+
+	for !endFound {
+		if l.ch == 0 {
+			endFound = true
+		}
+
+		if l.ch == '*' && l.peekChar() == '/' {
+			endFound = true
+			l.readChar()
+		}
+
+		l.readChar()
+	}
+
+	l.skipWhitespace()
 }
 
 func (l *Lexer) skipWhitespace() {

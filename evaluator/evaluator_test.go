@@ -71,6 +71,11 @@ func TestEvalBooleanExpression(t *testing.T) {
 	}{
 		{"true", true},
 		{"false", false},
+		{"true && true", true},
+		{"true && false", false},
+		{"true || false", true},
+		{"false || true", true},
+		{"false || false", false},
 		{"1 < 2", true},
 		{"1 > 2", false},
 		{"1 < 1", false},
@@ -79,8 +84,15 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"1 != 1", false},
 		{"1 == 2", false},
 		{"1 != 2", true},
+		{"1 && 1", true},
+		{"1 && 0", true},
+		{"0 && 1", true},
+		{"1 || false", true},
+		{"false || false", false},
+		{"false && 1", false},
 		{"10.0 == 10.0", true},
 		{"10.5 >= 10.0", true},
+		{"10.5 && 1", true},
 		{"(20.5 > 5) == true", true},
 		{"true == true", true},
 		{"false == false", true},
@@ -93,6 +105,8 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"(1 > 2) == false", true},
 		{"(1 <= 1) == true", true},
 		{"(1 >= 1) == true", true},
+		{"(1 >= 1) && true", true},
+		{"(1 || false) || false", true},
 	}
 
 	for _, tt := range tests {
@@ -662,6 +676,44 @@ func TestHashIndexExpressions(t *testing.T) {
 			testIntegerObject(t, evaluated, int64(integer))
 		} else {
 			testNullObject(t, evaluated)
+		}
+	}
+}
+
+func TestForStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`for(var i = 0; i <= 1; var i = i + 1) { i; }`,
+			2,
+		},
+		{
+			`for(var i = 0; i > 100; var i = i + 1) { i; }`,
+			nil,
+		},
+		{
+			`var i = 0; for(; i <= 1; var i = i + 1) { i; }`,
+			2,
+		},
+		{
+			`for(var i = 0; i <= 1; ) { var i = i + 1; i; }`,
+			2,
+		},
+		{
+			`var i = 0; var a = 0; for(;i <= 10 && a <= 10;) { var i = i + 2; var a = a + 2; i; }`,
+			12,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else if evaluated != nil {
+			t.Errorf("result isnt nil. Got %v", evaluated)
 		}
 	}
 }

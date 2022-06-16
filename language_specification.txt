@@ -39,9 +39,27 @@ if (statusCode[0] != 200) {
 
 var hashesResponse = {"nope":"an error happend", "ok":"everthing is ok"}
 
-for (index in statusCode) {
-	var item = statusCode[index];
+for (var i = 0; i <= 3; i ++) {
+
 }
+
+// Single comment
+
+/*
+multiple comments
+*/
+
+-------------------
+
+
+for (var i = 0; i <= 3; i ++) {
+
+}
+
+for (<init-clause-statement>; <condition-expression>; <iteration-expression>)
+    <block statement>
+
+
 
 ----------------- TODO
 * * * * * * * * *

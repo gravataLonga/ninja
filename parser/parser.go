@@ -12,12 +12,14 @@ import (
 const (
 	_ int = iota
 	LOWEST
+	LOGICAL     // || and &&
 	EQUALS      // ==
 	LESSGREATER // > or <
-	SUM         //+
-	PRODUCT     //*
-	PREFIX      //-Xor!X
-	CALL        // myFunction(X)
+
+	SUM     //+
+	PRODUCT //*
+	PREFIX  // -X or !X
+	CALL    // myFunction(X)
 	INDEX
 )
 
@@ -42,6 +44,8 @@ var precedences = map[token.TokenType]int{
 	token.GT:       LESSGREATER,
 	token.GTE:      LESSGREATER,
 	token.LTE:      LESSGREATER,
+	token.OR:       LOGICAL,
+	token.AND:      LOGICAL,
 	token.PLUS:     SUM,
 	token.MINUS:    SUM,
 	token.DECRE:    SUM,
@@ -74,6 +78,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
+	p.registerPrefix(token.LOOP, p.parseLoopLiteral)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
@@ -86,6 +91,9 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.GT, p.parseInfixExpression)
 	p.registerInfix(token.GTE, p.parseInfixExpression)
 	p.registerInfix(token.LTE, p.parseInfixExpression)
+	p.registerInfix(token.AND, p.parseInfixExpression)
+	p.registerInfix(token.OR, p.parseInfixExpression)
+
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 
@@ -174,6 +182,7 @@ func (p *Parser) parseLetStatement() *ast.VarStatement {
 	stmt := &ast.VarStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
+		p.nextToken()
 		return nil
 	}
 
@@ -501,6 +510,54 @@ func (p *Parser) parseHashLiteral() ast.Expression {
 		return nil
 	}
 	return hash
+}
+
+func (p *Parser) parseLoopLiteral() ast.Expression {
+	fr := &ast.ForStatement{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	// INITIAL CONDITION
+
+	if p.peekTokenIs(token.VAR) {
+		p.nextToken()
+		fr.InitialCondition = p.parseLetStatement()
+	} else if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	// CONDITION
+
+	if !p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+		fr.Condition = p.parseExpression(LOWEST)
+	}
+
+	if !p.expectPeek(token.SEMICOLON) {
+		return nil
+	}
+
+	// ITERATION
+
+	if !p.peekTokenIs(token.RPAREN) {
+		p.nextToken()
+		fr.Iteration = p.parseLetStatement()
+		p.nextToken()
+	} else {
+		p.nextToken()
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	// BODY
+
+	fr.Body = p.parseBlockStatement()
+
+	return fr
 }
 
 func (p *Parser) parseBoolean() ast.Expression {

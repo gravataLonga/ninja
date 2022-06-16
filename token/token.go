@@ -33,6 +33,8 @@ const (
 	GTE = ">="
 	EQ  = "=="
 	NEQ = "!="
+	AND = "&&"
+	OR  = "||"
 
 	COMMA     = ","
 	SEMICOLON = ";"
