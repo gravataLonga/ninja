@@ -415,6 +415,71 @@ func TestFunctionObject(t *testing.T) {
 	}
 }
 
+func TestCallFunction(t *testing.T) {
+	tests := []struct {
+		expression string
+		rs         interface{}
+	}{
+
+		{
+			"function(x) { x + 2; }(10);",
+			12,
+		},
+		{
+			"function add (x) { x + 2; }; add(2)",
+			4,
+		},
+		{
+			"var add = function (x) { return x + 2; }; add(2);",
+			4,
+		},
+		{
+			"var say = function (x) { return \"Hello \" + x; }; say(\"Dog\");",
+			"Hello Dog",
+		},
+		{
+			"function t(a) { return a + 20.0; } t(10.5);",
+			30.5,
+		},
+		{
+			"function t(a) { return !a; } t(1);",
+			false,
+		},
+		{
+			"function t(a) { if (a > 0) { return true; } else { return false }; } t(1);",
+			true,
+		},
+		{
+			"function t(a) { return a > 0; } t(1);",
+			true,
+		},
+		{
+			"function t(a) { return !(a > 0); } t(1);",
+			false,
+		},
+		{
+			"function add(a, b) { return a + b; } add(5, add(5, 5));",
+			15,
+		},
+		{
+			"function add(a, b) { function test(a, b) { return a + b }; return test(a + b, 10); } add(10, 20);",
+			40,
+		},
+		{
+			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
+			40,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.expression)
+
+		if !testObjectLiteral(t, evaluated, tt.rs) {
+			t.Errorf("TestCallFunction unable to test")
+		}
+	}
+}
+
 func TestFunctionApplication(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -758,6 +823,20 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	return true
 }
 
+func testStringObject(t *testing.T, obj object.Object, expected string) bool {
+	result, ok := obj.(*object.String)
+	if !ok {
+		t.Errorf("object is not String. got=%T (%+v)", obj, obj)
+		return false
+	}
+	if result.Value != expected {
+		t.Errorf("object has wrong value. got=%s, want=%s", result.Value, expected)
+		return false
+	}
+
+	return true
+}
+
 func testFloatObject(t *testing.T, obj object.Object, expected float64) bool {
 	result, ok := obj.(*object.Float)
 	if !ok {
@@ -778,6 +857,34 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 		return false
 	}
 	return true
+}
+
+func testObjectLiteral(
+	t *testing.T,
+	objectResult object.Object,
+	expected interface{},
+) bool {
+
+	switch expected.(type) {
+	case int:
+		expected := expected.(int)
+		return testIntegerObject(t, objectResult, int64(expected))
+	case int64:
+		expected := expected.(int64)
+		return testIntegerObject(t, objectResult, expected)
+	case bool:
+		expected := expected.(bool)
+		return testBooleanObject(t, objectResult, expected)
+	case float64:
+		expected := expected.(float64)
+		return testFloatObject(t, objectResult, expected)
+	case string:
+		expected := expected.(string)
+		return testStringObject(t, objectResult, expected)
+	}
+
+	t.Errorf("type of exp not handled. got=%T", expected)
+	return false
 }
 
 func testEval(input string) object.Object {

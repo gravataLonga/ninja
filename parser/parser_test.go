@@ -958,6 +958,11 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 			expectedIdent: "add",
 			expectedArgs:  []string{"1", "(2 * 3)", "(4 + 5)"},
 		},
+		{
+			input:         "add(1, add(1, 1));",
+			expectedIdent: "add",
+			expectedArgs:  []string{"1", "add(1, 1)"},
+		},
 	}
 
 	for _, tt := range tests {

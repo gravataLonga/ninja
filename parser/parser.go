@@ -223,6 +223,7 @@ func (p *Parser) parseLetStatement() *ast.VarStatement {
 }
 
 func (p *Parser) parseAssignStatement() *ast.ReassignmentVarStatement {
+
 	stmt := &ast.ReassignmentVarStatement{Token: p.curToken}
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 

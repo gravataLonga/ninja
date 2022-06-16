@@ -13,7 +13,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("Hello %s! This is Tuga Programming Language\n", user.Username)
+	fmt.Printf("Hello %s! This is Ninja Programming Language\n", user.Username)
 	fmt.Printf("Feel free to type in commands\n")
 
 	repl.Start(os.Stdin, os.Stdout)

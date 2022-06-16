@@ -74,6 +74,10 @@ func bFirst(args ...Object) Object {
 
 func bPuts(args ...Object) Object {
 	for _, arg := range args {
+		if arg == nil {
+			fmt.Println("Argument is nil")
+			continue
+		}
 		fmt.Println(arg.Inspect())
 	}
 

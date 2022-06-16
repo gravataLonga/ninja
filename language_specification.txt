@@ -24,8 +24,6 @@ saySomething("Hello " + name);
 
 if (five > 10) {
     saySomething("Ups");
-} elseif (five == 10) {
-    saySomething("Its same");
 } else {
     saySomething("All fine");
 }
