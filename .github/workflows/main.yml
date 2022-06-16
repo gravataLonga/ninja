@@ -1,25 +1,25 @@
-name: Check dist/
+name: Go
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  check-dist:
+
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
           go-version: '>=1.17.0'
-      - run: go version
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-go@v3
-          with:
-            go-version: '>=1.17.0'
-        - run: go test ./...
+
+      - name: Build
+        run: go build -o ninja main.go
+
+      - name: Test
+        run: go test -v ./...
