@@ -46,5 +46,33 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 		return &object.Float{Value: -value}
 	}
 
-	return newError("unknown operator: -%s", right.Type())
+	return newError("unknown object type %s for operator %s", right.Type(), "-")
+}
+
+func evalIncrementPrefixOperatorExpression(right object.Object) object.Object {
+	if right.Type() == object.INTEGER_OBJ {
+		value := right.(*object.Integer).Value
+		return &object.Integer{Value: value + 1}
+	}
+
+	if right.Type() == object.FLOAT_OBJ {
+		value := right.(*object.Float).Value
+		return &object.Float{Value: value + 1.0}
+	}
+
+	return newError("unknown object type %s for operator %s", right.Type(), "++")
+}
+
+func evalDecrementPrefixOperatorExpression(right object.Object) object.Object {
+	if right.Type() == object.INTEGER_OBJ {
+		value := right.(*object.Integer).Value
+		return &object.Integer{Value: value - 1}
+	}
+
+	if right.Type() == object.FLOAT_OBJ {
+		value := right.(*object.Float).Value
+		return &object.Float{Value: value - 1.0}
+	}
+
+	return newError("unknown object type %s for operator %s", right.Type(), "--")
 }
