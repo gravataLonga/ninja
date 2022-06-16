@@ -1,3 +1,3 @@
-module gravatalonga
+module ninja
 
 go 1.17
