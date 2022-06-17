@@ -10,3 +10,11 @@
  - [ ] Support parser for file ./ninja my-script.nj
  - [ ] Better Documentation https://vercel.com/new
  - [ ] Better way to include builtin functions
+ - [ ] Support for md5, sha1, base64
+ - [ ] Delete key from HASH
+ - [ ] Add key to HASH
+ - [ ] When using INDEX to get HASH need to get a better message.
+ - [ ] Add assertions for errors on each "happy path" testing on Evaluator
+ - [ ] Compare two string if they are equal or different
+ - [ ] Test if we got two return statement, we only parse first one, other is discard.
+ - [ ] If program never return nothing it need return nil? or object.NULL ?

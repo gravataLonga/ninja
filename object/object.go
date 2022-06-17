@@ -55,6 +55,14 @@ func IsNumber(o Object) bool {
 	return o != nil && (o.Type() == INTEGER_OBJ || o.Type() == FLOAT_OBJ)
 }
 
+func IsArray(o Object) bool {
+	return o != nil && o.Type() == ARRAY_OBJ
+}
+
+func IsHash(o Object) bool {
+	return o != nil && o.Type() == HASH_OBJ
+}
+
 func IsString(o Object) bool {
 	return o != nil && o.Type() == STRING_OBJ
 }

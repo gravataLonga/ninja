@@ -7,364 +7,6 @@ import (
 	"testing"
 )
 
-func TestEvalIntegerExpression(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected int64
-	}{
-
-		{"5", 5},
-		{"10", 10},
-		{"-5", -5},
-		{"-10", -10},
-		{"++4", 5},
-		{"--6", 5},
-		{"5 + 5 + 5 + 5 - 10", 10},
-		{"2 * 2 * 2 * 2 * 2", 32},
-		{"-50 + 100 + -50", 0},
-		{"5 * 2 + 10", 20},
-		{"5 + 2 * 10", 25},
-		{"20 + 2 * -10", 0},
-		{"50 / 2 * 2 + 10", 60},
-		{"2 * (5 + 10)", 30},
-		{"3 * 3 * 3 + 10", 37},
-		{"3 * (3 * 3) + 10", 37},
-		{"(5 + 10 * 2 + 15 / 3) * 2 + -10", 50},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-		testIntegerObject(t, evaluated, tt.expected)
-	}
-}
-
-func TestEvalFloatExpression(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected float64
-	}{
-		{"5.2", 5.2},
-		{"10.0", 10.0},
-		{"10.000000000123", 10.0000000001},
-		{"-5.2", -5.2},
-		{"-10.0", -10.0},
-		{"++1.0", 2.0},
-		{"--1.0", 0.0},
-		{"5.0 + 5.0 + 5.5 + 5.5 - 10", 11},
-		{"2.2 * 2.2 * 2.2 * 2.2 * 2.2", 51.5363200000},
-		{"-50.50 + 100.50 + -50.50", -0.5},
-		{"5.5 * 2.5 + 10.5", 24.25},
-		{"5.5 + 2.5 * 10.5", 31.75},
-		{"20 + 2.0 * -10", 0.0},
-		{"50.10 / 2.20 * 2.20 + 10.2", 60.2999999999},
-		{"2 * (5.2 + 10.2)", 30.8},
-		{"3 * 3 * 3 + 10.5", 37.5},
-		{"3 * (3 * 3.5) + 10", 41.5},
-		{"(5 + 10 * 2 + 15 / 3) * 2.2 + -10", 56.0},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-		testFloatObject(t, evaluated, tt.expected)
-	}
-}
-
-func TestEvalBooleanExpression(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected bool
-	}{
-		{"true", true},
-		{"false", false},
-		{"true && true", true},
-		{"true && false", false},
-		{"true || false", true},
-		{"false || true", true},
-		{"false || false", false},
-		{"1 < 2", true},
-		{"1 > 2", false},
-		{"1 < 1", false},
-		{"1 > 1", false},
-		{"1 == 1", true},
-		{"1 != 1", false},
-		{"1 == 2", false},
-		{"1 != 2", true},
-		{"1 && 1", true},
-		{"1 && 0", true},
-		{"0 && 1", true},
-		{"1 || false", true},
-		{"false || false", false},
-		{"false && 1", false},
-		{"10.0 == 10.0", true},
-		{"10.5 >= 10.0", true},
-		{"10.5 && 1", true},
-		{"(20.5 > 5) == true", true},
-		{"true == true", true},
-		{"false == false", true},
-		{"true == false", false},
-		{"true != false", true},
-		{"false != true", true},
-		{"(1 < 2) == true", true},
-		{"(1 < 2) == false", false},
-		{"(1 > 2) == true", false},
-		{"(1 > 2) == false", true},
-		{"(1 <= 1) == true", true},
-		{"(1 >= 1) == true", true},
-		{"(1 >= 1) && true", true},
-		{"(1 || false) || false", true},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-		testBooleanObject(t, evaluated, tt.expected)
-	}
-}
-
-func TestBangOperator(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected bool
-	}{
-		{"!true", false},
-		{"!false", true},
-		{"!5", false},
-		{"!!true", true},
-		{"!!false", false},
-		{"!!5", true},
-		{"!10.0", false},
-		{"!!10.0", true},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-		testBooleanObject(t, evaluated, tt.expected)
-	}
-}
-
-func TestIfElseExpressions(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected interface{}
-	}{
-		{"if (true) { 10 }", 10},
-		{"if (false) { 10 }", nil},
-		{"if (1) { 10 }", 10},
-		{"if (1 < 2) { 10 }", 10},
-		{"if (1 > 2) { 10 }", nil},
-		{"if (1 <= 2) { 10 }", 10},
-		{"if (1 >= 2) { 10 }", nil},
-		{"if (1 > 2) { 10 } else { 20 }", 20},
-		{"if (1 < 2) { 10 } else { 20 }", 10},
-		{"if (1 >= 2) { 10 } else { 20 }", 20},
-		{"if (1 <= 2) { 10 } else { 20 }", 10},
-		{"if (1.0) { 10 }", 10},
-		{"if (1.0 < 2.0) { 10 }", 10},
-		{"if (1.0 > 2.0) { 10 }", nil},
-		{"if (1.0 <= 2.0) { 10 }", 10},
-		{"if (1.0 >= 2.0) { 10 }", nil},
-		{"if (1.0 > 2.0) { 10 } else { 20 }", 20},
-		{"if (1.0 < 2.0) { 10 } else { 20 }", 10},
-		{"if (1.0 >= 2.0) { 10 } else { 20 }", 20},
-		{"if (1.0 <= 2.0) { 10 } else { 20 }", 10},
-		{"if (1) { 20.50 }", 20.50},
-		{"if (1.0 < 2.0) { 50.20 }", 50.20},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-		integer, ok := tt.expected.(int)
-		float, okFloat := tt.expected.(float64)
-		if ok {
-			testIntegerObject(t, evaluated, int64(integer))
-		} else if okFloat {
-			testFloatObject(t, evaluated, float64(float))
-		} else {
-			testNullObject(t, evaluated)
-		}
-	}
-}
-
-func TestReturnStatements(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected interface{}
-	}{
-		{"return 20;", 20},
-		{"return 20.50;", 20.50},
-		{"return 30; 9;", 30},
-		{"return 8 * 5; 9;", 40},
-		{"9; return 12 * 5; 9;", 60},
-		{"if (10 > 1) { return 10; }", 10},
-		{
-			`
-if (10 > 1) {
-  if (10 > 1) {
-    return 90;
-  }
-
-  return 1;
-}
-`,
-			90,
-		},
-		{
-			`
-		var f = function(x) {
-		  return x;
-		  x + 10;
-		};
-		f(10);`,
-			10,
-		},
-		{
-			`
-		var f = function(x) {
-		   var result = x + 10;
-		   return result;
-		   return 10;
-		};
-		f(10);`,
-			20,
-		},
-		{
-			`
-		function f(x) {
-		  return x;
-		  x + 10;
-		};
-		f(10);`,
-			10,
-		},
-		{
-			`
-		function f(x) {
-		   var result = x + 10;
-		   return result;
-		   return 10;
-		};
-		f(10);`,
-			20,
-		},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-
-		integer, ok := tt.expected.(int)
-		float, okFloat := tt.expected.(float64)
-
-		if ok {
-			testIntegerObject(t, evaluated, int64(integer))
-		} else if okFloat {
-			testFloatObject(t, evaluated, float64(float))
-		}
-
-	}
-}
-
-func TestErrorHandling(t *testing.T) {
-	tests := []struct {
-		input           string
-		expectedMessage string
-	}{
-		{
-			"5 + true;",
-			"type mismatch: INTEGER + BOOLEAN",
-		},
-		{
-			"50.50 + true;",
-			"type mismatch: FLOAT + BOOLEAN",
-		},
-		{
-			"5 + true; 5;",
-			"type mismatch: INTEGER + BOOLEAN",
-		},
-		{
-			"5.0 + true; 5.3;",
-			"type mismatch: FLOAT + BOOLEAN",
-		},
-		{
-			"-true",
-			"unknown operator: -BOOLEAN",
-		},
-		{
-			"true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"true + false + true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"5; true + false; 5",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"if (10 > 1) { true + false; }",
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			`
-if (10 > 1) {
-  if (10 > 1) {
-    return true + false;
-  }
-
-  return 1;
-}
-`,
-			"unknown operator: BOOLEAN + BOOLEAN",
-		},
-		{
-			"foobar",
-			"identifier not found: foobar",
-		},
-		{
-			`"Hello" - "World"`,
-			"unknown operator: STRING - STRING",
-		},
-	}
-
-	for _, tt := range tests {
-		evaluated := testEval(tt.input)
-
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)",
-				evaluated, evaluated)
-			continue
-		}
-
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q",
-				tt.expectedMessage, errObj.Message)
-		}
-	}
-}
-
-// @todo reassign values we need to check for same type values?
-func TestLetStatements(t *testing.T) {
-	tests := []struct {
-		input    string
-		expected int64
-	}{
-		{"var a = 5; a;", 5},
-		{"var a = 5 * 5; a;", 25},
-		{"var a = 5; var b = a; b;", 5},
-		{"var a = 5; var b = a; var c = a + b + 5; c;", 15},
-		{"var a = 5; ++a;", 6},
-		{"var a = 5; --a;", 4},
-		{"var a = 5; a = a + 5; a;", 10},
-		{"var a = 5; var b = 10; a = a + b * a; a", 55},
-		// {"var a = 5; a++;", 5},
-		// {"var a = 5; a--;", 5},
-	}
-
-	for _, tt := range tests {
-		testIntegerObject(t, testEval(tt.input), tt.expected)
-	}
-}
-
 func TestFunctionLiteralObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
@@ -878,6 +520,47 @@ func testObjectLiteral(
 ) bool {
 
 	switch expected.(type) {
+	case object.Hash:
+		hash, ok := objectResult.(*object.Hash)
+		if !ok {
+			t.Errorf("type of exp expected to be object.Hash. Got: . got=%T", objectResult)
+		}
+
+		hashExpected, _ := expected.(object.Hash)
+
+		if len(hashExpected.Pairs) != len(hash.Pairs) {
+			t.Fatalf("object.Hash pairs elements expected %d. got=%d", len(hashExpected.Pairs), len(hash.Pairs))
+		}
+
+		for _, hashPair := range hash.Pairs {
+			if !testObjectLiteral(t, hashPair.Value, expected) {
+				return false
+			}
+		}
+		return true
+
+	case object.Array:
+
+		arr, ok := objectResult.(*object.Array)
+		if !ok {
+			t.Errorf("type of exp expected to be object.Array. Got: . got=%T", objectResult)
+		}
+
+		arrExpected, _ := expected.(object.Array)
+
+		if len(arrExpected.Elements) != len(arr.Elements) {
+			t.Fatalf("object.Array elements expected %d. got=%d", len(arrExpected.Elements), len(arr.Elements))
+		}
+
+		for index, item := range arr.Elements {
+			if !testObjectLiteral(t, item, arrExpected.Elements[index]) {
+				return false
+			}
+		}
+		return true
+	case *object.Integer:
+		expected := expected.(*object.Integer)
+		return testIntegerObject(t, objectResult, expected.Value)
 	case int:
 		expected := expected.(int)
 		return testIntegerObject(t, objectResult, int64(expected))
@@ -890,9 +573,14 @@ func testObjectLiteral(
 	case float64:
 		expected := expected.(float64)
 		return testFloatObject(t, objectResult, expected)
+	case *object.String:
+		expected := expected.(*object.String)
+		return testStringObject(t, objectResult, expected.Value)
 	case string:
 		expected := expected.(string)
 		return testStringObject(t, objectResult, expected)
+	case nil:
+		return testNullObject(t, objectResult)
 	}
 
 	t.Errorf("type of exp not handled. got=%T", expected)

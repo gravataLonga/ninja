@@ -16,8 +16,25 @@ func evalInfixExpression(
 	case object.IsNumber(left) && object.IsNumber(right):
 		return evalFloatOrIntegerInfixExpression(operator, left, right)
 	case operator == "==":
+		// todo in future we can compare each array
+		if object.IsArray(left) || object.IsArray(right) {
+			return nativeBoolToBooleanObject(false)
+		}
+
+		if object.IsHash(left) || object.IsHash(right) {
+			return nativeBoolToBooleanObject(false)
+		}
+
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
+		// todo in future we can compare each array
+		if object.IsArray(left) || object.IsArray(right) {
+			return nativeBoolToBooleanObject(false)
+		}
+
+		if object.IsHash(left) || object.IsHash(right) {
+			return nativeBoolToBooleanObject(false)
+		}
 		return nativeBoolToBooleanObject(left != right)
 	case left.Type() != right.Type():
 		return object.NewErrorFormat("type mismatch: %s %s %s", left.Type(), operator, right.Type())
