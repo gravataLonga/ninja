@@ -12,7 +12,7 @@ func TestForStatement(t *testing.T) {
 			2,
 		},
 		{
-			`for(var i = 0; i > 100; i = i + 1) { i; }`,
+			`for(var i = 0; i > 10; i = i + 1) { i; }`,
 			nil,
 		},
 		{
@@ -20,12 +20,8 @@ func TestForStatement(t *testing.T) {
 			2,
 		},
 		{
-			`for(var i = 0; i <= 1; ) { var i = i + 1; i; }`,
-			2,
-		},
-		{
-			`var i = 0; var a = 0; for(;i <= 10 && a <= 10;) { var i = i + 2; var a = a + 2; i; }`,
-			12,
+			`for(;;) { return 1; }`,
+			1,
 		},
 	}
 

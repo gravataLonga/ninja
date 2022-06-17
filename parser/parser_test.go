@@ -1159,7 +1159,7 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 	}
 }
 
-func TestLoopStatement(t *testing.T) {
+func TestForStatement(t *testing.T) {
 	tests := []struct {
 		input               string
 		initialStatement    string
@@ -1200,6 +1200,29 @@ func TestLoopStatement(t *testing.T) {
 
 		if fr.Body != nil && fr.Body.String() != tt.block {
 			t.Errorf("For.Body.String() isn't %s. Got: %s", tt.block, fr.Body.String())
+		}
+	}
+}
+
+func TestImportStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`import "testing.mod";`, "import \"testing.mod\""},
+		{`import "testing" + "other.txt";`, `import "(testing + other.txt)"`},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		actual := program.String()
+
+		if actual != tt.expected {
+			t.Errorf("expected=%q, got=%q", tt.expected, actual)
 		}
 	}
 }

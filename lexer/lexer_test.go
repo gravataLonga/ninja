@@ -56,6 +56,8 @@ for (var i = 0; i <= len(statusCode); var i = i + 1) {
 5 && 10
 10 || 20
 
+import "testing.mo"
+
 `
 	tests := []struct {
 		expectedType    token.TokenType
@@ -209,7 +211,7 @@ for (var i = 0; i <= len(statusCode); var i = i + 1) {
 		{token.COLON, ":"},
 		{token.STRING, "everthing is ok"},
 		{token.RBRACE, "}"},
-		{token.LOOP, "for"},
+		{token.FOR, "for"},
 		{token.LPAREN, "("},
 		{token.VAR, "var"},
 		{token.IDENT, "i"},
@@ -245,6 +247,8 @@ for (var i = 0; i <= len(statusCode); var i = i + 1) {
 		{token.INT, "10"},
 		{token.OR, "||"},
 		{token.INT, "20"},
+		{token.IMPORT, "import"},
+		{token.STRING, "testing.mo"},
 
 		{token.EOF, ""},
 	}

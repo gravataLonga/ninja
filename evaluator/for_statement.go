@@ -16,24 +16,25 @@ func evalForStatement(
 		Eval(node.InitialCondition, env)
 	}
 
-	for {
-		condition := Eval(node.Condition, env)
-
-		conditionIsTrue, ok := condition.(*object.Boolean)
-		if !ok {
-			break
-		}
-
-		if !conditionIsTrue.Value {
-			break
-		}
-
+	condition := evalConditionForLoop(node.Condition, env)
+	for object.IsTruthy(condition) {
 		if node.Iteration != nil {
 			Eval(node.Iteration, env)
 		}
 
 		result = Eval(node.Body, env)
+		if result != nil && (result.Type() == object.RETURN_VALUE_OBJ) {
+			return result
+		}
+		condition = evalConditionForLoop(node.Condition, env)
 	}
 
 	return result
+}
+
+func evalConditionForLoop(nodeCondition ast.Expression, env *object.Environment) object.Object {
+	if nodeCondition != nil {
+		return Eval(nodeCondition, env)
+	}
+	return object.TRUE
 }
