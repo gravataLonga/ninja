@@ -9,7 +9,7 @@ func evalIndexExpression(left, index object.Object) object.Object {
 	case left.Type() == object.HASH_OBJ:
 		return evalHashIndexExpression(left, index)
 	default:
-		return newError("index operator not supported: %s", left.Type())
+		return object.NewErrorFormat("index operator not supported: %s", left.Type())
 	}
 }
 
@@ -19,7 +19,7 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
-		return NULL
+		return object.NULL
 	}
 
 	return arrayObject.Elements[idx]

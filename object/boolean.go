@@ -2,6 +2,11 @@ package object
 
 import "fmt"
 
+var (
+	TRUE  = &Boolean{Value: true}
+	FALSE = &Boolean{Value: false}
+)
+
 type Boolean struct {
 	Value bool
 }

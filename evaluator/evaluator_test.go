@@ -693,8 +693,8 @@ func TestHashLiterals(t *testing.T) {
 		(&object.String{Value: "two"}).HashKey():   2,
 		(&object.String{Value: "three"}).HashKey(): 3,
 		(&object.Integer{Value: 4}).HashKey():      4,
-		TRUE.HashKey():                             5,
-		FALSE.HashKey():                            6,
+		object.TRUE.HashKey():                      5,
+		object.FALSE.HashKey():                     6,
 	}
 
 	if len(result.Pairs) != len(expected) {
@@ -743,6 +743,18 @@ func TestHashIndexExpressions(t *testing.T) {
 		{
 			`{false: 5}[false]`,
 			5,
+		},
+		{
+			`{1.0: 35}[1.0]`,
+			35,
+		},
+		{
+			`{1.000000: 35}[1.0]`,
+			35,
+		},
+		{
+			`{1.000001: 35}[1.0]`,
+			nil,
 		},
 	}
 
@@ -852,7 +864,7 @@ func testFloatObject(t *testing.T, obj object.Object, expected float64) bool {
 }
 
 func testNullObject(t *testing.T, obj object.Object) bool {
-	if obj != NULL {
+	if obj != object.NULL {
 		t.Errorf("object is not NULL. got=%T (%+v)", obj, obj)
 		return false
 	}

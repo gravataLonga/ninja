@@ -8,20 +8,20 @@ func evalInfixExpression(
 ) object.Object {
 	switch {
 	case operator == "&&":
-		return nativeBoolToBooleanObject(isTruthy(left) && isTruthy(right))
+		return nativeBoolToBooleanObject(object.IsTruthy(left) && object.IsTruthy(right))
 	case operator == "||":
-		return nativeBoolToBooleanObject(isTruthy(left) || isTruthy(right))
-	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return nativeBoolToBooleanObject(object.IsTruthy(left) || object.IsTruthy(right))
+	case object.IsString(left) && object.IsString(right):
 		return evalStringInfixExpression(operator, left, right)
-	case (left.Type() == object.FLOAT_OBJ || left.Type() == object.INTEGER_OBJ) && (right.Type() == object.FLOAT_OBJ || right.Type() == object.INTEGER_OBJ):
+	case object.IsNumber(left) && object.IsNumber(right):
 		return evalFloatOrIntegerInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
 	case left.Type() != right.Type():
-		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewErrorFormat("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewErrorFormat("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }

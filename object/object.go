@@ -33,3 +33,28 @@ const (
 	ARRAY_OBJ   = "ARRAY"
 	HASH_OBJ    = "HASH"
 )
+
+func IsError(o Object) bool {
+	return o != nil && o.Type() == ERROR_OBJ
+}
+
+func IsTruthy(o Object) bool {
+	switch o {
+	case NULL:
+		return false
+	case TRUE:
+		return true
+	case FALSE:
+		return false
+	default:
+		return true
+	}
+}
+
+func IsNumber(o Object) bool {
+	return o != nil && (o.Type() == INTEGER_OBJ || o.Type() == FLOAT_OBJ)
+}
+
+func IsString(o Object) bool {
+	return o != nil && o.Type() == STRING_OBJ
+}

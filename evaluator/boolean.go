@@ -4,7 +4,7 @@ import "ninja/object"
 
 func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	if input {
-		return TRUE
+		return object.TRUE
 	}
-	return FALSE
+	return object.FALSE
 }

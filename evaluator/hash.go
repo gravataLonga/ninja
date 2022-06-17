@@ -13,17 +13,17 @@ func evalHashLiteral(
 
 	for keyNode, valueNode := range node.Pairs {
 		key := Eval(keyNode, env)
-		if isError(key) {
+		if object.IsError(key) {
 			return key
 		}
 
 		hashKey, ok := key.(object.Hashable)
 		if !ok {
-			return newError("unusable as hash key: %s", key.Type())
+			return object.NewErrorFormat("unusable as hash key: %s", key.Type())
 		}
 
 		value := Eval(valueNode, env)
-		if isError(value) {
+		if object.IsError(value) {
 			return value
 		}
 
@@ -39,12 +39,12 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 
 	key, ok := index.(object.Hashable)
 	if !ok {
-		return newError("unusable as hash key: %s", index.Type())
+		return object.NewErrorFormat("unusable as hash key: %s", index.Type())
 	}
 
 	pair, ok := hashObject.Pairs[key.HashKey()]
 	if !ok {
-		return NULL
+		return object.NULL
 	}
 
 	return pair.Value

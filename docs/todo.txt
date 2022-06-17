@@ -1,0 +1,12 @@
+ - [ ] Cant add float to array / object
+ - [ ] Add testing to each one of object
+ - [ ] Split Parser file into small individual pieces
+ - [ ] When give an error, it will nice to give line and character
+ - [ ] Import other files
+ - [ ] Test main.go
+ - [ ] Adding ternary operator
+ - [ ] Remove duplicate code
+ - [ ] Better CLI interface
+ - [ ] Support parser for file ./ninja my-script.nj
+ - [ ] Better Documentation https://vercel.com/new
+ - [ ] Better way to include builtin functions

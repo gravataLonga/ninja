@@ -7,7 +7,7 @@ func evalStringInfixExpression(
 	left, right object.Object,
 ) object.Object {
 	if operator != "+" {
-		return newError("unknown operator: %s %s %s",
+		return object.NewErrorFormat("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
 	}
 

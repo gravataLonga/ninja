@@ -2,10 +2,6 @@ package object
 
 import "fmt"
 
-var (
-	NULL = &Null{}
-)
-
 type Builtin struct {
 	Fn BuiltinFunction
 }
@@ -38,13 +34,9 @@ var Builtins = []struct {
 	{"push", &Builtin{Fn: bPush}},
 }
 
-func newError(msgWithFormatVerbs string, values ...interface{}) *Error {
-	return &Error{Message: fmt.Sprintf(msgWithFormatVerbs, values...)}
-}
-
 func bLen(args ...Object) Object {
 	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, want=1", len(args))
+		return NewErrorFormat("wrong number of arguments. got=%d, want=1", len(args))
 	}
 	switch arg := args[0].(type) {
 	case *Array:
@@ -52,17 +44,17 @@ func bLen(args ...Object) Object {
 	case *String:
 		return &Integer{Value: int64(len(arg.Value))}
 	default:
-		return newError("argument to `len` not supported, got %s", args[0].Type())
+		return NewErrorFormat("argument to `len` not supported, got %s", args[0].Type())
 	}
 }
 
 func bFirst(args ...Object) Object {
 	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, want=1", len(args))
+		return NewErrorFormat("wrong number of arguments. got=%d, want=1", len(args))
 	}
 
 	if args[0].Type() != ARRAY_OBJ {
-		return newError("argument to `first` must be ARRAY, got %s", args[0].Type())
+		return NewErrorFormat("argument to `first` must be ARRAY, got %s", args[0].Type())
 	}
 	arr := args[0].(*Array)
 	if len(arr.Elements) > 0 {
@@ -86,11 +78,11 @@ func bPuts(args ...Object) Object {
 
 func bLast(args ...Object) Object {
 	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, want=1",
+		return NewErrorFormat("wrong number of arguments. got=%d, want=1",
 			len(args))
 	}
 	if args[0].Type() != ARRAY_OBJ {
-		return newError("argument to `last` must be ARRAY, got %s",
+		return NewErrorFormat("argument to `last` must be ARRAY, got %s",
 			args[0].Type())
 	}
 
@@ -105,11 +97,11 @@ func bLast(args ...Object) Object {
 
 func bRest(args ...Object) Object {
 	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, want=1",
+		return NewErrorFormat("wrong number of arguments. got=%d, want=1",
 			len(args))
 	}
 	if args[0].Type() != ARRAY_OBJ {
-		return newError("argument to `rest` must be ARRAY, got %s",
+		return NewErrorFormat("argument to `rest` must be ARRAY, got %s",
 			args[0].Type())
 	}
 
@@ -126,11 +118,11 @@ func bRest(args ...Object) Object {
 
 func bPush(args ...Object) Object {
 	if len(args) != 2 {
-		return newError("wrong number of arguments. got=%d, want=2",
+		return NewErrorFormat("wrong number of arguments. got=%d, want=2",
 			len(args))
 	}
 	if args[0].Type() != ARRAY_OBJ {
-		return newError("argument to `push` must be ARRAY, got %s",
+		return NewErrorFormat("argument to `push` must be ARRAY, got %s",
 			args[0].Type())
 	}
 

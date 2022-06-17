@@ -6,12 +6,6 @@ import (
 	"ninja/object"
 )
 
-var (
-	NULL  = &object.Null{}
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
-)
-
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 
@@ -29,21 +23,21 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// VarStatement
 	case *ast.VarStatement:
 		val := Eval(node.Value, env)
-		if isError(val) {
+		if object.IsError(val) {
 			return val
 		}
 		env.Set(node.Name.Value, val)
 
 	case *ast.ReassignmentVarStatement:
 		val := Eval(node.Value, env)
-		if isError(val) {
+		if object.IsError(val) {
 			return val
 		}
 		env.Set(node.Name.Value, val)
 		// PrefixExpression
 	case *ast.PrefixExpression:
 		right := Eval(node.Right, env)
-		if isError(right) {
+		if object.IsError(right) {
 			return right
 		}
 		return evalPrefixExpression(node.Operator, right)
@@ -51,11 +45,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// InfixExpression
 	case *ast.InfixExpression:
 		left := Eval(node.Left, env)
-		if isError(left) {
+		if object.IsError(left) {
 			return left
 		}
 		right := Eval(node.Right, env)
-		if isError(right) {
+		if object.IsError(right) {
 			return right
 		}
 		return evalInfixExpression(node.Operator, left, right)
@@ -79,12 +73,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// CallFunctionNode
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
-		if isError(function) {
+		if object.IsError(function) {
 			return function
 		}
 
 		args := evalExpressions(node.Arguments, env)
-		if len(args) == 1 && isError(args[0]) {
+		if len(args) == 1 && object.IsError(args[0]) {
 			return args[0]
 		}
 
@@ -97,7 +91,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// ReturnStatement
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
-		if isError(val) {
+		if object.IsError(val) {
 			return val
 		}
 		return &object.ReturnValue{Value: val}
@@ -121,7 +115,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// ArrayLiteral
 	case *ast.ArrayLiteral:
 		elements := evalExpressions(node.Elements, env)
-		if len(elements) == 1 && isError(elements[0]) {
+		if len(elements) == 1 && object.IsError(elements[0]) {
 			return elements[0]
 		}
 		return &object.Array{Elements: elements}
@@ -129,11 +123,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// IndexExpression for Array and Object
 	case *ast.IndexExpression:
 		left := Eval(node.Left, env)
-		if isError(left) {
+		if object.IsError(left) {
 			return left
 		}
 		index := Eval(node.Index, env)
-		if isError(index) {
+		if object.IsError(index) {
 			return index
 		}
 		return evalIndexExpression(left, index)
@@ -174,7 +168,7 @@ func evalIdentifier(
 		return builtin
 	}
 
-	return newError("identifier not found: " + node.Value)
+	return object.NewErrorFormat("identifier not found: " + node.Value)
 }
 
 func evalExpressions(
@@ -185,33 +179,13 @@ func evalExpressions(
 
 	for _, e := range exps {
 		evaluated := Eval(e, env)
-		if isError(evaluated) {
+		if object.IsError(evaluated) {
 			return []object.Object{evaluated}
 		}
 		result = append(result, evaluated)
 	}
 
 	return result
-}
-
-func isTruthy(obj object.Object) bool {
-	switch obj {
-	case NULL:
-		return false
-	case TRUE:
-		return true
-	case FALSE:
-		return false
-	default:
-		return true
-	}
-}
-
-func isError(obj object.Object) bool {
-	if obj != nil {
-		return obj.Type() == object.ERROR_OBJ
-	}
-	return false
 }
 
 // @todo refactor

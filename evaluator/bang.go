@@ -4,13 +4,13 @@ import "ninja/object"
 
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
-		return TRUE
-	case NULL:
-		return TRUE
+	case object.TRUE:
+		return object.FALSE
+	case object.FALSE:
+		return object.TRUE
+	case object.NULL:
+		return object.TRUE
 	default:
-		return FALSE
+		return object.FALSE
 	}
 }

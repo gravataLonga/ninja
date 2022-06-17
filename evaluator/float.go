@@ -31,6 +31,6 @@ func evalFloatInfixExpression(
 	case ">=":
 		return nativeBoolToBooleanObject(leftVal >= rightVal)
 	default:
-		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		return object.NewErrorFormat("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
 }
