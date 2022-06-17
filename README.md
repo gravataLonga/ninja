@@ -182,7 +182,7 @@ var a = [1, 2, 3, 4];
 puts(push(a, 5)); // print [1, 2, 3, 4, 5];
 ```
 
-## Operators && Operators Logics    
+## Operators && Logics Operators  
 
 `<expression> <operator> <expression>`  
 

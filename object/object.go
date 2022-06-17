@@ -39,13 +39,15 @@ func IsError(o Object) bool {
 }
 
 func IsTruthy(o Object) bool {
-	switch o {
-	case NULL:
+	switch o.Type() {
+	case NULL_OBJ:
 		return false
-	case TRUE:
-		return true
-	case FALSE:
-		return false
+	case BOOLEAN_OBJ:
+		v, ok := o.(*Boolean)
+		if !ok {
+			return false
+		}
+		return v.Value
 	default:
 		return true
 	}

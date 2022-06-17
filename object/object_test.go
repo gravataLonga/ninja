@@ -19,3 +19,70 @@ func TestStringHashKey(t *testing.T) {
 		t.Errorf("strings with different content have same hash keys")
 	}
 }
+
+func TestIsTruthy(t *testing.T) {
+	tests := []struct {
+		obj      Object
+		expected bool
+	}{
+		{
+			TRUE,
+			true,
+		},
+		{
+			NULL,
+			false,
+		},
+		{
+			&Null{},
+			false,
+		},
+		{
+			&Array{},
+			true,
+		},
+		{
+			&Hash{},
+			true,
+		},
+		{
+			&String{},
+			true,
+		},
+		{
+			&Integer{},
+			true,
+		},
+		{
+			&Integer{Value: 0},
+			true,
+		},
+		{
+			&Float{},
+			true,
+		},
+		{
+			TRUE,
+			true,
+		},
+		{
+			FALSE,
+			false,
+		},
+		{
+			&Boolean{Value: true},
+			true,
+		},
+		{
+			&Boolean{Value: false},
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+
+		if tt.expected != IsTruthy(tt.obj) {
+			t.Errorf("%s expected to be %t. Got: %t", tt.obj.Inspect(), tt.expected, IsTruthy(tt.obj))
+		}
+	}
+}
