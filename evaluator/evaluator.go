@@ -29,11 +29,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		env.Set(node.Name.Value, val)
 
 	case *ast.ReassignmentVarStatement:
-		val := Eval(node.Value, env)
-		if object.IsError(val) {
-			return val
-		}
-		env.Set(node.Name.Value, val)
+		return evalReassignmentVarStatement(node, env)
 		// PrefixExpression
 	case *ast.PrefixExpression:
 		right := Eval(node.Right, env)

@@ -6,12 +6,19 @@ func evalStringInfixExpression(
 	operator string,
 	left, right object.Object,
 ) object.Object {
-	if operator != "+" {
-		return object.NewErrorFormat("unknown operator: %s %s %s",
-			left.Type(), operator, right.Type())
-	}
 
 	leftVal := left.(*object.String).Value
 	rightVal := right.(*object.String).Value
-	return &object.String{Value: leftVal + rightVal}
+
+	switch operator {
+	case "+":
+		return &object.String{Value: leftVal + rightVal}
+	case "==":
+		return &object.Boolean{Value: leftVal == rightVal}
+	case "!=":
+		return &object.Boolean{Value: leftVal != rightVal}
+	}
+
+	return object.NewErrorFormat("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+
 }

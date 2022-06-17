@@ -48,6 +48,14 @@ func TestErrorIdentifierHandling(t *testing.T) {
 			"identifier not found: foobar",
 		},
 		{
+			"foobar = 1 + 1;",
+			"identifier not found: foobar",
+		},
+		{
+			"var b = a + 1;",
+			"identifier not found: a",
+		},
+		{
 			`"Hello" - "World"`,
 			"unknown operator: STRING - STRING",
 		},

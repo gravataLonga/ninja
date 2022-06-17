@@ -20,3 +20,17 @@ func evalIdentifier(
 
 	return object.NewErrorFormat("identifier not found: " + node.Value)
 }
+
+func evalReassignmentVarStatement(node *ast.ReassignmentVarStatement, env *object.Environment) object.Object {
+	_, ok := env.Get(node.Name.Value)
+	if !ok {
+		return object.NewErrorFormat("identifier not found: %s", node.Name.Value)
+	}
+
+	val := Eval(node.Value, env)
+	if object.IsError(val) {
+		return val
+	}
+	env.Set(node.Name.Value, val)
+	return nil
+}
