@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	flag "github.com/spf13/pflag"
+	"io"
 	"io/ioutil"
 	"ninja/evaluator"
 	"ninja/lexer"
@@ -9,9 +11,6 @@ import (
 	"ninja/parser"
 	"ninja/repl"
 	"os"
-	user2 "os/user"
-
-	flag "github.com/spf13/pflag"
 )
 
 func main() {
@@ -26,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	if len(os.Args) == 1 {
-		repl.Start(os.Stdin, os.Stdout)
+		runRepl(os.Stdin, os.Stdout)
 		return
 	}
 
@@ -40,19 +39,13 @@ func main() {
 		execCode(string(file))
 		return
 	}
-
 }
 
-func runRepl() {
-	user, err := user2.Current()
-	if err != nil {
-		panic(err)
-	}
+func runRepl(in io.Reader, out io.Writer) {
+	replProgram := repl.NewRepel(out, in)
+	replProgram.Verbose(true)
 
-	fmt.Printf("Hello %s! This is Ninja Programming Language\n", user.Username)
-	fmt.Printf("Feel free to type in commands\n")
-
-	repl.Start(os.Stdin, os.Stdout)
+	replProgram.Start()
 }
 
 func execCode(input string) {
