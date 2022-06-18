@@ -1,0 +1,9 @@
+OK: Assign var a = 0
+OK: Reassign var a = 0
+OK: Operations (1 + 1)
+OK: Operations (1 + 2 * 1)
+OK: Operations (2 / 2 * 1)
+OK: Operations (2 / 2 * 1 - 20)
+OK: Array Map -> Reduce
+OK: Array Filter -> >= 3
+null

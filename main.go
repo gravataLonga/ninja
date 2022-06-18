@@ -30,13 +30,13 @@ func main() {
 	}
 
 	if len(*exec) > 0 {
-		execCode(*exec)
+		execCode(*exec, os.Stdout)
 		return
 	}
 
 	file, err := ioutil.ReadFile(os.Args[1])
 	if err == nil {
-		execCode(string(file))
+		execCode(string(file), os.Stdout)
 		return
 	}
 }
@@ -48,27 +48,26 @@ func runRepl(in io.Reader, out io.Writer) {
 	replProgram.Start()
 }
 
-func execCode(input string) {
+func execCode(input string, writer io.Writer) {
 	env := object.NewEnvironment()
 	l := lexer.New(input)
 	p := parser.New(l)
 
 	program := p.ParseProgram()
 	if len(p.Errors()) > 0 {
-		printParserErrors(p.Errors())
+		printParserErrors(p.Errors(), writer)
 		return
 	}
 
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {
-		fmt.Println(evaluated.Inspect())
+		fmt.Fprintf(writer, evaluated.Inspect())
 	}
 }
 
-func printParserErrors(errors []string) {
-	fmt.Println("🔥 Fire at core!")
-	fmt.Println(" parser errors:")
+func printParserErrors(errors []string, writer io.Writer) {
+	fmt.Fprintf(writer, "🔥 Fire at core! parser errors:")
 	for _, msg := range errors {
-		fmt.Printf("\t %s\n", msg)
+		fmt.Fprintf(writer, "\t %s\n", msg)
 	}
 }
