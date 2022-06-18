@@ -1,0 +1,32 @@
+function assert(name, fn) {
+    var result = fn()
+
+    if (!result) {
+        puts("NOK: " + name);
+        return 0;
+    }
+
+    puts("OK: " + name);
+    return 1;
+}
+
+function assertFalse()  {
+    return false;
+};
+
+function assertTrue() {
+    return true;
+};
+
+/*
+ Assertion basic variables
+*/
+
+import "./tests/assert_variable.nj";
+
+
+/*
+ Assertion advance stuff
+*/
+
+import "./tests/assert_advance.nj";

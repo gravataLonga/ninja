@@ -16,8 +16,6 @@ type Hashable interface {
 	HashKey() HashKey
 }
 
-type BuiltinFunction func(args ...Object) Object
-
 const (
 	NULL_OBJ  = "NULL"
 	ERROR_OBJ = "ERROR"

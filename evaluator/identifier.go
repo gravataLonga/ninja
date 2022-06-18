@@ -3,6 +3,7 @@ package evaluator
 import (
 	"ninja/ast"
 	"ninja/object"
+	"ninja/stdlib"
 )
 
 func evalIdentifier(
@@ -14,7 +15,7 @@ func evalIdentifier(
 		return val
 	}
 
-	if builtin, ok := builtins[node.Value]; ok {
+	if builtin, ok := stdlib.Builtins[node.Value]; ok {
 		return builtin
 	}
 

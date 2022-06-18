@@ -1,0 +1,58 @@
+
+// ========== MAP REDUCE ==============
+function map(arr, f) {
+     function iter(arr, accumulated) {
+          if (len(arr) == 0) {
+               return accumulated
+          } else {
+               return iter(rest(arr), push(accumulated, f(first(arr))));
+          }
+     };
+     iter(arr, []);
+};
+
+var a = [1, 2, 3, 4];
+function double(x) {
+    return x * 2;
+}
+
+var ok = assert("Array Map -> Reduce", function () {
+    var doublesResult = map(a, double);
+
+    if (doublesResult[0] != 2 && doublesResult[0] != 4 && doublesResult[0] != 6 && doublesResult[0] != 8) {
+        return false;
+    }
+
+    return true;
+
+});
+
+// ========== MAP FILTER ==============
+
+function filter(arr, f) {
+     function iter(arr, accumulated) {
+          if (len(arr) == 0) {
+               return accumulated
+          } else {
+               var filter = f(first(arr));
+               if (filter) {
+                   return iter(rest(arr), push(accumulated, first(arr)));
+               }
+               return iter(rest(arr), accumulated, first(arr));
+          }
+     };
+     iter(arr, []);
+};
+
+var ok = assert("Array Filter -> >= 3", function () {
+    var doublesResult = filter(a, function(item) {
+        return item >= 3;
+    });
+
+    if (doublesResult[0] != 3 && doublesResult[1] != 4 ) {
+        return false;
+    }
+
+    return true;
+
+});

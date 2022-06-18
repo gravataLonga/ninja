@@ -9,25 +9,26 @@ func TestBuiltinFunctions(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
+		nullable bool
 	}{
-		{`len("")`, 0},
-		{`len("four")`, 4},
-		{`len("hello world")`, 11},
-		{`len(1)`, "argument to `len` not supported, got INTEGER"},
-		{`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
-		{`len([1, 2, 3])`, 3},
-		{`len([])`, 0},
-		{`puts("hello", "world!")`, nil},
-		{`first([1, 2, 3])`, 1},
-		{`first([])`, nil},
-		{`first(1)`, "argument to `first` must be ARRAY, got INTEGER"},
-		{`last([1, 2, 3])`, 3},
-		{`last([])`, nil},
-		{`last(1)`, "argument to `last` must be ARRAY, got INTEGER"},
-		{`rest([1, 2, 3])`, []int{2, 3}},
-		{`rest([])`, nil},
-		{`push([], 1)`, []int{1}},
-		{`push(1, 1)`, "argument to `push` must be ARRAY, got INTEGER"},
+		{`len("")`, 0, false},
+		{`len("four")`, 4, false},
+		{`len("hello world")`, 11, false},
+		{`len(1)`, "argument to `len` not supported, got INTEGER", false},
+		{`len("one", "two")`, "wrong number of arguments. got=2, want=1", false},
+		{`len([1, 2, 3])`, 3, false},
+		{`len([])`, 0, false},
+		{`puts("hello", "world!")`, nil, true},
+		{`first([1, 2, 3])`, 1, false},
+		{`first([])`, nil, false},
+		{`first(1)`, "argument to `first` must be ARRAY, got INTEGER", false},
+		{`last([1, 2, 3])`, 3, false},
+		{`last([])`, nil, false},
+		{`last(1)`, "argument to `last` must be ARRAY, got INTEGER", false},
+		{`rest([1, 2, 3])`, []int{2, 3}, false},
+		{`rest([])`, nil, false},
+		{`push([], 1)`, []int{1}, false},
+		{`push(1, 1)`, "argument to `push` must be ARRAY, got INTEGER", false},
 	}
 
 	for _, tt := range tests {
@@ -37,7 +38,15 @@ func TestBuiltinFunctions(t *testing.T) {
 		case int:
 			testIntegerObject(t, evaluated, int64(expected))
 		case nil:
+			if tt.nullable {
+				if evaluated != nil {
+					t.Errorf("Test must return nil. Got: %T", evaluated)
+				}
+
+				continue
+			}
 			testNullObject(t, evaluated)
+
 		case string:
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

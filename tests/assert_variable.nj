@@ -1,0 +1,32 @@
+var a = 0;
+
+var ok = assert("Assign var a = 0", function() {
+    var a = 0;
+    return a == 0;
+});
+
+
+var ok = assert("Reassign var a = 0", function() {
+    var a = 0;
+    a = 1;
+    return a == 1;
+});
+
+var tests = [
+    {"expression": 1 + 1, "total": 2, "name": "(1 + 1)"},
+    {"expression": 1 + 2 * 1, "total": 3, "name": "(1 + 2 * 1)"},
+    {"expression": 2 / 2 * 1, "total": 1, "name": "(2 / 2 * 1)"},
+    {"expression": 2 / 2 * 1 - 20, "total": -19, "name": "(2 / 2 * 1 - 20)"}
+];
+
+for (var t = 0; t <= len(tests) - 1; t = t + 1) {
+    var expression = tests[t]["expression"];
+    var total = tests[t]["total"];
+    var name = tests[t]["name"];
+
+    if (expression != total) {
+        var ok = assert("Operations expected: " + total + " Got: " + expression + " in " + name, assertFalse);
+    } else {
+        var ok = assert("Operations " + name, assertTrue);
+    }
+}
