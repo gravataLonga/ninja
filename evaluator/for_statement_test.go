@@ -9,7 +9,7 @@ func TestForStatement(t *testing.T) {
 	}{
 		{
 			`for(var i = 0; i <= 1; i = i + 1) { i; }`,
-			2,
+			1,
 		},
 		{
 			`for(var i = 0; i > 10; i = i + 1) { i; }`,
@@ -17,11 +17,15 @@ func TestForStatement(t *testing.T) {
 		},
 		{
 			`var i = 0; for(; i <= 1; i = i + 1) { i; }`,
-			2,
+			1,
 		},
 		{
 			`for(;;) { return 1; }`,
 			1,
+		},
+		{
+			`var total = 0; var arr = [1, 1]; for(var i = 0; i <= len(arr) -1; i = i + 1) { total = total + arr[i]; }; total;`,
+			2,
 		},
 	}
 

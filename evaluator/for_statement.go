@@ -18,13 +18,13 @@ func evalForStatement(
 
 	condition := evalConditionForLoop(node.Condition, env)
 	for object.IsTruthy(condition) {
-		if node.Iteration != nil {
-			Eval(node.Iteration, env)
-		}
 
 		result = Eval(node.Body, env)
 		if result != nil && (result.Type() == object.RETURN_VALUE_OBJ) {
 			return result
+		}
+		if node.Iteration != nil {
+			Eval(node.Iteration, env)
 		}
 		condition = evalConditionForLoop(node.Condition, env)
 	}
