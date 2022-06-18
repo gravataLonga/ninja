@@ -73,7 +73,7 @@ func bPuts(args ...Object) Object {
 		fmt.Println(arg.Inspect())
 	}
 
-	return NULL
+	return nil
 }
 
 func bLast(args ...Object) Object {
