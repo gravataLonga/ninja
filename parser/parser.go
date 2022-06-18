@@ -11,6 +11,7 @@ import (
 const (
 	_ int = iota
 	LOWEST
+	ASSIGN
 	LOGICAL      // || and &&
 	EQUALS       // ==
 	LESS_GREATER // > or <
@@ -42,6 +43,7 @@ type (
 )
 
 var precedences = map[token.TokenType]int{
+	token.ASSIGN:   ASSIGN,
 	token.EQ:       EQUALS,
 	token.NEQ:      EQUALS,
 	token.LT:       LESS_GREATER,
@@ -83,10 +85,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
 	p.registerPrefix(token.FOR, p.parseLoopLiteral)
-	p.registerPrefix(token.ASSIGN, p.parsePrefixExpression)
 	p.registerPrefix(token.IMPORT, p.parseImport)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
+	p.registerInfix(token.ASSIGN, p.parseInfixAssignExpression)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
 	p.registerInfix(token.SLASH, p.parseInfixExpression)

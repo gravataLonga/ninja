@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestLetStatements(t *testing.T) {
+func TestVarStatements(t *testing.T) {
 	tests := []struct {
 		input              string
 		expectedIdentifier string
@@ -44,7 +44,7 @@ func TestLetStatements(t *testing.T) {
 	}
 }
 
-func TestReassignmentStatement(t *testing.T) {
+func TestAssignExpression(t *testing.T) {
 	l := lexer.New(`var a = a + 1; a = a + 1; a;`)
 	p := New(l)
 	program := p.ParseProgram()
@@ -55,13 +55,13 @@ func TestReassignmentStatement(t *testing.T) {
 	}
 
 	stmt := program.Statements[1]
-	if !testReassingLetStatement(t, stmt, "a") {
+	if !testAssingStatement(t, stmt, "a") {
 		return
 	}
 
 }
 
-func TestLetStatementErrors(t *testing.T) {
+func TestVarStatementErrors(t *testing.T) {
 	input := `
 var x true;
 var = "123";
@@ -91,6 +91,52 @@ var var;
 		err := errors[i]
 		if err != tt.expectedError {
 			t.Errorf("Error \"%s\" got=%q", tt.expectedError, err)
+		}
+	}
+}
+
+func TestIllegalAssignmentsErrors(t *testing.T) {
+	tests := []struct {
+		input         string
+		expectedError string
+	}{
+		{
+			`"ola" = "ola"`,
+			`illegal "ola" assignment to "ola"`,
+		},
+		{
+			`function() {} = "ola"`,
+			`illegal "ola" assignment to "function"`,
+		},
+		{
+			`1 = function() {}`,
+			`illegal "function" assignment to "1"`,
+		},
+		{
+			`{} = 1`,
+			`illegal "1" assignment to "{"`,
+		},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+
+		program := p.ParseProgram()
+
+		if program == nil {
+			t.Fatalf("ParseProgram() returned nil")
+		}
+
+		errors := p.Errors()
+
+		if len(errors) <= 0 {
+			t.Errorf("Program don't produce any error %s", tt.input)
+			continue
+		}
+
+		if tt.expectedError != errors[0] {
+			t.Errorf("TestIllegalAssignmentsErrors expected \"%s\" error. Got: \"%s\"", tt.expectedError, errors[0])
 		}
 	}
 }
@@ -637,6 +683,27 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{
 			"a && b || c",
 			"((a && b) || c)",
+		},
+		{
+			`var a = a + 1`,
+			`var a = (a + 1);`,
+		},
+		{
+			`var a = a + b[0]`,
+			`var a = (a + (b[0]));`,
+		},
+		{
+			`var a = a + b[0] * 1`,
+			`var a = (a + ((b[0]) * 1));`,
+		},
+		{
+			`a = a + b[0]`,
+			`a = (a + (b[0]));`,
+		},
+
+		{
+			`a[0] = 1 + 1`,
+			`(a[0]) = (1 + 1);`,
 		},
 	}
 
@@ -1263,24 +1330,30 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	return true
 }
 
-func testReassingLetStatement(t *testing.T, s ast.Statement, name string) bool {
+func testAssingStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != name {
 		t.Errorf("s.TokenLiteral not 'var'. got=%q", s.TokenLiteral())
 		return false
 	}
 
-	letStmt, ok := s.(*ast.ReassignmentVarStatement)
+	letStmt, ok := s.(*ast.AssignStatement)
 	if !ok {
-		t.Errorf("s not *ast.ReassignmentVarStatement. got=%T", s)
+		t.Errorf("s not *ast.AssignStatement. got=%T", s)
 		return false
 	}
 
-	if letStmt.Name.Value != name {
-		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, letStmt.Name.Value)
+	ident, ok := letStmt.Name.(*ast.Identifier)
+	if !ok {
+		t.Errorf("letStmt.Name is not type of Identifier. got=%t", letStmt.Name)
 		return false
 	}
 
-	if letStmt.Name.TokenLiteral() != name {
+	if ident.Value != name {
+		t.Errorf("letStmt.Name.Value not '%s'. got=%s", name, ident.Value)
+		return false
+	}
+
+	if ident.TokenLiteral() != name {
 		t.Errorf("s.Name not '%s'. got=%s", name, letStmt.Name)
 		return false
 	}

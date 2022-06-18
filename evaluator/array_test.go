@@ -82,6 +82,45 @@ func TestArrayIndexExpressions(t *testing.T) {
 	}
 }
 
+func TestArrayLiteralsAssing(t *testing.T) {
+	tests := []struct {
+		input            string
+		expected         int64
+		expectedElements int
+	}{
+		{
+			`var a = []; a[0] = 1; a;`,
+			1,
+			1,
+		},
+		{
+			`var a = [0]; a[0] = 2; a;`,
+			2,
+			1,
+		},
+		{
+			`var a = [0]; a[1] = 2; a;`,
+			0,
+			2,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		result, ok := evaluated.(*object.Array)
+		if !ok {
+			t.Fatalf("Eval didn't return Array. got=%T (%+v)", evaluated, evaluated)
+		}
+
+		if len(result.Elements) != tt.expectedElements {
+			t.Fatalf("Array has wrong num of elements, expected %d. got=%d", tt.expectedElements, len(result.Elements))
+		}
+
+		testIntegerObject(t, result.Elements[0], tt.expected)
+	}
+
+}
+
 func TestEvalArrayExpression(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -137,6 +176,14 @@ func TestErrorArrayHandling(t *testing.T) {
 		{
 			"[] >= [];",
 			"unknown operator: ARRAY >= ARRAY",
+		},
+		{
+			`var a = []; a[1] = 2;`,
+			`index out of range, got 1 but array has only 0 elements`,
+		},
+		{
+			`var a = []; a[-1] = 2;`,
+			`index out of range, got -1 not positive index`,
 		},
 	}
 

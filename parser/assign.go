@@ -30,9 +30,9 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	return stmt
 }
 
-func (p *Parser) parseAssignStatement() *ast.ReassignmentVarStatement {
+func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 
-	stmt := &ast.ReassignmentVarStatement{Token: p.curToken}
+	stmt := &ast.AssignStatement{Token: p.curToken}
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.ASSIGN) {
@@ -46,5 +46,24 @@ func (p *Parser) parseAssignStatement() *ast.ReassignmentVarStatement {
 		p.nextToken()
 	}
 
+	return stmt
+}
+
+func (p *Parser) parseInfixAssignExpression(left ast.Expression) ast.Expression {
+	stmt := &ast.AssignStatement{Token: p.curToken}
+	if n, ok := left.(*ast.Identifier); ok {
+		stmt.Name = n
+	} else if n, ok := left.(*ast.IndexExpression); ok {
+		stmt.Name = n
+	} else {
+		p.nextToken()
+		stmt.Value = p.parseExpression(LOWEST)
+
+		p.newError("illegal \"%s\" assignment to \"%s\"", stmt.Value.TokenLiteral(), left.TokenLiteral())
+		return nil
+	}
+
+	p.nextToken()
+	stmt.Value = p.parseExpression(LOWEST)
 	return stmt
 }

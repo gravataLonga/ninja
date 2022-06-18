@@ -57,6 +57,10 @@ var h = {"me":"Jonathan Fontes","age":1,"likes":["php","golang","ninja"]}
 var i = a < b;
 var j = true;
 var k = !j;
+
+g[0] = 10;
+g[4] = "new value"; // it will append to array.  
+h["other"] = true;
 ```  
 
 It's possible to reassign variable for example:  

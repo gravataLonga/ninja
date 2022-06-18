@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestLetStatements(t *testing.T) {
+func TestVarStatements(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
@@ -29,6 +29,8 @@ func TestLetStatements(t *testing.T) {
 		{"var a = 5; var b = 10; a = a + b * a; a", 55},
 		{"var a = 10; a = \"hello\"; a;", "hello"},
 		{"var a = 23.3; a;", 23.3},
+		{"var a = {}; a[0] = true; a[0];", true},
+		{"var a = [false]; a[0] = true; a[0];", true},
 		// {"var a = 5; a++;", 5},
 		// {"var a = 5; a--;", 5},
 	}
@@ -75,10 +77,6 @@ func TestErrorIdentifierHandling(t *testing.T) {
 			`"Hello" <= "World"`,
 			"unknown operator: STRING <= STRING",
 		},
-		{
-			`"Hello" = "World"`,
-			"unknown operator: =STRING",
-		},
 	}
 
 	for _, tt := range tests {
@@ -86,8 +84,7 @@ func TestErrorIdentifierHandling(t *testing.T) {
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)",
-				evaluated, evaluated)
+			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
 			continue
 		}
 

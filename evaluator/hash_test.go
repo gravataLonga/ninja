@@ -45,6 +45,36 @@ func TestHashLiterals(t *testing.T) {
 	}
 }
 
+func TestHashLiteralsAssing(t *testing.T) {
+	input := `var a = {};
+a["hello"] = "world";
+a;
+`
+
+	evaluated := testEval(input)
+	result, ok := evaluated.(*object.Hash)
+	if !ok {
+		t.Fatalf("Eval didn't return Hash. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	expected := map[object.HashKey]string{
+		(&object.String{Value: "hello"}).HashKey(): "world",
+	}
+
+	if len(result.Pairs) != len(expected) {
+		t.Fatalf("Hash has wrong num of pairs. got=%d", len(result.Pairs))
+	}
+
+	for expectedKey, expectedValue := range expected {
+		pair, ok := result.Pairs[expectedKey]
+		if !ok {
+			t.Errorf("no pair for given key in Pairs")
+		}
+
+		testStringObject(t, pair.Value, expectedValue)
+	}
+}
+
 func TestHashIndexExpressions(t *testing.T) {
 	tests := []struct {
 		input    string

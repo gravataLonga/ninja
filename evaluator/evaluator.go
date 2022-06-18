@@ -33,8 +33,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		env.Set(node.Name.Value, val)
 
-	case *ast.ReassignmentVarStatement:
-		return evalReassignmentVarStatement(node, env)
+	case *ast.AssignStatement:
+		return evalAssignStatement(node, env)
 		// PrefixExpression
 	case *ast.PrefixExpression:
 		right := Eval(node.Right, env)
@@ -203,7 +203,7 @@ func evalExpressions(
 	exps []ast.Expression,
 	env *object.Environment,
 ) []object.Object {
-	var result []object.Object
+	var result []object.Object = []object.Object{}
 
 	for _, e := range exps {
 		evaluated := Eval(e, env)

@@ -1,18 +1,20 @@
- - [ ] Cant add float to array / object
- - [ ] Add testing to each one of object
- - [ ] Split Parser file into small individual pieces
- - [ ] When give an error, it will nice to give line and character
- - [ ] Import other files
- - [ ] Test main.go
- - [ ] Adding ternary operator
- - [ ] Remove duplicate code
- - [ ] Better CLI interface
  - [ ] Support parser for file ./ninja my-script.nj
+ - [ ] Better CLI interface
+ - [ ] Test main.go
+ - [ ] Delete key from HASH
+ - [x] Add key to HASH
+ - [ ] Add value by index on array
+ - [ ] After build create a ninja file, run it in cli and test output if is equal
  - [ ] Better Documentation https://vercel.com/new
+ - [x] Cant add float to array / object
+ - [ ] Add testing to each one of object
+ - [x] Split Parser file into small individual pieces
+ - [ ] When give an error, it will nice to give line and character
+ - [x] Import other files
+ - [ ] Adding ternary operator
+ - [x] Remove duplicate code
  - [ ] Better way to include builtin functions
  - [ ] Support for md5, sha1, base64
- - [ ] Delete key from HASH
- - [ ] Add key to HASH
  - [ ] When using INDEX to get HASH need to get a better message if index not exists.
  - [ ] Add assertions for errors on each "happy path" testing on Evaluator
  - [ ] Compare two string if they are equal or different
