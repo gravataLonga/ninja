@@ -28,7 +28,7 @@ func TestErrorImportHandling(t *testing.T) {
 	}{
 		{
 			`import "non-exists-file"`,
-			"IO Error: error reading file '&{non-exists-file}': open non-exists-file: no such file or directory",
+			"IO Error: error reading file 'non-exists-file': open non-exists-file: no such file or directory",
 		},
 		{
 			`import "../fixtures/stub-with-error.nj"`,

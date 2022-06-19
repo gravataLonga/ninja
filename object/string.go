@@ -3,14 +3,19 @@ package object
 import "hash/fnv"
 
 type String struct {
-	Value string
+	Value        string
+	cacheHashKey uint64
 }
 
 func (s *String) Type() ObjectType { return STRING_OBJ }
 func (s *String) Inspect() string  { return s.Value }
 
 func (s *String) HashKey() HashKey {
-	h := fnv.New64a()
-	h.Write([]byte(s.Value))
-	return HashKey{Type: s.Type(), Value: h.Sum64()}
+	if s.cacheHashKey <= 0 {
+		h := fnv.New64a()
+		h.Write([]byte(s.Value))
+		s.cacheHashKey = h.Sum64()
+	}
+
+	return HashKey{Type: s.Type(), Value: s.cacheHashKey}
 }

@@ -4,12 +4,12 @@ echo "======================="
 echo "\n>>> SCRIPTING FIB(5);"
 
 echo "### PHP"
-time php ./tests/fib.php 5
+time php ./benchmark/fib.php 5
 echo ""
 
 
 echo "### GO"
-time ./tests/fib-go 5
+time ./benchmark/fib-go 5
 echo ""
 
 
@@ -20,11 +20,11 @@ echo "======================="
 echo "\n>>> SCRIPTING FIB(10);"
 
 echo "### PHP"
-time php ./tests/fib.php 10
+time php ./benchmark/fib.php 10
 echo ""
 
 echo "### GO"
-time ./tests/fib-go 10
+time ./benchmark/fib-go 10
 echo ""
 
 echo "### NINJA"
@@ -34,13 +34,43 @@ echo "======================="
 echo "\n>>> SCRIPTING FIB(20);"
 
 echo "### PHP"
-time php ./tests/fib.php 20
+time php ./benchmark/fib.php 20
 echo ""
 
 
 echo "### GO"
-time ./tests/fib-go 20
+time ./benchmark/fib-go 20
 echo ""
 
 echo "### NINJA"
 time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(20)"
+
+echo "======================="
+echo "\n>>> SCRIPTING FIB(25);"
+
+echo "### PHP"
+time php ./benchmark/fib.php 25
+echo ""
+
+
+echo "### GO"
+time ./benchmark/fib-go 25
+echo ""
+
+echo "### NINJA"
+time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(25)"
+
+echo "======================="
+echo "\n>>> SCRIPTING FIB(30);"
+
+echo "### PHP"
+time php ./benchmark/fib.php 30
+echo ""
+
+
+echo "### GO"
+time ./benchmark/fib-go 30
+echo ""
+
+echo "### NINJA"
+time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(30)"

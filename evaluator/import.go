@@ -25,7 +25,7 @@ func evalImport(node ast.Node, env *object.Environment) object.Object {
 	b, err := ioutil.ReadFile(filename.Value)
 
 	if err != nil {
-		return object.NewErrorFormat("IO Error: error reading file '%s': %s", filename, err)
+		return object.NewErrorFormat("IO Error: error reading file '%s': %s", filename.Value, err)
 	}
 
 	l := lexer.New(string(b))
