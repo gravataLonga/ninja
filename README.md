@@ -292,7 +292,7 @@ for(var i = 0; i <= len(a); i = i + 1) {
 
 ```
 var true false function
-return if else for
+return if else for import  
 ```
 
 ## Tricks  
