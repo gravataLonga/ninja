@@ -17,4 +17,4 @@ tasks:
       - CGO_ENABLED=0 GOOS=linux go build -o ninja-linux
       - go build -o ninja-osx
       - git add .
-      - git commit -m "New Release"  
+      - git commit -m "New Release"

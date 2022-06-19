@@ -35,6 +35,11 @@
 Download binary for your OS  
 Execute like normal binary  
 
+Executing a file  
+`./ninja name-of-file.nj`  
+
+In Repl Mode:  
+`./ninja`  
 
 # Syntax  
 
@@ -185,6 +190,14 @@ puts(rest(a)); // print [2, 3, 4]; (all but not first)
 var a = [1, 2, 3, 4];
 puts(push(a, 5)); // print [1, 2, 3, 4, 5];
 ```
+
+## Import  
+
+You can import another ninja files.  
+
+```
+import "testing.nj";
+```  
 
 ## Operators && Logics Operators  
 
@@ -338,6 +351,10 @@ function sum(arr) {
 puts([1, 2, 3, 4]); // prints 10  
 
 ```
+
+## Advance usage  
+
+Check at tests for more examples.  
 
 ## Tests  
 
