@@ -2,7 +2,6 @@ package parser
 
 import (
 	"fmt"
-	"math"
 	"ninja/ast"
 	"ninja/lexer"
 	"ninja/token"
@@ -135,17 +134,12 @@ func (p *Parser) ParseProgram() *ast.Program {
 }
 
 func (p *Parser) newError(format string, a ...interface{}) {
-	p.errors = append(p.errors, fmt.Sprintf(format, a...))
+	s := fmt.Sprintf(format, a...)
+	p.errors = append(p.errors, s)
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 	p.newError("no prefix parse function for %s found", t)
-}
-
-// @todo refactor
-func roundFloat(val float64, precision uint) float64 {
-	ratio := math.Pow(10, float64(precision))
-	return math.Round(val*ratio) / ratio
 }
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
@@ -180,7 +174,7 @@ func (p *Parser) expectPeek(tok token.TokenType) bool {
 func (p *Parser) peekError(t ...token.TokenType) {
 
 	if len(t) == 1 {
-		p.newError("expected next token to be %s, got %s instead", t, p.peekToken.Type)
+		p.newError("expected next token to be %s, got %s instead. %s", t[0], p.peekToken.Type, p.l.FormatLineCharacter())
 		return
 	}
 
@@ -189,7 +183,7 @@ func (p *Parser) peekError(t ...token.TokenType) {
 		listTokens += listTokens + " " + fmt.Sprintf("%s", i)
 	}
 
-	p.newError("expected next token to be %s, got %s instead", listTokens, p.peekToken.Type)
+	p.newError("expected next token to be %s, got %s instead. %s", listTokens, p.peekToken.Type, p.l.FormatLineCharacter())
 }
 
 func (p *Parser) peekPrecedence() int {

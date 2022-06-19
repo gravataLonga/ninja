@@ -9,6 +9,10 @@ type Token struct {
 	Literal string // be a string don't have same performance as using int or byte
 }
 
+func (t *TokenType) String() string {
+	return string(*t)
+}
+
 const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"

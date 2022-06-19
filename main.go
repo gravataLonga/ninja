@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	flag "github.com/spf13/pflag"
 	"io"
@@ -13,11 +14,14 @@ import (
 	"os"
 )
 
+//go:embed version.txt
+var version string
+
 func main() {
 	exec := flag.StringP("exec", "e", "", "Runs the given code.")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: ninja [flags] [program file] [arguments]\n\nAvailable flags:\n")
+		fmt.Fprintf(os.Stderr, "Version: %s. \nUsage: ninja [flags] [program file] [arguments]\n\nAvailable flags:\n", version)
 
 		flag.PrintDefaults()
 	}
@@ -44,6 +48,7 @@ func main() {
 func runRepl(in io.Reader, out io.Writer) {
 	replProgram := repl.NewRepel(out, in)
 	replProgram.Verbose(true)
+	replProgram.Version(version)
 
 	replProgram.Start()
 }

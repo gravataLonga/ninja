@@ -43,7 +43,7 @@ for (index in statusCode) {
 	var item = statusCode[index];
 }
 
------------------ TODO
+-----------------
 * * * * * * * * *
 
 
@@ -71,6 +71,10 @@ class testing {
 
 var a = new testing();
 a.call();
+
+async {
+
+}
 
 * * * * * *
 

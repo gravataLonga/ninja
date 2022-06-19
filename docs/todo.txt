@@ -1,6 +1,6 @@
  - [x] Support parser for file ./ninja my-script.nj
- - [ ] When give an error, it will nice to give line and character
- - [ ] Better CLI interface
+ - [x] When give an error, it will nice to give line and character
+ - [x] Better CLI interface
  - [ ] Get one char from string. <statement>[<index>]
  - [ ] Test main.go
  - [ ] Delete key from HASH

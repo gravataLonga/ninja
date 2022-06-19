@@ -1,6 +1,9 @@
 package evaluator
 
-import "ninja/object"
+import (
+	"ninja/ast"
+	"ninja/object"
+)
 
 func evalFloatInfixExpression(
 	operator string,
@@ -11,13 +14,13 @@ func evalFloatInfixExpression(
 
 	switch operator {
 	case "+":
-		return &object.Float{Value: roundFloat(leftVal+rightVal, 10)}
+		return &object.Float{Value: ast.FloatSmall(leftVal+rightVal, 10)}
 	case "-":
-		return &object.Float{Value: roundFloat(leftVal-rightVal, 10)}
+		return &object.Float{Value: ast.FloatSmall(leftVal-rightVal, 10)}
 	case "*":
-		return &object.Float{Value: roundFloat(leftVal*rightVal, 10)}
+		return &object.Float{Value: ast.FloatSmall(leftVal*rightVal, 10)}
 	case "/":
-		return &object.Float{Value: roundFloat(leftVal/rightVal, 10)}
+		return &object.Float{Value: ast.FloatSmall(leftVal/rightVal, 10)}
 	case "<":
 		return nativeBoolToBooleanObject(leftVal < rightVal)
 	case ">":

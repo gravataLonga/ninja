@@ -1,28 +1,48 @@
 package lexer
 
-import "ninja/token"
+import (
+	"fmt"
+	"ninja/token"
+)
 
 type Lexer struct {
 	input        string
 	position     int
 	readPosition int
 	ch           byte
+
+	lineNumber              int
+	characterPositionInLine int
 }
 
 func New(input string) *Lexer {
-	l := &Lexer{input: input}
+	l := &Lexer{input: input, lineNumber: 0}
 	l.readChar()
 	return l
 }
 
 func (l *Lexer) readChar() {
+
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
 	} else {
 		l.ch = l.input[l.readPosition]
 	}
+
 	l.position = l.readPosition
 	l.readPosition += 1
+
+	l.keepTrackLineAndCharPosition()
+
+}
+
+func (l *Lexer) keepTrackLineAndCharPosition() {
+	if l.ch == '\n' {
+		l.lineNumber += 1
+		l.characterPositionInLine = 0
+	} else {
+		l.characterPositionInLine += 1
+	}
 }
 
 func (l *Lexer) NextToken() token.Token {
@@ -33,8 +53,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.EQ, Literal: literal}
+			tok = newTokenFromString(token.EQ, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.ASSIGN, l.ch)
 		}
@@ -64,8 +83,7 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		ch := l.ch
 		l.readChar()
-		literal := string(ch) + string(l.ch)
-		tok = token.Token{Type: token.AND, Literal: literal}
+		tok = newTokenFromString(token.AND, string(ch)+string(l.ch))
 	case '|':
 		if l.peekChar() != '|' {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -73,14 +91,12 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		ch := l.ch
 		l.readChar()
-		literal := string(ch) + string(l.ch)
-		tok = token.Token{Type: token.OR, Literal: literal}
+		tok = newTokenFromString(token.OR, string(ch)+string(l.ch))
 	case '-':
 		if l.peekChar() == '-' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.DECRE, Literal: literal}
+			tok = newTokenFromString(token.DECRE, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.MINUS, l.ch)
 		}
@@ -88,8 +104,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '+' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.INCRE, Literal: literal}
+			tok = newTokenFromString(token.INCRE, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.PLUS, l.ch)
 		}
@@ -97,8 +112,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.GTE, Literal: literal}
+			tok = newTokenFromString(token.GTE, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.GT, l.ch)
 		}
@@ -107,8 +121,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.LTE, Literal: literal}
+			tok = newTokenFromString(token.LTE, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.LT, l.ch)
 		}
@@ -117,8 +130,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			literal := string(ch) + string(l.ch)
-			tok = token.Token{Type: token.NEQ, Literal: literal}
+			tok = newTokenFromString(token.NEQ, string(ch)+string(l.ch))
 		} else {
 			tok = newToken(token.BANG, l.ch)
 		}
@@ -160,8 +172,16 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
+func (l *Lexer) FormatLineCharacter() string {
+	return fmt.Sprintf("[line: %d, character: %d]", l.lineNumber+1, l.characterPositionInLine)
+}
+
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
+}
+
+func newTokenFromString(tokenType token.TokenType, ch string) token.Token {
+	return token.Token{Type: tokenType, Literal: ch}
 }
 
 func isLetter(ch byte) bool {
@@ -193,24 +213,17 @@ func (l *Lexer) skipSingleLineComment() {
 	for l.ch != '\n' && l.ch != 0 {
 		l.readChar()
 	}
+
 	l.skipWhitespace()
 }
 
 func (l *Lexer) skipMultiLineComment() {
-	endFound := false
 
-	for !endFound {
-		if l.ch == 0 {
-			endFound = true
-		}
-
-		if l.ch == '*' && l.peekChar() == '/' {
-			endFound = true
-			l.readChar()
-		}
-
+	for !(l.ch == '*' && l.peekChar() == '/') || l.ch == 0 {
 		l.readChar()
 	}
+	l.readChar() // "*"
+	l.readChar() // "/"
 
 	l.skipWhitespace()
 }

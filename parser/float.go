@@ -14,6 +14,6 @@ func (p *Parser) parseFloatLiteral() ast.Expression {
 		return nil
 	}
 
-	lit.Value = roundFloat(value, 10)
+	lit.Value = ast.FloatSmall(value, 10)
 	return lit
 }

@@ -32,7 +32,7 @@ func TestErrorImportHandling(t *testing.T) {
 		},
 		{
 			`import "../fixtures/stub-with-error.nj"`,
-			"../fixtures/stub-with-error.nj: expected next token to be [(], got EOF instead",
+			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF instead. [line: 1, character: 14]",
 		},
 	}
 

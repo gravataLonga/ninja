@@ -265,3 +265,66 @@ import "testing.mo"
 		}
 	}
 }
+
+func TestLexer_KeepTrackPosition(t *testing.T) {
+	// not we are looking by identifier "a"
+	tests := []struct {
+		input        string
+		linePosition int
+		charPosition int
+		expected     string
+	}{
+		{
+			`var a = 0;`,
+			0,
+			4,
+			"[line: 1, character: 4]",
+		},
+		{
+			`
+var b = 0;
+var a = 0;`,
+			2,
+			4,
+			"[line: 3, character: 4]",
+		}, {
+			`
+var b = 0;
+/*
+Hello World
+*/
+var a = 0;`,
+			5,
+			4,
+			"[line: 6, character: 4]",
+		},
+	}
+
+	for _, tt := range tests {
+		l := New(tt.input)
+		for {
+			curToken := l.NextToken()
+			if l.peekChar() == 'a' {
+				break
+			}
+
+			if curToken.Type == token.EOF {
+				t.Fatalf("Unable to find token a. Got: EOF")
+				break
+			}
+		}
+
+		if tt.linePosition != l.lineNumber {
+			t.Errorf("Wrong line, expected %d. Got: %d", tt.linePosition, l.lineNumber)
+		}
+
+		if tt.charPosition != l.characterPositionInLine {
+			t.Errorf("Wrong line, expected %d. Got: %d", tt.charPosition, l.characterPositionInLine)
+		}
+
+		if tt.expected != l.FormatLineCharacter() {
+			t.Errorf("l.formatLineCharacter Expected %s. Got: %s", tt.expected, l.FormatLineCharacter())
+		}
+
+	}
+}

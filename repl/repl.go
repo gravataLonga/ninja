@@ -8,13 +8,14 @@ import (
 	"ninja/object"
 	"ninja/parser"
 	"os/user"
+	"strings"
 
 	color "github.com/fatih/color"
 )
 
 const PROMPT = ">> "
 
-const NINJA_LICENSE = "License 2022 - Built by Jonathan Fontes"
+const NINJA_LICENSE = " License 2022 - Built by Jonathan Fontes - Version: %s"
 
 const NINJA_SPLASH = `
 
@@ -39,6 +40,7 @@ type repl struct {
 	scan    *bufio.Scanner
 	env     *object.Environment
 	verbose bool
+	version string
 }
 
 var colorName = map[string]*color.Color{
@@ -57,6 +59,10 @@ func NewRepel(out io.Writer, in io.Reader) *repl {
 
 func (r *repl) Verbose(state bool) {
 	r.verbose = state
+}
+
+func (r *repl) Version(vs string) {
+	r.version = strings.Replace(vs, "\n", "", 0)
 }
 
 func (r *repl) Output(levelOutput string, format string, a ...interface{}) {
@@ -106,7 +112,7 @@ func (r *repl) Start() {
 }
 
 func (r *repl) printSplashLicense() {
-	r.Output("brand", NINJA_LICENSE)
+	r.Output("brand", NINJA_LICENSE, r.version)
 }
 
 func (r *repl) printSplashScreen() {

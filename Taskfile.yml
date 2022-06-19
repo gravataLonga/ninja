@@ -1,0 +1,20 @@
+version: '3'
+
+tasks:
+  version:
+    cmds:
+      - echo $(git tag --list --sort=version:refname 'v*' | tail -1) | sed 's/\n\r/\s/' > version.txt
+
+  tests:
+    cmds:
+      - go test ./... -v
+
+  release:
+    deps: [version, tests]
+    preconditions:
+      - sh: "ASSERTION=$(go run main.go ./tests/assertions.nj); if [[ \"$ASSERTION\" == *\"NOK\"* ]] then exit 1; fi"
+    cmds:
+      - CGO_ENABLED=0 GOOS=linux go build -o ninja-linux
+      - go build -o ninja-osx
+      - git add .
+      - git commit -m "New Release"  
