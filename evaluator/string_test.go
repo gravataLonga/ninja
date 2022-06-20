@@ -118,3 +118,37 @@ func TestErrorStringHandling(t *testing.T) {
 		}
 	}
 }
+
+func TestStringIndexExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`"ola"[0]`,
+			"o",
+		},
+		{
+			`"ola"[2]`,
+			"a",
+		},
+		{
+			`"ola"[3]`,
+			nil,
+		},
+		{
+			`"ola"[-1]`,
+			nil,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+		str, ok := tt.expected.(string)
+		if ok {
+			testStringObject(t, evaluated, string(str))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
