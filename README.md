@@ -66,6 +66,7 @@ var k = !j;
 g[0] = 10;
 g[4] = "new value"; // it will append to array.  
 h["other"] = true;
+"ola"[0] // print o  
 ```  
 
 It's possible to reassign variable for example:  
