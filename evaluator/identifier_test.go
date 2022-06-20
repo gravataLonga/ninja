@@ -36,7 +36,7 @@ func TestVarStatements(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		testObjectLiteral(t, testEval(tt.input), tt.expected)
+		testObjectLiteral(t, testEval(tt.input, t), tt.expected)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestErrorIdentifierHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

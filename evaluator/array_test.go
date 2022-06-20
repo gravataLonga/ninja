@@ -8,7 +8,7 @@ import (
 func TestArrayLiterals(t *testing.T) {
 	input := "[1, 2 * 2, 3 + 3]"
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	result, ok := evaluated.(*object.Array)
 	if !ok {
 		t.Fatalf("object is not Array. got=%T (%+v)", evaluated, evaluated)
@@ -72,7 +72,7 @@ func TestArrayIndexExpressions(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		integer, ok := tt.expected.(int)
 		if ok {
 			testIntegerObject(t, evaluated, int64(integer))
@@ -106,7 +106,7 @@ func TestArrayLiteralsAssing(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		result, ok := evaluated.(*object.Array)
 		if !ok {
 			t.Fatalf("Eval didn't return Array. got=%T (%+v)", evaluated, evaluated)
@@ -143,7 +143,7 @@ func TestEvalArrayExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testObjectLiteral(t, evaluated, tt.expected)
 	}
 }
@@ -188,7 +188,7 @@ func TestErrorArrayHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

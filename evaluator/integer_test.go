@@ -36,7 +36,7 @@ func TestEvalIntegerExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testIntegerObject(t, evaluated, tt.expected)
 	}
 }
@@ -81,7 +81,7 @@ func TestErrorIntegerHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

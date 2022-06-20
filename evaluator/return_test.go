@@ -1,6 +1,9 @@
 package evaluator
 
-import "testing"
+import (
+	"ninja/object"
+	"testing"
+)
 
 func TestReturnStatements(t *testing.T) {
 	tests := []struct {
@@ -8,11 +11,13 @@ func TestReturnStatements(t *testing.T) {
 		expected interface{}
 	}{
 		{"return 20;", 20},
+		{"return;", object.NULL},
 		{"return 20.50;", 20.50},
 		{"return 30; 9;", 30},
 		{"return 8 * 5; 9;", 40},
 		{"9; return 12 * 5; 9;", 60},
 		{"if (10 > 1) { return 10; }", 10},
+		{"if (10 > 1) { return; }", object.NULL},
 		{
 			`
 if (10 > 1) {
@@ -33,6 +38,14 @@ if (10 > 1) {
 		};
 		f(10);`,
 			10,
+		},
+		{
+			`
+		var f = function() {
+		  return;
+		};
+		f();`,
+			object.NULL,
 		},
 		{
 			`
@@ -66,7 +79,7 @@ if (10 > 1) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		integer, ok := tt.expected.(int)
 		float, okFloat := tt.expected.(float64)

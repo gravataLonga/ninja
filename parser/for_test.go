@@ -15,6 +15,7 @@ func TestForStatement(t *testing.T) {
 		block               string
 	}{
 		{input: "for (;;) {}", initialStatement: "", condition: "", iterationExpression: "", block: ""},
+		{input: "for (;;) {return;}", initialStatement: "", condition: "", iterationExpression: "", block: "return ;"},
 		{input: "for (var i = 0;;) {}", initialStatement: "var i = 0;", condition: "", iterationExpression: "", block: ""},
 		{input: "for (var i = 0; i <= 3;) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "", block: ""},
 		{input: "for (var i = 0; i <= 3; var i = i + 1) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: ""},

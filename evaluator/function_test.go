@@ -8,7 +8,7 @@ import (
 func TestFunctionLiteralObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	fn, ok := evaluated.(*object.FunctionLiteral)
 	if !ok {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
@@ -33,7 +33,7 @@ func TestFunctionLiteralObject(t *testing.T) {
 func TestFunctionObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	fn, ok := evaluated.(*object.FunctionLiteral)
 	if !ok {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
@@ -112,7 +112,7 @@ func TestCallFunction(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.expression)
+		evaluated := testEval(tt.expression, t)
 
 		if !testObjectLiteral(t, evaluated, tt.rs) {
 			t.Errorf("TestCallFunction unable to test")
@@ -136,6 +136,6 @@ func TestFunctionApplication(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		testIntegerObject(t, testEval(tt.input), tt.expected)
+		testIntegerObject(t, testEval(tt.input, t), tt.expected)
 	}
 }

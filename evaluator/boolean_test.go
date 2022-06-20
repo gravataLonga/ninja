@@ -60,7 +60,7 @@ func TestEvalBooleanExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testBooleanObject(t, evaluated, tt.expected)
 	}
 }
@@ -145,7 +145,7 @@ if (10 > 1) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

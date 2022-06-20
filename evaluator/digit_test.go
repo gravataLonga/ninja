@@ -40,7 +40,7 @@ func TestEvalDigitExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testObjectLiteral(t, evaluated, tt.expected)
 	}
 }

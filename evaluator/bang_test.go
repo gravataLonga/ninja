@@ -22,7 +22,7 @@ func TestBangOperator(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testBooleanObject(t, evaluated, tt.expected)
 	}
 }

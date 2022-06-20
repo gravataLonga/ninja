@@ -16,7 +16,7 @@ func TestHashLiterals(t *testing.T) {
 		false: 6
 	}`
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	result, ok := evaluated.(*object.Hash)
 	if !ok {
 		t.Fatalf("Eval didn't return Hash. got=%T (%+v)", evaluated, evaluated)
@@ -51,7 +51,7 @@ a["hello"] = "world";
 a;
 `
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	result, ok := evaluated.(*object.Hash)
 	if !ok {
 		t.Fatalf("Eval didn't return Hash. got=%T (%+v)", evaluated, evaluated)
@@ -123,7 +123,7 @@ func TestHashIndexExpressions(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		integer, ok := tt.expected.(int)
 		if ok {
 			testIntegerObject(t, evaluated, int64(integer))
@@ -158,7 +158,7 @@ func TestEvalHashExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testObjectLiteral(t, evaluated, tt.expected)
 	}
 }
@@ -199,7 +199,7 @@ func TestErrorHashHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

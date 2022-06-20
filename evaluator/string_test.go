@@ -8,7 +8,7 @@ import (
 func TestStringLiteral(t *testing.T) {
 	input := `"Hello World!"`
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
@@ -22,7 +22,7 @@ func TestStringLiteral(t *testing.T) {
 func TestStringConcatenation(t *testing.T) {
 	input := `"Hello" + " " + "World!"`
 
-	evaluated := testEval(input)
+	evaluated := testEval(input, t)
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
@@ -52,7 +52,7 @@ func TestEvalStringExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 		testObjectLiteral(t, evaluated, tt.expected)
 	}
 }
@@ -105,7 +105,7 @@ func TestErrorStringHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {

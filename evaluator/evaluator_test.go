@@ -145,11 +145,25 @@ func testObjectLiteral(
 	return false
 }
 
-func testEval(input string) object.Object {
+func checkParserErrors(t *testing.T, p *parser.Parser) {
+	errors := p.Errors()
+	if len(errors) == 0 {
+		return
+	}
+	t.Errorf("parser has %d errors", len(errors))
+	for _, msg := range errors {
+		t.Errorf("parser error: %q", msg)
+	}
+	t.FailNow()
+}
+
+func testEval(input string, t *testing.T) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
 	program := p.ParseProgram()
 	env := object.NewEnvironment()
+
+	checkParserErrors(t, p)
 
 	return Eval(program, env)
 }

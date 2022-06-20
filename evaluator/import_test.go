@@ -16,7 +16,7 @@ func TestImportStatements(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		v := testEval(tt.input)
+		v := testEval(tt.input, t)
 		testObjectLiteral(t, v, tt.expected)
 	}
 }
@@ -37,7 +37,7 @@ func TestErrorImportHandling(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input)
+		evaluated := testEval(tt.input, t)
 
 		errObj, ok := evaluated.(*object.Error)
 		if !ok {
