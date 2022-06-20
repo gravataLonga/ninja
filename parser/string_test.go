@@ -14,11 +14,6 @@ func TestStringExpression(t *testing.T) {
 		{"\"Testing\"", "Testing"},
 		{"\"\"", ""},
 		{"\" \"", " "},
-		{"\"\"[0]", ""},
-		{"\"1\"[0]", "1"},
-		{"\"Hello World\"[:2]", "He"},
-		{"\"Hello World\"[1:2]", "e"},
-		{"\"Hello World\"[1:]", "ello World"},
 	}
 
 	for _, tt := range tests {
