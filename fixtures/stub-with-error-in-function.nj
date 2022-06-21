@@ -1,0 +1,45 @@
+var a = [1, 2, 3];
+
+function assert(name, fn) {
+    var result = fn()
+
+    if (!result) {
+        puts("NOK: " + name);
+        return 0;
+    }
+
+    puts("OK: " + name);
+    return 1;
+}
+
+function filter(arr, f) {
+     function iter(arr, accumulated) {
+          if (len(arr) == 0) {
+               return accumulated
+          } else {
+               var filter = f(first(arr));
+               // this is the error, iter, only take 2 arguments.
+               if (filter) {
+                   return iter(rest(arr), push(accumulated, first(arr)), first(arr));
+               }
+               return iter(rest(arr), accumulated, first(arr));
+          }
+     };
+     iter(arr, []);
+};
+
+var ok = assert("Array Filter -> >= 3", function () {
+
+    var doublesResult = filter(a, function(item) {
+        return item >= 3;
+    });
+
+
+
+    if (doublesResult[0] != 3 && doublesResult[1] != 4 ) {
+        return false;
+    }
+
+    return true;
+
+});

@@ -34,6 +34,10 @@ func TestErrorImportHandling(t *testing.T) {
 			`import "../fixtures/stub-with-error.nj"`,
 			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF instead. [line: 1, character: 14]",
 		},
+		{
+			`import "../fixtures/stub-with-error-in-function.nj"`,
+			"../fixtures/stub-with-error-in-function.nj: Function expected 2 arguments, got 3",
+		},
 	}
 
 	for _, tt := range tests {

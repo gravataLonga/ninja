@@ -34,20 +34,24 @@ function filter(arr, f) {
           if (len(arr) == 0) {
                return accumulated
           } else {
-               var filter = f(first(arr));
+               var value = first(arr);
+               var filter = f(value);
                if (filter) {
-                   return iter(rest(arr), push(accumulated, first(arr)));
+                   return iter(rest(arr), push(accumulated, value));
                }
-               return iter(rest(arr), accumulated, first(arr));
+               return iter(rest(arr), accumulated);
           }
      };
      iter(arr, []);
 };
 
 var ok = assert("Array Filter -> >= 3", function () {
+
     var doublesResult = filter(a, function(item) {
         return item >= 3;
     });
+
+
 
     if (doublesResult[0] != 3 && doublesResult[1] != 4 ) {
         return false;

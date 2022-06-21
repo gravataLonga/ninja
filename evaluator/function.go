@@ -9,10 +9,16 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 
 	switch fn := fn.(type) {
 	case *object.FunctionLiteral:
+		if len(fn.Parameters) != len(args) {
+			return object.NewErrorFormat("Function expected %d arguments, got %d", len(fn.Parameters), len(args))
+		}
 		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 	case *object.Function:
+		if len(fn.Parameters) != len(args) {
+			return object.NewErrorFormat("Function expected %d arguments, got %d", len(fn.Parameters), len(args))
+		}
 		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
@@ -29,6 +35,7 @@ func extendFunctionEnv(
 	fnArguments []*ast.Identifier,
 	args []object.Object,
 ) *object.Environment {
+
 	env := object.NewEnclosedEnvironment(fnEnv)
 
 	for paramIdx, param := range fnArguments {

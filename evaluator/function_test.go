@@ -139,3 +139,27 @@ func TestFunctionApplication(t *testing.T) {
 		testIntegerObject(t, testEval(tt.input, t), tt.expected)
 	}
 }
+
+func TestCallWrongParameters(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{"function (x) {}();", "Function expected 1 arguments, got 0"},
+		{"function () {}(0);", "Function expected 0 arguments, got 1"},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			continue
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}

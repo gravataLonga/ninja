@@ -19,10 +19,16 @@ function assertTrue() {
 };
 
 /*
- Assertion basic variables
+Assertion basic variables
 */
 
 import "./tests/assert_variable.nj";
+
+/*
+ Assertion Index
+*/
+
+import "./tests/assert_index.nj";
 
 
 /*

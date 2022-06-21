@@ -46,6 +46,11 @@ func evalImport(node ast.Node, env *object.Environment) object.Object {
 		return object.NULL
 	}
 
+	errorStr, ok := result.(*object.Error)
+	if ok {
+		return object.NewErrorFormat("%s: %s", filename.Value, errorStr.Message)
+	}
+
 	// Only return if last item of imported file have "return"
 	if len(programs.Statements) > 0 {
 		stmts := programs.Statements

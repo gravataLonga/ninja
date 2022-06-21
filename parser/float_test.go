@@ -13,7 +13,7 @@ func TestFloatLiteralExpression(t *testing.T) {
 0.20;
 1.23;
 1000.34;
-20.00000000012;
+20.012;
 `
 
 	l := lexer.New(input)
@@ -34,7 +34,7 @@ func TestFloatLiteralExpression(t *testing.T) {
 		{0.20, "0.20"},
 		{1.23, "1.23"},
 		{1000.34, "1000.34"},
-		{20.0000000001, "20.00000000012"},
+		{20.012, "20.012"},
 	}
 
 	for i, tt := range tests {

@@ -1,7 +1,6 @@
 package ast
 
 import (
-	"math"
 	"ninja/token"
 )
 
@@ -16,8 +15,7 @@ func (il *FloatLiteral) String() string {
 	return il.Token.Literal
 }
 
-// FloatSmall return always smallest decimal place
-func FloatSmall(f float64, precision uint) float64 {
-	ratio := math.Pow(10, float64(precision))
-	return math.Round(f*ratio) / ratio
+// ToBeDeleted return always smallest decimal place
+func ToBeDeleted(f float64, precision uint) float64 {
+	return f
 }

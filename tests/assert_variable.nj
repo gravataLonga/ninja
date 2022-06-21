@@ -1,11 +1,12 @@
-var a = 0;
 
+// Assing var
 var ok = assert("Assign var a = 0", function() {
     var a = 0;
     return a == 0;
 });
 
 
+// Reassign var
 var ok = assert("Reassign var a = 0", function() {
     var a = 0;
     a = 1;

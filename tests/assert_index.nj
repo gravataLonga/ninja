@@ -1,0 +1,34 @@
+var ok = assert("Index Array", function() {
+    var a = [0, 1, 2, 3];
+    return a[3] == 3;
+});
+
+var ok = assert("Index Array", function() {
+    var a = ["ola", {"k":"hello"}, assertTrue, false, !true, 54.4];
+
+    if (a[0] != "ola") {
+        return false;
+    }
+
+    if (a[1]["k"] != "hello") {
+        return false;
+    }
+
+    if (a[2]() != true) {
+        return false;
+    }
+
+    if (a[3] != false) {
+        return false;
+    }
+
+    if (a[4] != false) {
+        return false;
+    }
+
+    if (a[5] - a[5] > 0.00001) {
+        return false;
+    }
+
+    return true;
+});
