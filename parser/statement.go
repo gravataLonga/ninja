@@ -12,6 +12,11 @@ func (p *Parser) parseStatement() ast.Statement {
 			return p.parseAssignStatement()
 		}
 		return p.parseExpressionStatement()
+	case token.DELETE:
+		if !p.expectPeek(token.IDENT) {
+			return nil
+		}
+		return p.parseDeleteStatement()
 	case token.VAR:
 		return p.parseVarStatement()
 	case token.RETURN:

@@ -61,6 +61,7 @@ const (
 	RETURN           = "RETURN"
 	IMPORT           = "IMPORT"
 	FOR              = "FOR"
+	DELETE           = "DELETE"
 )
 
 var keywords = map[string]TokenType{
@@ -74,6 +75,7 @@ var keywords = map[string]TokenType{
 	"else":     ELSE,
 	"for":      FOR,
 	"import":   IMPORT,
+	"delete":   DELETE,
 }
 
 func LookupIdentifier(ident string) TokenType {

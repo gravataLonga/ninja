@@ -8,4 +8,3 @@ OK: Index Array
 OK: Index Array
 OK: Array Map -> Reduce
 OK: Array Filter -> >= 3
-null

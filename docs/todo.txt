@@ -14,7 +14,7 @@
  - [x] Compare two string if they are equal or different
  - [x] Test if we got two return statement, we only parse first one, other is discard.
  - [x] If program never return nothing it need return nil? or object.NULL ?
- - [ ] If import return nil, need return nil.
+ - [x] If import return nil, need return nil.
  - [ ] Delete key from HASH
  - [ ] Better Documentation https://vercel.com/new
  - [ ] Add testing to each one of object

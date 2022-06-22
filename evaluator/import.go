@@ -43,7 +43,7 @@ func evalImport(node ast.Node, env *object.Environment) object.Object {
 	result := Eval(programs, env)
 
 	if result == nil {
-		return object.NULL
+		return nil
 	}
 
 	errorStr, ok := result.(*object.Error)

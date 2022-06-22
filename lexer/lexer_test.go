@@ -58,6 +58,7 @@ for (var i = 0; i <= len(statusCode); var i = i + 1) {
 
 import "testing.mo"
 
+delete x[0];
 `
 	tests := []struct {
 		expectedType    token.TokenType
@@ -249,6 +250,12 @@ import "testing.mo"
 		{token.INT, "20"},
 		{token.IMPORT, "import"},
 		{token.STRING, "testing.mo"},
+		{token.DELETE, "delete"},
+		{token.IDENT, "x"},
+		{token.LBRACKET, "["},
+		{token.INT, "0"},
+		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
 
 		{token.EOF, ""},
 	}
