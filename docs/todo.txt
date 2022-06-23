@@ -20,7 +20,6 @@ v0.1.x
  - [ ] Bind Location in its AST. (Start: {Filename, Offset, Line, Column}, End: {Filename, Offset, Line, Column})
  - [ ] Documentation (https://github.com/gravataLonga/ninja-documentation)
  - [ ] Add testing to each one of object
- - [ ] Support for md5, sha1, base64
  - [ ] https://github.com/goreleaser/goreleaser-action
  - [ ] Change from "string" to "[]Bytes" string
 
