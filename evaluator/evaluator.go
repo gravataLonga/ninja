@@ -16,7 +16,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
 	case *ast.DeleteStatement:
-		return evalDelete(node, env)
+		return evalDelete(node.Left, Eval(node.Index, env), env)
 	case *ast.Import:
 		return evalImport(node, env)
 

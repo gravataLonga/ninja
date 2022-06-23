@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestParsingDeleteIndexExpressions(t *testing.T) {
+func TestDeleteStatementArrayHashLiteral(t *testing.T) {
 	input := "delete myArray[1]"
 
 	l := lexer.New(input)
@@ -19,16 +19,21 @@ func TestParsingDeleteIndexExpressions(t *testing.T) {
 		t.Fatalf("exp not *ast.DeleteStatement. got=%T", program.Statements[0])
 	}
 
-	index, ok := stmt.Identifier.(*ast.IndexExpression)
+	index, ok := stmt.Index.(*ast.IntegerLiteral)
 	if !ok {
-		t.Fatalf("exp not *ast.DeleteStatement.Identifier is not IndexExpression. got=%T", index)
+		t.Fatalf("exp not *ast.DeleteStatement.Index is not IntegerLiteral. got=%T", stmt.Index)
 	}
 
-	if !testIdentifier(t, index.Left, "myArray") {
+	left, ok := stmt.Left.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("exp not *ast.DeleteStatement.Identifier is not IdentifierLiteral. got=%T", stmt.Left)
+	}
+
+	if !testIdentifier(t, left, "myArray") {
 		return
 	}
 
-	if !testIntegerLiteral(t, index.Index, 1) {
+	if !testIntegerLiteral(t, index, 1) {
 		return
 	}
 }

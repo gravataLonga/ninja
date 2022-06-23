@@ -104,6 +104,13 @@ func (r *repl) Start() {
 		}
 
 		evaluated := evaluator.Eval(program, r.env)
+
+		if _, ok := evaluated.(*object.Error); ok {
+			r.Output("error", evaluated.Inspect())
+			r.Output("program", "\n")
+			continue
+		}
+
 		if evaluated != nil {
 			r.Output("program", evaluated.Inspect())
 			r.Output("program", "\n")

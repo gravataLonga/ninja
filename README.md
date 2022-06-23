@@ -243,13 +243,47 @@ Arithmetics Operators
 var a = [1 + 1, 2, 4, function() {}, ["a", "b"]];  
 ```  
 
-### Object  
+
+#### Delete index
+
+```
+delete a[0];  
+```  
+
+It will keep the order  
+
+#### Add Key
+
+```
+a[5] = "hello";  
+push(a, "anotherKey"); 
+
+// push by empty braces
+a[] = 6;  
+```  
+
+
+
+### Hash  
 
 `var <identifier> = {<expression>:<expression>,....}`
 
 ```
 var a = {"key":"hello","key" + "key":"hello2", "other":["nice", "other"], 2: true};  
 ```  
+
+#### Delete Key    
+
+```
+delete a["key"];
+```  
+
+#### Add Key  
+
+```
+a["testing"] = "hello";  
+```  
+
 
 ## Conditions  
 
@@ -292,7 +326,7 @@ for(var i = 0; i <= len(a); i = i + 1) {
 ## Keywords  
 
 ```
-var true false function
+var true false function delete
 return if else for import  
 ```
 

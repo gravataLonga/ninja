@@ -43,6 +43,42 @@ func TestVarStatements(t *testing.T) {
 	}
 }
 
+func TestAssignStatements(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      interface{}
+	}{
+		{"x = y;", "x", "y"},
+		{"x = 1;", "x", 1},
+		{"x = true;", "x", true},
+		{"x = false;", "x", false},
+		{"x = 13.3;", "x", 13.3},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+				len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
+		if !testAssingStatement(t, stmt, tt.expectedIdentifier) {
+			return
+		}
+
+		val := stmt.(*ast.AssignStatement).Value
+		if !testLiteralExpression(t, val, tt.expectedValue) {
+			return
+		}
+	}
+}
+
 func TestAssignExpression(t *testing.T) {
 	l := lexer.New(`var a = a + 1; a = a + 1; a;`)
 	p := New(l)
