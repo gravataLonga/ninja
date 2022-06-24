@@ -11,8 +11,10 @@ type Token struct {
 	Literal []byte // be a string don't have same performance as using int or byte
 }
 
+// String() is used to transform TokenType int8 in it is string format, for better
+// human debugging.
 func (t TokenType) String() string {
-	return []string{
+	list := [...]string{
 		"ILLEGAL",
 		"EOF",
 		"IDENT",
@@ -56,7 +58,13 @@ func (t TokenType) String() string {
 		"IMPORT",
 		"FOR",
 		"DELETE",
-	}[t]
+	}
+
+	if len(list)-1 < int(t) {
+		return ""
+	}
+
+	return list[t]
 }
 
 const (
@@ -108,6 +116,8 @@ const (
 	IMPORT           // "IMPORT"
 	FOR              // "FOR"
 	DELETE           // "DELETE"
+
+	ENDTOKEN // Special token, only for testing purposes
 )
 
 var keywords = map[string]TokenType{
@@ -124,6 +134,7 @@ var keywords = map[string]TokenType{
 	"delete":   DELETE,
 }
 
+// LookupIdentifier it will search from []byte() it's keyword token
 func LookupIdentifier(ident []byte) TokenType {
 	if tok, ok := keywords[string(ident)]; ok {
 		return tok
@@ -131,6 +142,9 @@ func LookupIdentifier(ident []byte) TokenType {
 	return IDENT
 }
 
+// DigitType here is where we analyze what type of digit
+// for now we only support integer and float, but later we
+// need to support Hex and Octa. @todo
 func DigitType(digit []byte) TokenType {
 	hasDot := bytes.IndexByte(digit, '.')
 	if hasDot >= 0 {
