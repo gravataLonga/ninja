@@ -12,7 +12,7 @@ type DeleteStatement struct {
 }
 
 func (de *DeleteStatement) statementNode()       {}
-func (de *DeleteStatement) TokenLiteral() string { return de.Token.Literal }
+func (de *DeleteStatement) TokenLiteral() string { return string(de.Token.Literal) }
 func (de *DeleteStatement) String() string {
 	var out bytes.Buffer
 

@@ -9,5 +9,5 @@ func (p *Parser) parseIdentifier() ast.Expression {
 		return postfix()
 	}
 
-	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	return &ast.Identifier{Token: p.curToken, Value: string(p.curToken.Literal)}
 }

@@ -7,6 +7,9 @@ import (
 
 func TestNextToken(t *testing.T) {
 	input := `
+@
+|=
+&=
 !true
 !=
 >
@@ -64,6 +67,9 @@ delete x[0];
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
+		{token.ILLEGAL, "@"},
+		{token.ILLEGAL, "|="},
+		{token.ILLEGAL, "&="},
 		{token.BANG, "!"},
 		{token.TRUE, "true"},
 		{token.NEQ, "!="},
@@ -257,7 +263,7 @@ delete x[0];
 		{token.RBRACKET, "]"},
 		{token.SEMICOLON, ";"},
 
-		{token.EOF, ""},
+		{token.EOF, "\x00"},
 	}
 
 	l := New(input)
@@ -267,9 +273,65 @@ delete x[0];
 		if tok.Type != tt.expectedType {
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 		}
-		if tok.Literal != tt.expectedLiteral {
+		if string(tok.Literal) != tt.expectedLiteral {
 			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Literal)
 		}
+	}
+}
+
+func BenchmarkLexer_NextToken(b *testing.B) {
+	input := `var a = 0; "ola" != true; if (a > 0) { return 1; }; import "testing";`
+	for i := 0; i < b.N; i++ {
+		l := New(input)
+
+		for {
+			tok := l.NextToken()
+			if tok.Type == token.EOF {
+				break
+			}
+		}
+	}
+}
+
+func BenchmarkLexer_NextTokenMedium(b *testing.B) {
+	input := `
+var a = 0; 
+"ola" != true; 
+if (a > 0) { return 1; }; 
+import "testing";
+
+/*
+ With comments
+*/
+for (;;) {
+	return 1+1*33 <= 45443.343;
+}
+
+function() {
+	import "I";
+}();
+`
+	for i := 0; i < b.N; i++ {
+		l := New(input)
+
+		for {
+			tok := l.NextToken()
+			if tok.Type == token.EOF {
+				break
+			}
+		}
+	}
+}
+
+func TestLexer_PastEOF(t *testing.T) {
+	input := ``
+
+	l := New(input)
+
+	l.readChar()
+
+	if l.ch != 0 {
+		t.Fatalf("lexer.readChar expected 0. Got: %v", l.ch)
 	}
 }
 

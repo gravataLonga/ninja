@@ -14,7 +14,7 @@ func (p *Parser) parseDeleteStatement() *ast.DeleteStatement {
 	stmt := &ast.DeleteStatement{Token: p.curToken}
 
 	if !p.curTokenIs(token.IDENT) {
-		p.newError("expected current token to be %s, got %s instead.", token.IDENT, p.curToken)
+		p.newError("expected current token to be %s, got %s instead.", token.IDENT, p.curToken.Type)
 		return nil
 	}
 

@@ -12,7 +12,7 @@ type VarStatement struct {
 }
 
 func (ls *VarStatement) statementNode()       {}
-func (ls *VarStatement) TokenLiteral() string { return ls.Token.Literal }
+func (ls *VarStatement) TokenLiteral() string { return string(ls.Token.Literal) }
 func (ls *VarStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString(ls.TokenLiteral() + " ")
@@ -35,7 +35,7 @@ type AssignStatement struct {
 
 func (ls *AssignStatement) expressionNode()      {}
 func (ls *AssignStatement) statementNode()       {}
-func (ls *AssignStatement) TokenLiteral() string { return ls.Token.Literal }
+func (ls *AssignStatement) TokenLiteral() string { return string(ls.Token.Literal) }
 func (ls *AssignStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString(ls.Name.String())

@@ -80,7 +80,7 @@ return >=;
 	for i, tt := range tests {
 		err := errors[i]
 		if err != tt.expectedError {
-			t.Errorf("Error \"%s\" got=%q", tt.expectedError, err)
+			t.Errorf("Error \"%s\" got=%s", tt.expectedError, err)
 		}
 	}
 }

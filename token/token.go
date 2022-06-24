@@ -1,67 +1,113 @@
 package token
 
-import "strings"
+import (
+	"bytes"
+)
 
-type TokenType string
+type TokenType int8
 
 type Token struct {
 	Type    TokenType
-	Literal string // be a string don't have same performance as using int or byte
+	Literal []byte // be a string don't have same performance as using int or byte
 }
 
-func (t *TokenType) String() string {
-	return string(*t)
+func (t TokenType) String() string {
+	return []string{
+		"ILLEGAL",
+		"EOF",
+		"IDENT",
+		"INT",
+		"FLOAT",
+		"STRING",
+		"=",
+		"+",
+		"-",
+		"!",
+		"*",
+		"/",
+		"++",
+		"--",
+		"<",
+		">",
+		"<=",
+		">=",
+		"==",
+		"!=",
+		"&&",
+		"||",
+		",",
+		";",
+		":",
+		"(",
+		")",
+		"{",
+		"}",
+		"[",
+		"]",
+		"FUNCTION",
+		"FUNCTION_LITERAL",
+		"VARIABLE",
+		"TRUE",
+		"FALSE",
+		"IF",
+		"ELSEIF",
+		"ELSE",
+		"RETURN",
+		"IMPORT",
+		"FOR",
+		"DELETE",
+	}[t]
 }
 
 const (
-	ILLEGAL = "ILLEGAL"
-	EOF     = "EOF"
+	ILLEGAL TokenType = iota //  "ILLEGAL"
+	EOF                      // "EOF"
 
-	IDENT  = "IDENT"
-	INT    = "INT"
-	FLOAT  = "FLOAT"
-	STRING = "STRING"
+	IDENT  // "IDENT"
+	INT    // "INT"
+	FLOAT  // "FLOAT"
+	STRING // "STRING"
 
-	ASSIGN   = "="
-	PLUS     = "+"
-	MINUS    = "-"
-	BANG     = "!"
-	ASTERISK = "*"
-	SLASH    = "/"
-	INCRE    = "++"
-	DECRE    = "--"
+	ASSIGN   // "="
+	PLUS     // "+"
+	MINUS    // "-"
+	BANG     // "!"
+	ASTERISK // "*"
+	SLASH    // "/"
+	INCRE    // "++"
+	DECRE    // "--"
 
-	LT  = "<"
-	GT  = ">"
-	LTE = "<="
-	GTE = ">="
-	EQ  = "=="
-	NEQ = "!="
-	AND = "&&"
-	OR  = "||"
+	LT  // "<"
+	GT  // ">"
+	LTE // "<="
+	GTE // ">="
+	EQ  // "=="
+	NEQ // "!="
+	AND // "&&"
+	OR  // "||"
 
-	COMMA     = ","
-	SEMICOLON = ";"
-	COLON     = ":"
-	LPAREN    = "("
-	RPAREN    = ")"
-	LBRACE    = "{"
-	RBRACE    = "}"
-	LBRACKET  = "["
-	RBRACKET  = "]"
+	COMMA     // ","
+	SEMICOLON // ";"
+	COLON     // ":"
+	LPAREN    // "("
+	RPAREN    // ")"
+	LBRACE    // "{"
+	RBRACE    // "}"
+	LBRACKET  // "["
+	RBRACKET  // "]"
 
-	FUNCTION         = "FUNCTION"
-	FUNCTION_LITERAL = "FUNCTION_LITERAL"
-	VAR              = "VARIABLE"
-	TRUE             = "TRUE"
-	FALSE            = "FALSE"
-	IF               = "IF"
-	ELSEIF           = "ELSEIF"
-	ELSE             = "ELSE"
-	RETURN           = "RETURN"
-	IMPORT           = "IMPORT"
-	FOR              = "FOR"
-	DELETE           = "DELETE"
+	FUNCTION         // "FUNCTION"
+	FUNCTION_LITERAL // "FUNCTION_LITERAL"
+	VAR              // "VARIABLE"
+	TRUE             // "TRUE"
+	FALSE            // "FALSE"
+	IF               // "IF"
+	ELSEIF           // "ELSEIF"
+	ELSE             // "ELSE"
+	RETURN           // "RETURN"
+	IMPORT           // "IMPORT"
+	FOR              // "FOR"
+	DELETE           // "DELETE"
 )
 
 var keywords = map[string]TokenType{
@@ -78,15 +124,15 @@ var keywords = map[string]TokenType{
 	"delete":   DELETE,
 }
 
-func LookupIdentifier(ident string) TokenType {
-	if tok, ok := keywords[ident]; ok {
+func LookupIdentifier(ident []byte) TokenType {
+	if tok, ok := keywords[string(ident)]; ok {
 		return tok
 	}
 	return IDENT
 }
 
-func GuessTypeOfDigit(digit string) TokenType {
-	hasDot := strings.IndexByte(digit, '.')
+func DigitType(digit []byte) TokenType {
+	hasDot := bytes.IndexByte(digit, '.')
 	if hasDot >= 0 {
 		return FLOAT
 	}

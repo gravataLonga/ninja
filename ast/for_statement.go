@@ -14,11 +14,11 @@ type ForStatement struct {
 }
 
 func (fs *ForStatement) expressionNode()      {}
-func (fs *ForStatement) TokenLiteral() string { return fs.Token.Literal }
+func (fs *ForStatement) TokenLiteral() string { return string(fs.Token.Literal) }
 func (fs *ForStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(fs.TokenLiteral() + " ")
+	out.WriteString(string(fs.TokenLiteral()) + " ")
 
 	out.WriteString("(")
 	out.WriteString(fs.InitialCondition.String() + ";")

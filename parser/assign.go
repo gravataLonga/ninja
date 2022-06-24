@@ -16,7 +16,7 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 		return nil
 	}
 
-	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: string(p.curToken.Literal)}
 
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
@@ -41,7 +41,7 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 
 	stmt := &ast.AssignStatement{Token: p.curToken}
-	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
+	stmt.Name = &ast.Identifier{Token: p.curToken, Value: string(p.curToken.Literal)}
 
 	if !p.expectPeek(token.ASSIGN) {
 		return nil

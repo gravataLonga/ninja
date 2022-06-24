@@ -5,7 +5,7 @@ import "ninja/ast"
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
-		Operator: p.curToken.Literal,
+		Operator: string(p.curToken.Literal),
 		Left:     left,
 	}
 	precedence := p.curPrecedence()

@@ -29,14 +29,14 @@ func TestFunctionLiteral_String(t *testing.T) {
 			createReturnStatement(createIntegerLiteral(tt.body)),
 		}
 
-		blockStatement := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: "{"}, Statements: stmts}
+		blockStatement := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: []byte("{")}, Statements: stmts}
 		argumentsIdentifier := []*Identifier{}
 		for _, arg := range tt.parameters {
-			integerLiteral := &Identifier{Token: token.Token{Type: token.INT, Literal: strconv.FormatInt(arg, 10)}, Value: strconv.FormatInt(arg, 10)}
+			integerLiteral := &Identifier{Token: token.Token{Type: token.INT, Literal: []byte(strconv.FormatInt(arg, 10))}, Value: strconv.FormatInt(arg, 10)}
 			argumentsIdentifier = append(argumentsIdentifier, integerLiteral)
 		}
 		fn := &FunctionLiteral{
-			Token:      token.Token{Type: token.FUNCTION, Literal: "function"},
+			Token:      token.Token{Type: token.FUNCTION, Literal: []byte("function")},
 			Parameters: argumentsIdentifier,
 			Body:       blockStatement,
 		}
