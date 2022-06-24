@@ -101,6 +101,7 @@ func TestVarStatementErrors(t *testing.T) {
 var x true;
 var = "123";
 var var;
+var = =;
 `
 
 	l := lexer.New(input)
@@ -112,12 +113,17 @@ var var;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
+	if len(p.errors) != 4 {
+		t.Errorf("Expected 4 errors, got: %d", len(p.errors))
+	}
+
 	tests := []struct {
 		expectedError string
 	}{
 		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 2, character: 11]", token.ASSIGN, token.TRUE)},
 		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 3, character: 6]", token.IDENT, token.ASSIGN)},
 		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 4, character: 8]", token.IDENT, token.VAR)},
+		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 5, character: 6]", token.IDENT, token.ASSIGN)},
 	}
 
 	errors := p.Errors()

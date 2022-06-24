@@ -174,10 +174,13 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			`a = a + b[0]`,
 			`a = (a + (b[0]));`,
 		},
-
 		{
 			`a[0] = 1 + 1`,
 			`(a[0]) = (1 + 1);`,
+		},
+		{
+			`a["key"] = b[0]`,
+			`(a[key]) = (b[0]);`,
 		},
 	}
 

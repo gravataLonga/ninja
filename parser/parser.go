@@ -162,6 +162,15 @@ func (p *Parser) peekTokenIs(tok token.TokenType) bool {
 	return p.peekToken.Type == tok
 }
 
+func (p *Parser) peekTokenAny(toks ...token.TokenType) bool {
+	for _, t := range toks {
+		if p.peekToken.Type == t {
+			return true
+		}
+	}
+	return false
+}
+
 func (p *Parser) expectPeek(tok token.TokenType) bool {
 	if p.peekTokenIs(tok) {
 		p.nextToken()

@@ -10,6 +10,9 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 
 	if !p.expectPeek(token.IDENT) {
 		p.nextToken()
+		for !p.curTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
 		return nil
 	}
 
@@ -20,6 +23,11 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	}
 
 	p.nextToken()
+
+	if p.curTokenIs(token.ASSIGN) {
+		p.newError("expected next token to be %s, got %s instead. %s", token.IDENT, p.curToken.Type, p.l.FormatLineCharacter())
+		return nil
+	}
 
 	stmt.Value = p.parseExpression(LOWEST)
 
