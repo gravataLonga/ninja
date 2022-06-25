@@ -1,0 +1,82 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+archives:
+  - name_template: "{{.Binary}}_{{.Os}}_{{.Arch}}"
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+
+
+release:
+  draft: true
+
+snapshot:
+  name_template: "{{.Tag}}"
+
+checksum:
+  name_template: "checksums.txt"
+
+nfpms:
+  - vendor: gravatalonga
+    homepage: https://ninja.jonathan.pt
+    maintainer: Jonathan Fontes <jonathan.alexey16@gmail.com>
+    description: Ninja Programming Language
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+    id: packages
+    file_name_template: "{{.ProjectName}}_{{.Os}}_{{.Arch}}_{{ .Tag }}"
+
+# .goreleaser.yml
+brews:
+  -
+    name: ninja
+    tap:
+      owner: gravatalonga
+      name: homebrew-tap
+
+    # Git author used to commit to the repository.
+    # Defaults are shown.
+    commit_author:
+      name: Jonathan Fontes
+      email: jonathan.alexey16@gmail.com
+
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+
+    folder: Formula
+
+    homepage: "https://jonathan.pt/"
+    license: "MIT"
+
+publishers:
+  - name: fury.io
+    ids:
+      - packages
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/gravatalonga/
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
