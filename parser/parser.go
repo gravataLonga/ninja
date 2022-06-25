@@ -139,7 +139,7 @@ func (p *Parser) newError(format string, a ...interface{}) {
 }
 
 func (p *Parser) noPrefixParseFnError(t token.TokenType) {
-	p.newError("no prefix parse function for %d found", t)
+	p.newError("no prefix parse function for %s found", t)
 }
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {

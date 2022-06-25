@@ -20,6 +20,7 @@ func TestLookupIdentifier(t *testing.T) {
 		{[]byte("for"), FOR},
 		{[]byte("import"), IMPORT},
 		{[]byte("delete"), DELETE},
+		{[]byte("break"), BREAK},
 		{[]byte("testing_var"), IDENT},
 	}
 

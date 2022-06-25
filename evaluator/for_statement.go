@@ -20,8 +20,14 @@ func evalForStatement(
 	for object.IsTruthy(condition) {
 
 		result = Eval(node.Body, env)
-		if result != nil && (result.Type() == object.RETURN_VALUE_OBJ) {
-			return result
+		if result != nil {
+			if result.Type() == object.RETURN_VALUE_OBJ {
+				return result
+			}
+
+			if result.Type() == object.BREAK_VALUE_OBJ {
+				return nil
+			}
 		}
 		if node.Iteration != nil {
 			Eval(node.Iteration, env)

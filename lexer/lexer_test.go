@@ -54,6 +54,7 @@ var hashesResponse = {"nope":"an error happend", "ok":"everthing is ok"}
 
 for (var i = 0; i <= len(statusCode); var i = i + 1) {
 	puts(statusCode[i])
+	break;
 }
 
 5 && 10
@@ -247,6 +248,8 @@ delete x[0];
 		{token.IDENT, "i"},
 		{token.RBRACKET, "]"},
 		{token.RPAREN, ")"},
+		{token.BREAK, "break"},
+		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.INT, "5"},
 		{token.AND, "&&"},

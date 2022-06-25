@@ -58,6 +58,7 @@ func (t TokenType) String() string {
 		"IMPORT",
 		"FOR",
 		"DELETE",
+		"BREAK",
 	}
 
 	if len(list)-1 < int(t) {
@@ -116,6 +117,7 @@ const (
 	IMPORT           // "IMPORT"
 	FOR              // "FOR"
 	DELETE           // "DELETE"
+	BREAK            // "BREAK"
 
 	ENDTOKEN // Special token, only for testing purposes
 )
@@ -132,6 +134,7 @@ var keywords = map[string]TokenType{
 	"for":      FOR,
 	"import":   IMPORT,
 	"delete":   DELETE,
+	"break":    BREAK,
 }
 
 // LookupIdentifier it will search from []byte() it's keyword token

@@ -83,3 +83,4 @@ changelog:
       - '^docs:'
       - '^test:'
       - '^wip:'
+      - '^WIP:'
