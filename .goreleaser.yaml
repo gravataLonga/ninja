@@ -7,16 +7,23 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
-  - env:
+  -
+    id: "default"
+    binary: ninja-lang
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
       - windows
       - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - 386
     
 archives:
   - name_template: "{{.Binary}}_{{.Os}}_{{.Arch}}"
-
 
 release:
   draft: true
@@ -28,7 +35,7 @@ checksum:
   name_template: "checksums.txt"
 
 nfpms:
-  - vendor: gravatalonga
+  - vendor: gravataLonga
     homepage: https://ninja.jonathan.pt
     maintainer: Jonathan Fontes <jonathan.alexey16@gmail.com>
     description: Ninja Programming Language
@@ -43,7 +50,7 @@ nfpms:
 # .goreleaser.yml
 brews:
   -
-    name: ninja
+    name: ninja-lang
     tap:
       owner: gravatalonga
       name: homebrew-tap
@@ -70,8 +77,19 @@ publishers:
 
 changelog:
   sort: asc
+  groups:
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: Others
+      order: 999
   filters:
     exclude:
       - '^docs:'
       - '^test:'
+      - '^wip:'
+      - '^WIP:'
 
