@@ -1,15 +1,25 @@
 ![ninja programming language](./ninja.svg)
 
-# How to use  
+# Install  
 
-Download binary for your OS  
-Execute like normal binary  
+## Homebrew  
 
-Executing a file  
-`./ninja name-of-file.nj`  
+```sh
+brew tap gravatalonga/ninja-lang
+brew install ninja-lang
+```
 
-In Repl Mode:  
-`./ninja`  
+## Manual Download    
+
+Download from [github](https://github.com/gravataLonga/ninja/releases)  
+
+## Manual Installtion  
+
+```sh  
+git clone https://github.com/gravataLonga/ninja
+cd ninja
+go build -o ninja-lang
+```  
 
 # Syntax  
 
