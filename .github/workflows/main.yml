@@ -46,3 +46,4 @@ jobs:
 
         env:
           FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
