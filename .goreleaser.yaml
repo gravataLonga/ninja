@@ -69,8 +69,8 @@ brews:
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
 
     folder: Formula
-
-    homepage: "https://jonathan.pt/"
+    description: "Ninja Programming Language Binary"
+    homepage: "https://ninja.jonathan.pt/"
     license: "MIT"
 
 snapshot:
