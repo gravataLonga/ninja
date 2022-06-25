@@ -52,8 +52,8 @@ brews:
   -
     name: ninja-lang
     tap:
-      owner: gravatalonga
-      name: homebrew-tap
+      owner: gravataLonga
+      name: homebrew-ninja-lang
 
     # Git author used to commit to the repository.
     # Defaults are shown.
