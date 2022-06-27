@@ -201,3 +201,115 @@ func TestErrorArrayHandling(t *testing.T) {
 		}
 	}
 }
+
+func TestArrayMethod(t *testing.T) {
+
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`[].type()`,
+			"ARRAY",
+		},
+		{
+			`[].join(",")`,
+			`[]`,
+		},
+		{
+			`[1, true, 1.1, "hello", function() {return 1;}()].join(",")`,
+			`[1,true,1.1,hello,1]`,
+		},
+		{
+			`[1].push(2)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}},
+		},
+		{
+			`[1].push(2, 3)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
+			`[1, 2].pop()`,
+			2,
+		},
+		{
+			`[].pop()`,
+			nil,
+		},
+		{
+			`[1, 2].shift()`,
+			1,
+		},
+		{
+			`[].shift()`,
+			nil,
+		},
+		{
+			`[1, 2, 3].slice(1)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
+			`[1, 2, 3].slice(4)`,
+			object.Array{Elements: []object.Object{}},
+		},
+		{
+			`[1, 2, 3].slice(1, 1)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}}},
+		},
+		{
+			`[1, 2, 3].slice(1, 2)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		testObjectLiteral(t, evaluated, tt.expected)
+	}
+}
+
+func TestArrayMethodWrongUsage(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{
+			`[].join([])`,
+			"array.join expect first argument be string. Got: ARRAY",
+		},
+		{
+			`[].join()`,
+			"array.join expect exactly 1 argument. Got: 0",
+		},
+		{
+			`[].push()`,
+			"array.push expect exactly 1 argument. Got: 0",
+		},
+		{
+			`[1].pop(1)`,
+			"array.pop expect exactly 0 argument. Got: 1",
+		},
+		{
+			`[1].shift(1)`,
+			"array.shift expect exactly 0 argument. Got: 1",
+		},
+		{
+			`[1].slice(1, 2, 3)`,
+			`array.slice(start, offset) expected at least 1 argument and at max 2 arguments. Got: [1, 2, 3]`,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}

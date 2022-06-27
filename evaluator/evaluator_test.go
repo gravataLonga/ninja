@@ -101,7 +101,7 @@ func testObjectLiteral(
 
 		arr, ok := objectResult.(*object.Array)
 		if !ok {
-			t.Errorf("type of exp expected to be object.Array. Got: . got=%T", objectResult)
+			t.Fatalf("type of exp expected to be object.Array. Got: . got=%s", objectResult.Inspect())
 		}
 
 		arrExpected, _ := expected.(object.Array)

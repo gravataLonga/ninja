@@ -12,15 +12,18 @@ type Object interface {
 	Inspect() string
 }
 
+// CallableMethod is use for calling method in data type.
 type CallableMethod interface {
 	Call(method string, args ...Object) Object
 }
 
+// HashKey hold "key" on Hash
 type HashKey struct {
 	Type  ObjectType
 	Value uint64
 }
 
+// Hashable exist for object implement it in order to be used in Hash object
 type Hashable interface {
 	HashKey() HashKey
 }
