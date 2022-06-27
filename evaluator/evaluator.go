@@ -43,6 +43,14 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 		// InfixExpression
 	case *ast.InfixExpression:
+		if node.Left == nil {
+			return object.NewErrorFormat("InfixExpression.Left is nil.")
+		}
+
+		if node.Right == nil {
+			return object.NewErrorFormat("InfixExpression.Right is nil.")
+		}
+
 		left := Eval(node.Left, env)
 		if object.IsError(left) {
 			return left
@@ -139,6 +147,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalHashLiteral(node, env)
 	case *ast.ForStatement:
 		return evalForStatement(node, env)
+	case *ast.ObjectCall:
+		return evalObjectCallExpression(node, env)
 	}
 	return nil
 }

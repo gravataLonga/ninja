@@ -63,6 +63,7 @@ for (var i = 0; i <= len(statusCode); var i = i + 1) {
 import "testing.mo"
 
 delete x[0];
+"ola".int();
 `
 	tests := []struct {
 		expectedType    token.TokenType
@@ -264,6 +265,12 @@ delete x[0];
 		{token.LBRACKET, "["},
 		{token.INT, "0"},
 		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
+		{token.STRING, "ola"},
+		{token.DOT, "."},
+		{token.IDENT, "int"},
+		{token.LPAREN, "("},
+		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
 
 		{token.EOF, "\x00"},

@@ -1,37 +1,9 @@
-v0.1.x
- - [x] Support parser for file ./ninja my-script.nj
- - [x] When give an error, it will nice to give line and character
- - [x] Better CLI interface
- - [x] Get one char from string. <statement>[<index>]
- - [-] Test main.go
- - [x] Add key to HASH
- - [x] Add value by index on array
- - [x] After build create a ninja file, run it in cli and test output if is equal
- - [x] Cant add float to array / object
- - [x] Split Parser file into small individual pieces
- - [x] Import other files
- - [x] Remove duplicate code
- - [x] Add assertions for errors on each "happy path" testing on Evaluator
- - [x] Compare two string if they are equal or different
- - [x] Test if we got two return statement, we only parse first one, other is discard.
- - [x] If program never return nothing it need return nil? or object.NULL ?
- - [x] If import return nil, need return nil.
- - [x] Delete key from HASH or Array
- - [ ] Bind Location in its AST. (Start: {Filename, Offset, Line, Column}, End: {Filename, Offset, Line, Column})
- - [ ] Documentation (https://github.com/gravataLonga/ninja-documentation)
- - [ ] Add testing to each one of object
- - [ ] https://github.com/goreleaser/goreleaser-action
- - [ ] Change from "string" to "[]Bytes" string
+# Errors
 
-v0.2.x
- - [ ] Better way to include builtin functions
- - [ ] Adding ternary operator
- - [ ] Object call
- - [ ] Method String: Split
- - [ ] Method String: Contain
- - [ ] Method String: Index
- - [ ] Method String: SubString
- - [ ] Method String: Replace
- - [ ] Method String: Upper
- - [ ] Method String: Lower
- - [ ] Method String: Trim
+Case 1:
+for(var i = 0; i <= len(b)-1; b = b +1) { puts(b[i]); }
+
+Case 2:
+var a = "hello";
+if (a.type() == "STRING") { puts(a.split("")); }
+

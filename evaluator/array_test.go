@@ -82,7 +82,7 @@ func TestArrayIndexExpressions(t *testing.T) {
 	}
 }
 
-func TestArrayLiteralsAssing(t *testing.T) {
+func TestArrayLiteralsAssign(t *testing.T) {
 	tests := []struct {
 		input            string
 		expected         int64

@@ -14,7 +14,7 @@ const (
 	LOGICAL      // || and &&
 	EQUALS       // ==
 	LESS_GREATER // > or <
-
+	OBJECT_CALL
 	SUM     //+
 	PRODUCT //*
 	PREFIX  // -X or !X
@@ -59,6 +59,7 @@ var precedences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
+	token.DOT:      OBJECT_CALL,
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -102,6 +103,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.OR, p.parseInfixExpression)
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
+	p.registerInfix(token.DOT, p.parseObjectCallExpression)
 
 	p.postfixParseFns = make(map[token.TokenType]postfixParseFn)
 	p.registerPostfix(token.INCRE, p.parsePostfixExpression)

@@ -37,6 +37,7 @@ func (t TokenType) String() string {
 		"!=",
 		"&&",
 		"||",
+		".",
 		",",
 		";",
 		":",
@@ -95,6 +96,7 @@ const (
 	AND // "&&"
 	OR  // "||"
 
+	DOT       // "."
 	COMMA     // ","
 	SEMICOLON // ";"
 	COLON     // ":"

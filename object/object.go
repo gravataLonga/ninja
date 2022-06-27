@@ -1,10 +1,19 @@
 package object
 
+import (
+	"bytes"
+	"strings"
+)
+
 type ObjectType string
 
 type Object interface {
 	Type() ObjectType
 	Inspect() string
+}
+
+type CallableMethod interface {
+	Call(method string, args ...Object) Object
 }
 
 type HashKey struct {
@@ -66,4 +75,16 @@ func IsHash(o Object) bool {
 
 func IsString(o Object) bool {
 	return o != nil && o.Type() == STRING_OBJ
+}
+
+func InspectArguments(args ...Object) string {
+	var out bytes.Buffer
+	elements := make([]string, len(args))
+	for i, e := range args {
+		elements[i] = e.Inspect()
+	}
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
 }

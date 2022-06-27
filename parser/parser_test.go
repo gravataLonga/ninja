@@ -182,6 +182,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			`a["key"] = b[0]`,
 			`(a[key]) = (b[0]);`,
 		},
+		{
+			`"hello".type()`,
+			`(hello.type())`,
+		},
+		{
+			`"hello" + "world".type()`,
+			`((hello + world).type())`,
+		},
+		{
+			`"hello".type().split("_")`,
+			`((hello.type()).split(_))`,
+		},
 	}
 
 	for _, tt := range tests {
@@ -344,6 +356,25 @@ func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
 	return true
 }
 
+func testStringLiteral(t *testing.T, il ast.Expression, value string) bool {
+	str, ok := il.(*ast.StringLiteral)
+	if !ok {
+		t.Errorf("value not *ast.StringLiteral. got=%T", il)
+		return false
+	}
+
+	if str.Value != value {
+		t.Errorf("value.Value not %s. got=%s", value, str.Value)
+		return false
+	}
+
+	if str.TokenLiteral() != fmt.Sprintf("%s", value) {
+		t.Errorf("value.TokenLiteral not %s. got=%s", value, str.TokenLiteral())
+		return false
+	}
+	return true
+}
+
 func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	integ, ok := il.(*ast.IntegerLiteral)
 	if !ok {
@@ -377,6 +408,34 @@ func testFloatLiteral(t *testing.T, il ast.Expression, value float64) bool {
 
 	if floated.TokenLiteral() != strconv.FormatFloat(value, 'f', -1, 64) {
 		t.Errorf("float.TokenLiteral not %.f. got=%s", value, floated.TokenLiteral())
+		return false
+	}
+	return true
+}
+
+func testArrayLiteral(t *testing.T, il ast.Expression, value string) bool {
+	arr, ok := il.(*ast.ArrayLiteral)
+	if !ok {
+		t.Errorf("value not *ast.ArrayLiteral. got=%T", il)
+		return false
+	}
+
+	if arr.String() != value {
+		t.Errorf("value.String() expected %s. got=%s", value, arr.TokenLiteral())
+		return false
+	}
+	return true
+}
+
+func testHashLiteral(t *testing.T, il ast.Expression, value string) bool {
+	hash, ok := il.(*ast.HashLiteral)
+	if !ok {
+		t.Errorf("value not *ast.ArrayLiteral. got=%T", il)
+		return false
+	}
+
+	if hash.String() != value {
+		t.Errorf("value.String() expected %s. got=%s", value, hash.TokenLiteral())
 		return false
 	}
 	return true

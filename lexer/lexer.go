@@ -156,6 +156,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.RBRACKET, []byte{l.ch})
 	case ',':
 		tok = newToken(token.COMMA, []byte{l.ch})
+	case '.':
+		tok = newToken(token.DOT, []byte{l.ch})
 	case 0:
 		tok.Literal = []byte{0}
 		tok.Type = token.EOF
