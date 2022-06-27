@@ -31,3 +31,48 @@ func (h *Hash) Inspect() string {
 
 	return out.String()
 }
+
+func (s *Hash) Call(method string, args ...Object) Object {
+	switch method {
+	case "type":
+		if len(args) > 0 {
+			argStr := InspectArguments(args...)
+			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		}
+		return &String{Value: HASH_OBJ}
+	case "keys":
+		return hashKeys(s.Pairs, args...)
+	case "has":
+		return hashHas(s.Pairs, args...)
+	}
+	return NewErrorFormat("method %s not exists on string object.", method)
+}
+
+func hashKeys(keys map[HashKey]HashPair, args ...Object) Object {
+	if len(args) != 0 {
+		return NewErrorFormat("hash.keys() expect 0 arguments. Got: %s", InspectArguments(args...))
+	}
+	elements := []Object{}
+	for _, pair := range keys {
+		elements = append(elements, pair.Key)
+	}
+
+	return &Array{Elements: elements}
+}
+
+func hashHas(keys map[HashKey]HashPair, args ...Object) Object {
+	if len(args) != 1 {
+		return NewErrorFormat("hash.has() expect at least 1 argument. got: %s", InspectArguments(args...))
+	}
+
+	hashable, ok := args[0].(Hashable)
+	if !ok {
+		return NewErrorFormat("hash.has() first argument isnt hashable. got: %s", InspectArguments(args...))
+	}
+
+	_, ok = keys[hashable.HashKey()]
+	if ok {
+		return TRUE
+	}
+	return FALSE
+}

@@ -212,3 +212,71 @@ func TestErrorHashHandling(t *testing.T) {
 		}
 	}
 }
+
+func TestHashMethod(t *testing.T) {
+
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`{}.type()`,
+			"HASH",
+		},
+		{
+			`{}.keys()`,
+			object.Array{Elements: []object.Object{}},
+		},
+		{
+			`{"a": 1, "b": true}.keys()`,
+			object.Array{Elements: []object.Object{&object.String{Value: "a"}, &object.String{Value: "b"}}},
+		},
+		{
+			`{}.has("a")`,
+			false,
+		},
+		{
+			`{"a": 1}.has("a")`,
+			true,
+		},
+		{
+			`{"a": 1}.has("b")`,
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		testObjectLiteral(t, evaluated, tt.expected)
+	}
+}
+
+func TestHashMethodWrongUsage(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{
+			`{}.keys(1)`,
+			"hash.keys() expect 0 arguments. Got: [1]",
+		},
+		{
+			`{}.has(1, 2)`,
+			"hash.has() expect at least 1 argument. got: [1, 2]",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}
