@@ -23,3 +23,15 @@ func (b *Boolean) HashKey() HashKey {
 	}
 	return HashKey{Type: b.Type(), Value: value}
 }
+
+func (s *Boolean) Call(method string, args ...Object) Object {
+	switch method {
+	case "type":
+		if len(args) > 0 {
+			argStr := InspectArguments(args...)
+			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		}
+		return &String{Value: BOOLEAN_OBJ}
+	}
+	return NewErrorFormat("method %s not exists on string object.", method)
+}

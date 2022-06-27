@@ -158,3 +158,22 @@ if (10 > 1) {
 		}
 	}
 }
+
+func TestBooleanMethod(t *testing.T) {
+
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`true.type()`,
+			"BOOLEAN",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		testObjectLiteral(t, evaluated, tt.expected)
+	}
+}
