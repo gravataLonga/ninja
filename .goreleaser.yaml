@@ -30,11 +30,11 @@ release:
   header: |
     ## New Release {{ .Tag }} ({{ .Date }})
     
-    Welcome to this new release!
+    Here we will find list of changes on this version
   footer: |
-    ## Thanks!
+    ## If you find a security issue or bug, please use [github.com](https://github.com/gravataLonga/ninja/issues/new?assignees=&labels=review&template=bug_report.md&title=)  
 
-    Those were the changes on {{ .Tag }}!
+    and refer this version {{ .Tag }}!
 
 
 checksum:
@@ -42,6 +42,7 @@ checksum:
 
 nfpms:
   - vendor: gravataLonga
+    package_name: ninja-lang
     homepage: https://ninja.jonathan.pt
     maintainer: Jonathan Fontes <jonathan.alexey16@gmail.com>
     description: Ninja Programming Language

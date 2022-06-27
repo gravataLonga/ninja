@@ -1,4 +1,8 @@
+<p align="center">
+
 ![ninja programming language](./ninja.svg)
+
+</p>
 
 # Install  
 
@@ -7,6 +11,50 @@
 ```sh
 brew tap gravatalonga/ninja-lang
 brew install ninja-lang
+```  
+
+## yum/rpm  
+
+To enable, add the following file `/etc/yum.repos.d/fury.repo`:
+
+```sh
+[fury]
+name=Gemfury Private Repo
+baseurl=https://yum.fury.io/gravatalonga/
+enabled=1
+gpgcheck=0
+```  
+
+Check if correctly created  
+
+```
+yum --disablerepo=* --enablerepo=fury list available
+```  
+
+To install you only need run following command:  
+
+```
+yum install ninja-lang  
+```  
+
+## apt  
+
+To configure apt access, create a following file `/etc/apt/sources.list.d/fury.list` with content of :  
+
+```  
+deb [trusted=yes] https://apt.fury.io/gravatalonga/ /
+```  
+
+Or use this one line command:  
+
+```
+echo "deb [trusted=yes] https://apt.fury.io/gravatalonga/ /" > /etc/apt/sources.list.d/fury.list
+```  
+
+and them you can install  
+
+```
+sudo apt install ninja-lang
 ```
 
 ## Manual Download    
@@ -20,6 +68,10 @@ git clone https://github.com/gravataLonga/ninja
 cd ninja
 go build -o ninja-lang
 ```  
+
+# Documentation  
+
+For more detail about language, you can check [here](https://ninja.jonathan.pt) (Still working in progress).  
 
 # Syntax  
 
