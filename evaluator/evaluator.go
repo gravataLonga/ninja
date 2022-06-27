@@ -160,6 +160,8 @@ func evalProgram(stmts []ast.Statement, env *object.Environment) object.Object {
 		switch result := result.(type) {
 		case *object.ReturnValue:
 			return result.Value
+		case *object.Break:
+			return object.NewErrorFormat("'break' not in the 'loop' context")
 		case *object.Error:
 			return result
 		}

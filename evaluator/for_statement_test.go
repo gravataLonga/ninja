@@ -39,3 +39,25 @@ func TestForStatement(t *testing.T) {
 		}
 	}
 }
+
+func TestBreakOutsideForLoop(t *testing.T) {
+	input := `break`
+	expected := "'break' not in the 'loop' context"
+
+	evaluated := testEval(input, t)
+
+	if evaluated == nil {
+		t.Fatalf("evaluated is empty")
+	}
+
+	err, ok := evaluated.(*object.Error)
+
+	if !ok {
+		t.Fatalf("expected error. Got: %s", evaluated.Inspect())
+	}
+
+	if err.Message != expected {
+		t.Fatalf("expected error message to be %s, got: %s", expected, err.Message)
+	}
+
+}

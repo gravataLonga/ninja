@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+// testBooleanObject helper for testing if object.Object is equal expected.
 func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
 	result, ok := obj.(*object.Boolean)
 	if !ok {
@@ -21,6 +22,7 @@ func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
 	return true
 }
 
+// testIntegerObject helper for testing if object.Object is equal expected.
 func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	result, ok := obj.(*object.Integer)
 	if !ok {
@@ -35,6 +37,7 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	return true
 }
 
+// testStringObject helper for testing if object.Object is equal expected.
 func testStringObject(t *testing.T, obj object.Object, expected string) bool {
 	result, ok := obj.(*object.String)
 	if !ok {
@@ -49,6 +52,7 @@ func testStringObject(t *testing.T, obj object.Object, expected string) bool {
 	return true
 }
 
+// testFloatObject helper for testing if object.Object is equal expected.
 func testFloatObject(t *testing.T, obj object.Object, expected float64) bool {
 	result, ok := obj.(*object.Float)
 	if !ok {
@@ -63,6 +67,7 @@ func testFloatObject(t *testing.T, obj object.Object, expected float64) bool {
 	return true
 }
 
+// testNullObject helper for testing if object.Object is equal expected NULL.
 func testNullObject(t *testing.T, obj object.Object) bool {
 	if obj != object.NULL {
 		t.Errorf("object is not NULL. got=%T (%+v)", obj, obj)
@@ -71,6 +76,8 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 	return true
 }
 
+// testObjectLiteral helper for testing if object is equal expected interface{}
+// we will decide which object test based on value passed in interface{}
 func testObjectLiteral(
 	t *testing.T,
 	objectResult object.Object,
@@ -145,6 +152,7 @@ func testObjectLiteral(
 	return false
 }
 
+// checkParserErrors check if there are parser errors
 func checkParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
@@ -157,6 +165,8 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 	t.FailNow()
 }
 
+// testEval execute input code and check if there are parser error
+// and return result object.Object
 func testEval(input string, t *testing.T) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
