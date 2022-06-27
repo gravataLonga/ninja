@@ -34,6 +34,8 @@ func (s *String) Call(method string, args ...Object) Object {
 		return &String{Value: STRING_OBJ}
 	case "split":
 		return stringSplit(s.Value, args...)
+	case "replace":
+		return stringReplace(s.Value, args...)
 	case "contain":
 		return stringContains(s.Value, args...)
 	case "index":
@@ -52,7 +54,6 @@ func (s *String) Call(method string, args ...Object) Object {
 	return NewErrorFormat("method %s not exists on string object.", method)
 }
 
-// @todo test for unhappy path for all methods
 // @todo performance for all methods
 
 func stringSplit(str string, args ...Object) Object {
@@ -71,6 +72,25 @@ func stringSplit(str string, args ...Object) Object {
 		arrObject.Elements = append(arrObject.Elements, &String{Value: i})
 	}
 	return arrObject
+}
+
+func stringReplace(str string, args ...Object) Object {
+	if len(args) != 2 {
+		return NewErrorFormat("replace method expect exactly 2 argument")
+	}
+
+	search, ok := args[0].(*String)
+	if !ok {
+		return NewErrorFormat("first argument must be string, got: %s", args[0].Type())
+	}
+
+	replace, ok := args[1].(*String)
+	if !ok {
+		return NewErrorFormat("second argument must be string, got: %s", args[1].Type())
+	}
+	newStr := strings.ReplaceAll(str, search.Value, replace.Value)
+
+	return &String{Value: newStr}
 }
 
 func stringContains(str string, args ...Object) Object {

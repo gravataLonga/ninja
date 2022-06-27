@@ -603,6 +603,69 @@ func TestStringMethodFloatWrongParameter(t *testing.T) {
 	}
 }
 
+func TestStringMethodReplace(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`"Hello World".replace("World", "Jonathan")`,
+			"Hello Jonathan",
+		},
+		{
+			`"Hello World".replace("Nothing", "Jonathan")`,
+			"Hello World",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		testStringObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestStringMethodReplaceWrongParameter(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{
+			`"Hello World".replace()`,
+			"replace method expect exactly 2 argument",
+		},
+		{
+			`"Hello World".replace("this")`,
+			"replace method expect exactly 2 argument",
+		},
+		{
+			`"Hello World".replace("this", "that", "other")`,
+			"replace method expect exactly 2 argument",
+		},
+		{
+			`"Hello World".replace(1, "other")`,
+			"first argument must be string, got: INTEGER",
+		},
+		{
+			`"Hello World".replace("other", [])`,
+			"second argument must be string, got: ARRAY",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}
+
 func TestStringMethodNotFound(t *testing.T) {
 	input := `"a".ups()`
 	expected := ""
