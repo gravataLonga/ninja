@@ -94,3 +94,70 @@ func TestErrorIntegerHandling(t *testing.T) {
 		}
 	}
 }
+
+func TestIntegerMethod(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`1.string()`,
+			"1",
+		},
+		{
+			`1.type()`,
+			"INTEGER",
+		},
+		{
+			`1.float()`,
+			1.0,
+		},
+		{
+			`-1.abs()`,
+			1,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		testObjectLiteral(t, evaluated, tt.expected)
+	}
+}
+
+func TestIntegerMethodWrongUsage(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{
+			`1.type(1)`,
+			"method type not accept any arguments. got: [1]",
+		},
+		{
+			`1.string(1)`,
+			"method string not accept any arguments. got: [1]",
+		},
+		{
+			`1.float(1)`,
+			"method float not accept any arguments. got: [1]",
+		},
+		{
+			`1.abs(1)`,
+			"method abs not accept any arguments. got: [1]",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}
