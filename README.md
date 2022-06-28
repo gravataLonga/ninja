@@ -76,7 +76,7 @@ For more detail about language, you can check [here](https://ninja.jonathan.pt) 
 # Demo  
 
 Resolving katas you can check this repository  
-https://adventofcode.com/2015  
+https://adventofcode.com/2015
 
 # Syntax  
 
@@ -433,6 +433,31 @@ Check at tests for more examples.
 ```
 go test -v -race ./...  
 ```
+
+## Profiling && Performance
+
+### Where CPU resources spend more time
+Create svg graph:  
+[interpreter result](https://github.com/google/pprof/blob/main/doc/README.md#interpreting-the-callgraph)
+```
+go test -bench=. -cpuprofile cpu.prof  
+go tool pprof -svg cpu.prof > cpu.svg  
+```  
+
+### Cores
+
+```
+go test -bench=. -trace trace.out  
+go tool trace trace.out
+```  
+
+### Test Race Condition
+
+```  
+go test -race
+```
+
+---   
 
 # Technical don't read below this line.  
 

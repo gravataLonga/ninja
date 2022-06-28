@@ -85,6 +85,29 @@ func TestMain_execCode(t *testing.T) {
 	}
 }
 
+func TestMain_execCodeSpecialCharacter(t *testing.T) {
+	originalStdOut := os.Stdout
+	temporaryStdOut, err := os.CreateTemp("", "TestMain_execCode")
+	if err != nil {
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
+	}
+	defer os.Remove(temporaryStdOut.Name())
+	os.Stdout = temporaryStdOut
+
+	execCode(`import "./tests/multiple_lines.nj"; input.split("\n")`, temporaryStdOut)
+
+	resultOut, err := os.ReadFile(temporaryStdOut.Name())
+	if err != nil {
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
+	}
+
+	if string(resultOut) != "3" {
+		os.Stdout = originalStdOut
+		fmt.Printf("--- stdout ---\n%s--- expected ---\n%s", resultOut, "3")
+		t.Errorf("%s: stdout does not match expected", "TestMain_execCode")
+	}
+}
+
 func TestMain_execCodeAssertions(t *testing.T) {
 	originalStdOut := os.Stdout
 	temporaryStdOut, err := os.CreateTemp("", "TestMain_execCodeAssertions")

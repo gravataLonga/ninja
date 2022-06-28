@@ -15,7 +15,7 @@ func (hl *HashLiteral) expressionNode()      {}
 func (hl *HashLiteral) TokenLiteral() string { return string(hl.Token.Literal) }
 func (hl *HashLiteral) String() string {
 	var out bytes.Buffer
-	pairs := []string{}
+	pairs := make([]string, len(hl.Pairs))
 	for key, value := range hl.Pairs {
 		pairs = append(pairs, key.String()+":"+value.String())
 	}

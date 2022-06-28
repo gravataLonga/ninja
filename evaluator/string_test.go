@@ -197,6 +197,10 @@ func TestStringMethodSplit(t *testing.T) {
 			`"a;b,c;d" + "other,nice".split(",")`,
 			`[a;b, c;dother, nice]`,
 		},
+		{
+			`"a\nb\nc".split("\n")`,
+			`[a, b, c]`,
+		},
 	}
 
 	for _, tt := range tests {

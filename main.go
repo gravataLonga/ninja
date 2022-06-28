@@ -65,8 +65,6 @@ func execCode(input string, writer io.Writer) {
 		return
 	}
 
-	fmt.Println(program.String())
-
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {
 		fmt.Fprintf(writer, evaluated.Inspect())

@@ -21,5 +21,35 @@ func TestArrayLiteral_String(t *testing.T) {
 	if arrLiteral.TokenLiteral() != "[" {
 		t.Errorf("ArrayLiteral.TokenLiteral() isnt equal to %s. Got: %s", "[", arrLiteral.TokenLiteral())
 	}
+}
 
+func BenchmarkArrayLiteral_String(b *testing.B) {
+	elements := []Expression{
+		&IntegerLiteral{Token: token.Token{Type: token.LBRACKET, Literal: []byte("1")}, Value: 1},
+		&FloatLiteral{Token: token.Token{Type: token.INT, Literal: []byte("2.2")}, Value: 2.2},
+		&StringLiteral{Token: token.Token{Type: token.STRING, Literal: []byte("3")}, Value: "3"},
+		&Boolean{Token: token.Token{Type: token.TRUE, Literal: []byte("True")}, Value: true},
+	}
+	arrLiteral := &ArrayLiteral{Token: token.Token{Type: token.LBRACKET, Literal: []byte("[")}, Elements: elements}
+
+	for i := 0; i < b.N; i++ {
+		arrLiteral.String()
+	}
+}
+
+func BenchmarkArrayLiteral_StringWithHash(b *testing.B) {
+	elements := []Expression{
+		&IntegerLiteral{Token: token.Token{Type: token.LBRACKET, Literal: []byte("1")}, Value: 1},
+		&FloatLiteral{Token: token.Token{Type: token.INT, Literal: []byte("2.2")}, Value: 2.2},
+		&StringLiteral{Token: token.Token{Type: token.STRING, Literal: []byte("3")}, Value: "3"},
+		&Boolean{Token: token.Token{Type: token.TRUE, Literal: []byte("True")}, Value: true},
+		&HashLiteral{Pairs: map[Expression]Expression{
+			&IntegerLiteral{Token: token.Token{Type: token.LBRACKET, Literal: []byte("1")}, Value: 1}: &Boolean{Token: token.Token{Type: token.TRUE, Literal: []byte("True")}, Value: true},
+		}},
+	}
+	arrLiteral := &ArrayLiteral{Token: token.Token{Type: token.LBRACKET, Literal: []byte("[")}, Elements: elements}
+
+	for i := 0; i < b.N; i++ {
+		arrLiteral.String()
+	}
 }

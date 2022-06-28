@@ -7,21 +7,21 @@ import (
 )
 
 type String struct {
-	Value        string
-	cacheHashKey uint64
+	Value         string
+	hashKeyCached uint64
 }
 
 func (s *String) Type() ObjectType { return STRING_OBJ }
 func (s *String) Inspect() string  { return s.Value }
 
 func (s *String) HashKey() HashKey {
-	if s.cacheHashKey <= 0 {
+	if s.hashKeyCached == 0 {
 		h := fnv.New64a()
 		h.Write([]byte(s.Value))
-		s.cacheHashKey = h.Sum64()
+		s.hashKeyCached = h.Sum64()
 	}
 
-	return HashKey{Type: s.Type(), Value: s.cacheHashKey}
+	return HashKey{Type: s.Type(), Value: s.hashKeyCached}
 }
 
 func (s *String) Call(method string, args ...Object) Object {
