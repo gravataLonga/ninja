@@ -26,6 +26,10 @@ func TestForStatement(t *testing.T) {
 			`var i = 0; for(;;) { break; }; i;`,
 			0,
 		},
+		{
+			`var i = 0; for(;;) { if( i > 3) { break; } i = i + 1; }; i;`,
+			4,
+		},
 	}
 
 	for _, tt := range tests {
