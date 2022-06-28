@@ -21,11 +21,26 @@ func (fs *ForStatement) String() string {
 	out.WriteString(string(fs.TokenLiteral()) + " ")
 
 	out.WriteString("(")
-	out.WriteString(fs.InitialCondition.String() + ";")
-	out.WriteString(fs.Condition.String() + ";")
-	out.WriteString(fs.Iteration.String())
+	if fs.InitialCondition != nil {
+		out.WriteString(fs.InitialCondition.String())
+	} else {
+		out.WriteString(";")
+	}
+
+	if fs.Condition != nil {
+		out.WriteString(fs.Condition.String() + ";")
+	} else {
+		out.WriteString(";")
+	}
+
+	if fs.Iteration != nil {
+		out.WriteString(fs.Iteration.String())
+	}
+
 	out.WriteString(") ")
+	out.WriteString("{")
 	out.WriteString(fs.Body.String())
+	out.WriteString("}")
 
 	return out.String()
 }

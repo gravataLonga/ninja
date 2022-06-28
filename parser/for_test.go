@@ -51,3 +51,46 @@ func TestForStatement(t *testing.T) {
 		}
 	}
 }
+
+func TestForStatement_String(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`for(var i = 0; i <= 3; i = i + 1) { }`,
+			`for (var i = 0;(i <= 3);i = (i + 1);) {}`,
+		},
+		{
+			`for(var i = 0; i <= 3; i = i + 1) { puts(1); }`,
+			`for (var i = 0;(i <= 3);i = (i + 1);) {puts(1)}`,
+		},
+		{
+			`for(; i <= 3; i = i + 1) { puts(1); }`,
+			`for (;(i <= 3);i = (i + 1);) {puts(1)}`,
+		},
+		{
+			`for(var i = 0;; i = i + 1) { puts(1); }`,
+			`for (var i = 0;;i = (i + 1);) {puts(1)}`,
+		},
+		{
+			`for(var i = 0; i <= 3;) { puts(1); }`,
+			`for (var i = 0;(i <= 3);) {puts(1)}`,
+		},
+		{
+			`for(;;) { puts(1); }`,
+			`for (;;) {puts(1)}`,
+		},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if program.String() != tt.expected {
+			t.Errorf("ForStatement.string() expected %s. Got: %s", tt.expected, program.String())
+		}
+	}
+}

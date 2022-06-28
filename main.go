@@ -19,6 +19,7 @@ var version string
 
 func main() {
 	exec := flag.StringP("exec", "e", "", "Runs the given code.")
+	_ = flag.BoolP("ast", "a", false, "Return AST structure")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Version: %s. \nUsage: ninja [flags] [program file] [arguments]\n\nAvailable flags:\n", version)
@@ -63,6 +64,8 @@ func execCode(input string, writer io.Writer) {
 		printParserErrors(p.Errors(), writer)
 		return
 	}
+
+	fmt.Println(program.String())
 
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {

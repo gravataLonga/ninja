@@ -73,6 +73,11 @@ go build -o ninja-lang
 
 For more detail about language, you can check [here](https://ninja.jonathan.pt) (Still working in progress).  
 
+# Demo  
+
+Resolving katas you can check this repository  
+https://adventofcode.com/2015  
+
 # Syntax  
 
 ## Variable  
