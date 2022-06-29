@@ -94,7 +94,7 @@ func (r *repl) Start() {
 		}
 
 		line := r.scan.Text()
-		l := lexer.New(line)
+		l := lexer.New(strings.NewReader(line))
 		p := parser.New(l)
 
 		program := p.ParseProgram()

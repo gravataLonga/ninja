@@ -3,6 +3,7 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
@@ -16,7 +17,7 @@ func TestFloatLiteralExpression(t *testing.T) {
 20.012;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()

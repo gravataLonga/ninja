@@ -3,6 +3,7 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
@@ -26,7 +27,7 @@ func TestParsingPrefixExpressions(t *testing.T) {
 	}
 
 	for _, tt := range prefixTests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)

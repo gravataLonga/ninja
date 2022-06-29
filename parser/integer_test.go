@@ -4,6 +4,7 @@ import (
 	"ninja/ast"
 	"ninja/lexer"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -15,7 +16,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 10000000000000000;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()
@@ -60,7 +61,7 @@ func TestIntegerLiteralExpressionOverflowError(t *testing.T) {
 10000000000000000000;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	p.ParseProgram()

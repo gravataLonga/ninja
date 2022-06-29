@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestBreakStatement(t *testing.T) {
 	input := `break;`
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()

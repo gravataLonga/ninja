@@ -3,6 +3,7 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
@@ -16,7 +17,7 @@ func TestBooleanExpression(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)

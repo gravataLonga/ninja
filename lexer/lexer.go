@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"fmt"
+	"io"
 	"ninja/token"
 )
 
@@ -15,8 +16,12 @@ type Lexer struct {
 	characterPositionInLine int
 }
 
-func New(input string) *Lexer {
-	l := &Lexer{input: input, lineNumber: 0}
+func New(in io.Reader) *Lexer {
+	r, err := io.ReadAll(in)
+	if err != nil {
+		return nil
+	}
+	l := &Lexer{input: string(r), lineNumber: 0}
 	l.readChar()
 	return l
 }
@@ -193,7 +198,7 @@ func newToken(tokenType token.TokenType, ch []byte) token.Token {
 //}
 
 func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_' || ch == '\n'
 }
 
 func isDigit(ch byte) bool {

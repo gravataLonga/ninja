@@ -3,6 +3,7 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
@@ -14,7 +15,7 @@ with_number_123;
 Abc_123;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)

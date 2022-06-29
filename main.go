@@ -12,6 +12,7 @@ import (
 	"ninja/parser"
 	"ninja/repl"
 	"os"
+	"strings"
 )
 
 //go:embed version.txt
@@ -56,7 +57,7 @@ func runRepl(in io.Reader, out io.Writer) {
 
 func execCode(input string, writer io.Writer) {
 	env := object.NewEnvironment()
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
 
 	program := p.ParseProgram()

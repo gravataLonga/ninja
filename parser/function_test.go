@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestFunctionNamedLiteralParsing(t *testing.T) {
 	input := `function add(x, y) { return x + y; }`
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)

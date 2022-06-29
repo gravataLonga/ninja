@@ -5,6 +5,7 @@ import (
 	"ninja/ast"
 	"ninja/lexer"
 	"ninja/token"
+	"strings"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestReturnStatement(t *testing.T) {
 	return "ola" == "ola";
    `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()
@@ -54,7 +55,7 @@ return <=;
 return >=;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()

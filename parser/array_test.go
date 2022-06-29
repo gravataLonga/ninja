@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestParsingArrayLiterals(t *testing.T) {
 	input := "[1, 2 * 2, 3 + 3, true, false, 3.3]"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)

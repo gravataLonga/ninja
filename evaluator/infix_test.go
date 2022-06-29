@@ -4,6 +4,7 @@ import (
 	"ninja/lexer"
 	"ninja/object"
 	"ninja/parser"
+	"strings"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestErrorParsingInfixExpressions(t *testing.T) {
 
 	for _, tt := range infixTests {
 
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := parser.New(l)
 		program := p.ParseProgram()
 		env := object.NewEnvironment()

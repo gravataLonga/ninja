@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestObjectCallIntegerExpression(t *testing.T) {
 	input := "1.type()"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -38,7 +39,7 @@ func TestObjectCallIntegerExpression(t *testing.T) {
 func TestObjectCallBooleanExpression(t *testing.T) {
 	input := "true.type()"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -67,7 +68,7 @@ func TestObjectCallBooleanExpression(t *testing.T) {
 func TestObjectCallStringExpression(t *testing.T) {
 	input := "\"hello\".type()"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -96,7 +97,7 @@ func TestObjectCallStringExpression(t *testing.T) {
 func TestObjectCallArrayExpression(t *testing.T) {
 	input := "[].type()"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -125,7 +126,7 @@ func TestObjectCallArrayExpression(t *testing.T) {
 func TestObjectCallHashExpression(t *testing.T) {
 	input := "{}.type()"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -190,7 +191,7 @@ func TestObjectCallExpression_Multiple(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)

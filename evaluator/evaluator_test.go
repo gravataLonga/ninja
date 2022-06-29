@@ -4,6 +4,7 @@ import (
 	"ninja/lexer"
 	"ninja/object"
 	"ninja/parser"
+	"strings"
 	"testing"
 )
 
@@ -168,7 +169,7 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 // testEval execute input code and check if there are parser error
 // and return result object.Object
 func testEval(input string, t *testing.T) object.Object {
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
 	program := p.ParseProgram()
 	env := object.NewEnvironment()

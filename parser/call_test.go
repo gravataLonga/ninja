@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestCallExpressionParsing(t *testing.T) {
 	input := "add(1, 2 * 3, 4 + 5);"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -72,7 +73,7 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)

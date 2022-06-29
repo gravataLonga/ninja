@@ -8,6 +8,7 @@ import (
 	"ninja/object"
 	"ninja/parser"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -49,7 +50,7 @@ func BenchmarkExecCode(b *testing.B) {
 			for n := 0; n < b.N; n++ {
 
 				env := object.NewEnvironment()
-				l := lexer.New(code + " fib(" + fmt.Sprint(v.fib) + "); ")
+				l := lexer.New(strings.NewReader(code + " fib(" + fmt.Sprint(v.fib) + "); "))
 				p := parser.New(l)
 
 				program := p.ParseProgram()
@@ -94,14 +95,14 @@ func TestMain_execCodeSpecialCharacter(t *testing.T) {
 	defer os.Remove(temporaryStdOut.Name())
 	os.Stdout = temporaryStdOut
 
-	execCode(`import "./tests/multiple_lines.nj"; input.split("\n")`, temporaryStdOut)
+	execCode("import \"./tests/multiple_lines.nj\"; input.split(\"\n\")", temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
 
-	if string(resultOut) != "3" {
+	if string(resultOut) != "[29x13x26, 11x11x14, 27x2x5, 6x10x13, 15x19x10, 26x29x15, 8x23x6, 17x8x26, 20x28x3, 14x3x5, 10x9x8]" {
 		os.Stdout = originalStdOut
 		fmt.Printf("--- stdout ---\n%s--- expected ---\n%s", resultOut, "3")
 		t.Errorf("%s: stdout does not match expected", "TestMain_execCode")

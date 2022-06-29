@@ -5,6 +5,7 @@ import (
 	"ninja/ast"
 	"ninja/lexer"
 	"ninja/token"
+	"strings"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestVarStatements(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
@@ -57,7 +58,7 @@ func TestAssignStatements(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
@@ -80,7 +81,7 @@ func TestAssignStatements(t *testing.T) {
 }
 
 func TestAssignExpression(t *testing.T) {
-	l := lexer.New(`var a = a + 1; a = a + 1; a;`)
+	l := lexer.New(strings.NewReader(`var a = a + 1; a = a + 1; a;`))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -104,7 +105,7 @@ var var;
 var = =;
 `
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 
 	program := p.ParseProgram()
@@ -160,7 +161,7 @@ func TestIllegalAssignmentsErrors(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 
 		program := p.ParseProgram()

@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestIfExpression(t *testing.T) {
 	input := `if (x < y) { x }`
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -53,7 +54,7 @@ func TestIfExpression(t *testing.T) {
 func TestIfElseExpression(t *testing.T) {
 	input := `if (true != 10) { x } else { y }`
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)

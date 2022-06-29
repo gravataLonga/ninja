@@ -1,11 +1,11 @@
 package evaluator
 
 import (
-	"io/ioutil"
 	"ninja/ast"
 	"ninja/lexer"
 	"ninja/object"
 	"ninja/parser"
+	"os"
 	"strings"
 )
 
@@ -22,13 +22,13 @@ func evalImport(node ast.Node, env *object.Environment) object.Object {
 		return object.NULL
 	}
 
-	b, err := ioutil.ReadFile(filename.Value)
+	readFile, err := os.Open(filename.Value)
 
 	if err != nil {
 		return object.NewErrorFormat("IO Error: error reading file '%s': %s", filename.Value, err)
 	}
 
-	l := lexer.New(string(b))
+	l := lexer.New(readFile)
 	p := parser.New(l)
 	programs := p.ParseProgram()
 

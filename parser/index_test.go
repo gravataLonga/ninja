@@ -3,13 +3,14 @@ package parser
 import (
 	"ninja/ast"
 	"ninja/lexer"
+	"strings"
 	"testing"
 )
 
 func TestParsingIndexExpressions(t *testing.T) {
 	input := "myArray[1 + 1]"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
@@ -32,7 +33,7 @@ func TestParsingIndexExpressions(t *testing.T) {
 func TestParsingIndexStringExpressions(t *testing.T) {
 	input := "\"hello\"[1]"
 
-	l := lexer.New(input)
+	l := lexer.New(strings.NewReader(input))
 	p := New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)

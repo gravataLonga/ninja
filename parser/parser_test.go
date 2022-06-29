@@ -5,6 +5,7 @@ import (
 	"ninja/ast"
 	"ninja/lexer"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -197,7 +198,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
+		l := lexer.New(strings.NewReader(tt.input))
 		p := New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
