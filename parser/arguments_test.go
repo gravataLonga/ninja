@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"ninja/ast"
 	"ninja/lexer"
 	"strings"
@@ -48,24 +49,26 @@ func TestFunctionParameterParsing(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		program := p.ParseProgram()
-		checkParserErrors(t, p)
+		t.Run(fmt.Sprintf("TestFunctionParameter %s", tt.input), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
 
-		stmt := program.Statements[0].(*ast.ExpressionStatement)
-		function := stmt.Expression.(*ast.Function)
+			stmt := program.Statements[0].(*ast.ExpressionStatement)
+			function := stmt.Expression.(*ast.Function)
 
-		if len(function.Parameters) != len(tt.expectedParams) {
-			t.Errorf("length parameters wrong. want %d, got=%d\n", len(tt.expectedParams), len(function.Parameters))
-		}
+			if len(function.Parameters) != len(tt.expectedParams) {
+				t.Errorf("length parameters wrong. want %d, got=%d\n", len(tt.expectedParams), len(function.Parameters))
+			}
 
-		for i, ident := range tt.expectedParams {
-			testLiteralExpression(t, function.Parameters[i], ident)
-		}
+			for i, ident := range tt.expectedParams {
+				testLiteralExpression(t, function.Parameters[i], ident)
+			}
 
-		if function.Name.String() != tt.ident {
-			t.Errorf("Identitier of function not match. want %s, got=%s\n", tt.ident, function.Name.String())
-		}
+			if function.Name.String() != tt.ident {
+				t.Errorf("Identitier of function not match. want %s, got=%s\n", tt.ident, function.Name.String())
+			}
+		})
 	}
 }
