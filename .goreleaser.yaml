@@ -30,11 +30,11 @@ release:
   header: |
     ## New Release {{ .Tag }} ({{ .Date }})
     
-    Here we will find list of changes on this version
+    Check changelog for get complete list of new feature, bugfixes and security issues.
   footer: |
-    ## If you find a security issue or bug, please use [github.com](https://github.com/gravataLonga/ninja/issues/new?assignees=&labels=review&template=bug_report.md&title=)  
-
-    and refer this version {{ .Tag }}!
+    ## Supporting me  
+    
+    If you like it consider support me at https://github.com/sponsors/gravataLonga.
 
 
 checksum:
@@ -67,7 +67,7 @@ brews:
       name: Jonathan Fontes
       email: jonathan.alexey16@gmail.com
 
-    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_msg_template: "New version for {{ .ProjectName }} version {{ .Tag }}"
 
     folder: Formula
     description: "Ninja Programming Language Binary"
