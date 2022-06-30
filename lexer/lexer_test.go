@@ -9,7 +9,7 @@ import (
 
 func TestNextToken(t *testing.T) {
 	input := `
-var true false if else 
+var true false if else
 break for () [] {} . ; : 
 != == <= >= < > && || = 
 + - * / 
