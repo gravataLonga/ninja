@@ -148,6 +148,22 @@ func TestLexer_PastEOF(t *testing.T) {
 	}
 }
 
+func TestStringAcceptUtf8Character(t *testing.T) {
+	input := `"नमस्ते दुनिया or Hello World or Olá Mundo"`
+	l := New(strings.NewReader(input))
+
+	tok := l.NextToken()
+
+	if tok.Type != token.STRING {
+		t.Fatalf("Expected string token, got: %s", tok.Type)
+	}
+
+	if string(tok.Literal) != `नमस्ते दुनिया or Hello World or Olá Mundo` {
+		t.Fatalf("Expected string to be àãç, got: %s", tok.Literal)
+	}
+
+}
+
 func TestLexer_KeepTrackPosition(t *testing.T) {
 	// not we are looking by identifier "a"
 	tests := []struct {
