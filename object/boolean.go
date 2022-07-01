@@ -1,6 +1,9 @@
 package object
 
-import "fmt"
+import (
+	"fmt"
+	"ninja/ast"
+)
 
 var (
 	TRUE  = &Boolean{Value: true}
@@ -24,7 +27,7 @@ func (b *Boolean) HashKey() HashKey {
 	return HashKey{Type: b.Type(), Value: value}
 }
 
-func (s *Boolean) Call(method string, args ...Object) Object {
+func (s *Boolean) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {

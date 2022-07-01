@@ -221,12 +221,32 @@ func TestArrayMethod(t *testing.T) {
 			`[1,true,1.1,hello,1]`,
 		},
 		{
+			`var a = [1, 2]; a.join(";");`,
+			`[1;2]`,
+		},
+		{
+			`var a = [1, 2]; a.join(";"); a`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}},
+		},
+		{
 			`[1].push(2)`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}},
 		},
 		{
 			`[1].push(2, 3)`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
+			`var a = [1]; a.push(2, 3); a`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
+			`var a = [1, 2]; a.pop(); a;`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 1}}},
+		},
+		{
+			`var a = [1, 2]; a.pop();`,
+			2,
 		},
 		{
 			`[1, 2].pop()`,
@@ -241,6 +261,14 @@ func TestArrayMethod(t *testing.T) {
 			1,
 		},
 		{
+			`var a = [1, 2]; a.shift()`,
+			1,
+		},
+		{
+			`var a = [1, 2]; a.shift(); a`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}}},
+		},
+		{
 			`[].shift()`,
 			nil,
 		},
@@ -249,7 +277,15 @@ func TestArrayMethod(t *testing.T) {
 			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
 		},
 		{
+			`var a = [1, 2, 3]; a.slice(1)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
 			`[1, 2, 3].slice(4)`,
+			object.Array{Elements: []object.Object{}},
+		},
+		{
+			`var a = [1, 2, 3]; a.slice(4)`,
 			object.Array{Elements: []object.Object{}},
 		},
 		{
@@ -257,7 +293,15 @@ func TestArrayMethod(t *testing.T) {
 			object.Array{Elements: []object.Object{&object.Integer{Value: 2}}},
 		},
 		{
+			`var a = [1, 2, 3]; a.slice(1, 1)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}}},
+		},
+		{
 			`[1, 2, 3].slice(1, 2)`,
+			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
+		},
+		{
+			`var a = [1, 2, 3]; a.slice(1, 2)`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
 		},
 	}

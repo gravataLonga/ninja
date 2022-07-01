@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"math"
+	"ninja/ast"
 	"strconv"
 )
 
@@ -28,7 +29,7 @@ func (f *Float) HashKey() HashKey {
 	return HashKey{Type: f.Type(), Value: f.hashKeyCache}
 }
 
-func (f *Float) Call(method string, args ...Object) Object {
+func (f *Float) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {

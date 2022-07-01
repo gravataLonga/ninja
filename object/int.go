@@ -2,6 +2,7 @@ package object
 
 import (
 	"fmt"
+	"ninja/ast"
 	"strconv"
 )
 
@@ -16,7 +17,7 @@ func (i *Integer) HashKey() HashKey {
 	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
 }
 
-func (s *Integer) Call(method string, args ...Object) Object {
+func (s *Integer) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {

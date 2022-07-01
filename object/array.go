@@ -2,6 +2,7 @@ package object
 
 import (
 	"bytes"
+	"ninja/ast"
 	"strconv"
 	"strings"
 )
@@ -23,7 +24,7 @@ func (ao *Array) Inspect() string {
 	return out.String()
 }
 
-func (s *Array) Call(method string, args ...Object) Object {
+func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {
@@ -34,11 +35,30 @@ func (s *Array) Call(method string, args ...Object) Object {
 	case "join":
 		return arrayJoin(s.Elements, args...)
 	case "push":
-		return arrayPush(s.Elements, args...)
+		result := arrayPush(s.Elements, args...)
+
+		ident, ok := objectCall.Object.(*ast.Identifier)
+		if ok {
+			env.Set(ident.Value, result)
+		}
+
+		return result
 	case "pop":
-		return arrayPop(s.Elements, args...)
+		popValue, newArray := arrayPop(s.Elements, args...)
+
+		ident, ok := objectCall.Object.(*ast.Identifier)
+		if ok {
+			env.Set(ident.Value, newArray)
+		}
+		return popValue
 	case "shift":
-		return arrayShift(s.Elements, args...)
+		shiftValue, newArray := arrayShift(s.Elements, args...)
+
+		ident, ok := objectCall.Object.(*ast.Identifier)
+		if ok {
+			env.Set(ident.Value, newArray)
+		}
+		return shiftValue
 	case "slice":
 		return arraySlice(s.Elements, args...)
 	}
@@ -79,7 +99,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 			}
 		case *Array:
 			v, _ := el.(*Array)
-			joinObject := v.Call("join", args...)
+			joinObject := v.Call(nil, "join", nil, args...)
 			strJoinObject, ok := joinObject.(*String)
 			if !ok {
 				return NewErrorFormat("Unable to join array")
@@ -112,26 +132,27 @@ func arrayPush(elements []Object, args ...Object) Object {
 	return arr
 }
 
-func arrayPop(elements []Object, args ...Object) Object {
+func arrayPop(elements []Object, args ...Object) (popValue Object, newArray Object) {
 	if len(args) > 0 {
-		return NewErrorFormat("array.pop expect exactly 0 argument. Got: %d", len(args))
+		return NewErrorFormat("array.pop expect exactly 0 argument. Got: %d", len(args)), nil
 	}
 
 	if len(elements) <= 0 {
-		return NULL
+		return NULL, &Array{}
 	}
-	return elements[len(elements)-1]
+
+	return elements[len(elements)-1], &Array{Elements: elements[0 : len(elements)-1]}
 }
 
-func arrayShift(elements []Object, args ...Object) Object {
+func arrayShift(elements []Object, args ...Object) (shiftValue Object, newArray Object) {
 	if len(args) > 0 {
-		return NewErrorFormat("array.shift expect exactly 0 argument. Got: %d", len(args))
+		return NewErrorFormat("array.shift expect exactly 0 argument. Got: %d", len(args)), nil
 	}
 
 	if len(elements) <= 0 {
-		return NULL
+		return NULL, &Array{}
 	}
-	return elements[0]
+	return elements[0], &Array{Elements: elements[1:]}
 }
 
 func arraySlice(elements []Object, args ...Object) Object {

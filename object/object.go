@@ -2,6 +2,7 @@ package object
 
 import (
 	"bytes"
+	"ninja/ast"
 	"strings"
 )
 
@@ -14,7 +15,7 @@ type Object interface {
 
 // CallableMethod is use for calling method in data type.
 type CallableMethod interface {
-	Call(method string, args ...Object) Object
+	Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object
 }
 
 // HashKey hold "key" on Hash

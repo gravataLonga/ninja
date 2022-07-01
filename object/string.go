@@ -2,6 +2,7 @@ package object
 
 import (
 	"hash/fnv"
+	"ninja/ast"
 	"strconv"
 	"strings"
 )
@@ -24,7 +25,7 @@ func (s *String) HashKey() HashKey {
 	return HashKey{Type: s.Type(), Value: s.hashKeyCached}
 }
 
-func (s *String) Call(method string, args ...Object) Object {
+func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {

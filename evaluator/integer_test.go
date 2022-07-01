@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -119,9 +120,12 @@ func TestIntegerMethod(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+		t.Run(fmt.Sprintf("TestIntegerMethod_%s", tt.input), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testObjectLiteral(t, evaluated, tt.expected)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+
 	}
 }
 
