@@ -71,17 +71,20 @@ return >=;
 	tests := []struct {
 		expectedError string
 	}{
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s. [line: 2, character: 11]", token.VAR)},
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s. [line: 3, character: 14]", token.RETURN)},
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s. [line: 4, character: 10]", token.DECRE)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (var) at [Line: 2, Offset: 11].", token.VAR)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (return) at [Line: 3, Offset: 14].", token.RETURN)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (--) at [Line: 4, Offset: 9].", token.DECRE)},
 	}
 
 	errors := p.Errors()
 
 	for i, tt := range tests {
-		err := errors[i]
-		if err != tt.expectedError {
-			t.Errorf("Error \"%s\" got=%s", tt.expectedError, err)
-		}
+		t.Run(fmt.Sprintf("TestReturnStatementErrors_%d", i), func(t *testing.T) {
+			err := errors[i]
+			if err != tt.expectedError {
+				t.Errorf("Error \"%s\" got=%s", tt.expectedError, err)
+			}
+		})
+
 	}
 }

@@ -121,10 +121,10 @@ var = =;
 	tests := []struct {
 		expectedError string
 	}{
-		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 2, character: 11]", token.ASSIGN, token.TRUE)},
-		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 3, character: 6]", token.IDENT, token.ASSIGN)},
-		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 4, character: 8]", token.IDENT, token.VAR)},
-		{fmt.Sprintf("expected next token to be %s, got %s instead. [line: 5, character: 6]", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s (true) at [Line: 2, Offset: 11] instead.", token.ASSIGN, token.TRUE)},
+		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 3, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s (var) at [Line: 4, Offset: 8] instead.", token.IDENT, token.VAR)},
+		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 5, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
 	}
 
 	errors := p.Errors()

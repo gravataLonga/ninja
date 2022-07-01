@@ -185,7 +185,7 @@ func (p *Parser) expectPeek(tok token.TokenType) bool {
 func (p *Parser) peekError(t ...token.TokenType) {
 
 	if len(t) == 1 {
-		p.newError("expected next token to be %s, got %s instead. %s", t[0], p.peekToken.Type, p.l.FormatLineCharacter())
+		p.newError("expected next token to be %s, got %s instead.", t[0], p.peekToken)
 		return
 	}
 
@@ -194,7 +194,7 @@ func (p *Parser) peekError(t ...token.TokenType) {
 		listTokens += listTokens + " " + fmt.Sprintf("%s", i)
 	}
 
-	p.newError("expected next token to be %s, got %s instead. %s", listTokens, p.peekToken.Type, p.l.FormatLineCharacter())
+	p.newError("expected next token to be %s, got %s instead.", listTokens, p.peekToken)
 }
 
 func (p *Parser) peekPrecedence() int {

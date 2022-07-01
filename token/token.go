@@ -2,13 +2,14 @@ package token
 
 import (
 	"bytes"
+	"fmt"
 )
 
 type TokenType int8
 
 type Location struct {
-	Line   int32
-	Offset int32
+	Line   int
+	Offset int
 }
 
 type Token struct {
@@ -162,4 +163,8 @@ func DigitType(digit []byte) TokenType {
 		return FLOAT
 	}
 	return INT
+}
+
+func (t Token) String() string {
+	return fmt.Sprintf("%s (%s) at [Line: %d, Offset: %d]", t.Type, t.Literal, t.Line, t.Offset)
 }

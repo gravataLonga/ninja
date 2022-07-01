@@ -25,7 +25,7 @@ func (p *Parser) parseVarStatement() *ast.VarStatement {
 	p.nextToken()
 
 	if p.curTokenIs(token.ASSIGN) {
-		p.newError("expected next token to be %s, got %s instead. %s", token.IDENT, p.curToken.Type, p.l.FormatLineCharacter())
+		p.newError("expected next token to be %s, got %s instead.", token.IDENT, p.curToken)
 		return nil
 	}
 

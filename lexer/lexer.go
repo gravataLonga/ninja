@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"io"
 	"ninja/token"
 )
@@ -61,12 +60,11 @@ func (l *Lexer) NextToken() token.Token {
 		})
 
 	case ';':
-		tok = newToken(token.SEMICOLON, []byte{l.ch})
+		tok = l.newToken(token.SEMICOLON, []byte{l.ch})
 	case '"':
-		tok.Type = token.STRING
-		tok.Literal = l.readString()
+		tok = l.newToken(token.STRING, l.readString())
 	case '*':
-		tok = newToken(token.ASTERISK, []byte{l.ch})
+		tok = l.newToken(token.ASTERISK, []byte{l.ch})
 	case '/':
 		if l.peekChar() == '/' {
 			l.skipSingleLineComment()
@@ -77,27 +75,27 @@ func (l *Lexer) NextToken() token.Token {
 			l.skipMultiLineComment()
 			return l.NextToken()
 		}
-		tok = newToken(token.SLASH, []byte{l.ch})
+		tok = l.newToken(token.SLASH, []byte{l.ch})
 	case '&':
 		if l.peekChar() != '&' {
 			ch := l.ch
 			l.readChar()
-			tok = newToken(token.ILLEGAL, []byte{ch, l.ch})
+			tok = l.newToken(token.ILLEGAL, []byte{ch, l.ch})
 		} else {
 			ch := l.ch
 			l.readChar()
-			tok = newToken(token.AND, []byte{ch, l.ch})
+			tok = l.newToken(token.AND, []byte{ch, l.ch})
 		}
 
 	case '|':
 		if l.peekChar() != '|' {
 			ch := l.ch
 			l.readChar()
-			tok = newToken(token.ILLEGAL, []byte{ch, l.ch})
+			tok = l.newToken(token.ILLEGAL, []byte{ch, l.ch})
 		} else {
 			ch := l.ch
 			l.readChar()
-			tok = newToken(token.OR, []byte{ch, l.ch})
+			tok = l.newToken(token.OR, []byte{ch, l.ch})
 		}
 
 	case '-':
@@ -130,38 +128,34 @@ func (l *Lexer) NextToken() token.Token {
 		})
 
 	case ':':
-		tok = newToken(token.COLON, []byte{l.ch})
+		tok = l.newToken(token.COLON, []byte{l.ch})
 	case '(':
-		tok = newToken(token.LPAREN, []byte{l.ch})
+		tok = l.newToken(token.LPAREN, []byte{l.ch})
 	case ')':
-		tok = newToken(token.RPAREN, []byte{l.ch})
+		tok = l.newToken(token.RPAREN, []byte{l.ch})
 	case '{':
-		tok = newToken(token.LBRACE, []byte{l.ch})
+		tok = l.newToken(token.LBRACE, []byte{l.ch})
 	case '}':
-		tok = newToken(token.RBRACE, []byte{l.ch})
+		tok = l.newToken(token.RBRACE, []byte{l.ch})
 	case '[':
-		tok = newToken(token.LBRACKET, []byte{l.ch})
+		tok = l.newToken(token.LBRACKET, []byte{l.ch})
 	case ']':
-		tok = newToken(token.RBRACKET, []byte{l.ch})
+		tok = l.newToken(token.RBRACKET, []byte{l.ch})
 	case ',':
-		tok = newToken(token.COMMA, []byte{l.ch})
+		tok = l.newToken(token.COMMA, []byte{l.ch})
 	case '.':
-		tok = newToken(token.DOT, []byte{l.ch})
+		tok = l.newToken(token.DOT, []byte{l.ch})
 	case 0:
-		tok.Literal = []byte{0}
-		tok.Type = token.EOF
-
+		tok = l.newToken(token.EOF, []byte{0})
 	default:
 		if isLetter(l.ch) {
-			tok.Literal = l.readIdentifier()
-			tok.Type = token.LookupIdentifier(tok.Literal)
-			return tok
+			literal := l.readIdentifier()
+			return l.newToken(token.LookupIdentifier(literal), literal)
 		} else if isDigit(l.ch) {
-			tok.Literal = l.readDigit()
-			tok.Type = token.DigitType(tok.Literal)
-			return tok
+			literal := l.readDigit()
+			return l.newToken(token.DigitType(literal), literal)
 		} else {
-			tok = newToken(token.ILLEGAL, []byte{l.ch})
+			tok = l.newToken(token.ILLEGAL, []byte{l.ch})
 		}
 	}
 
@@ -169,23 +163,20 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-func (l *Lexer) FormatLineCharacter() string {
-	return fmt.Sprintf("[line: %d, character: %d]", l.lineNumber+1, l.characterPositionInLine)
-}
-
-func newToken(tokenType token.TokenType, ch []byte) token.Token {
-	return token.Token{Type: tokenType, Literal: ch}
+func (l *Lexer) newToken(tokenType token.TokenType, ch []byte) token.Token {
+	location := token.Location{Line: l.lineNumber + 1, Offset: l.characterPositionInLine}
+	return token.Token{Type: tokenType, Literal: ch, Location: location}
 }
 
 func (l *Lexer) newTokenPeekOrDefault(tokenType token.TokenType, expectedPeek map[byte]token.TokenType) token.Token {
 	peekToken, ok := expectedPeek[l.peekChar()]
 	if !ok {
-		return newToken(tokenType, []byte{l.ch})
+		return l.newToken(tokenType, []byte{l.ch})
 	}
 
 	ch := l.ch
 	l.readChar()
-	return newToken(peekToken, []byte{ch, l.ch})
+	return l.newToken(peekToken, []byte{ch, l.ch})
 }
 
 func isLetter(ch byte) bool {

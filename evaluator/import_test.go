@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -32,7 +33,7 @@ func TestErrorImportHandling(t *testing.T) {
 		},
 		{
 			`import "../fixtures/stub-with-error.nj"`,
-			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF instead. [line: 1, character: 14]",
+			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF (\x00) at [Line: 1, Offset: 13] instead.",
 		},
 		{
 			`import "../fixtures/stub-with-error-in-function.nj"`,
@@ -40,17 +41,20 @@ func TestErrorImportHandling(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+		t.Run(fmt.Sprintf("TestErrorImportHandling_%d", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+
 	}
 }
