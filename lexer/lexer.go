@@ -55,13 +55,10 @@ func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 	switch l.ch {
 	case '=':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.EQ, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.ASSIGN, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.ASSIGN, map[byte]token.TokenType{
+			'=': token.EQ,
+		})
 
 	case ';':
 		tok = newToken(token.SEMICOLON, []byte{l.ch})
@@ -104,47 +101,34 @@ func (l *Lexer) NextToken() token.Token {
 		}
 
 	case '-':
-		if l.peekChar() == '-' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.DECRE, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.MINUS, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.MINUS, map[byte]token.TokenType{
+			'-': token.DECRE,
+		})
+
 	case '+':
-		if l.peekChar() == '+' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.INCRE, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.PLUS, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.PLUS, map[byte]token.TokenType{
+			'+': token.INCRE,
+		})
 	case '>':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.GTE, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.GT, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.GT, map[byte]token.TokenType{
+			'=': token.GTE,
+		})
 
 	case '<':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.LTE, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.LT, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.LT, map[byte]token.TokenType{
+			'=': token.LTE,
+		})
 
 	case '!':
-		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tok = newToken(token.NEQ, []byte{ch, l.ch})
-		} else {
-			tok = newToken(token.BANG, []byte{l.ch})
-		}
+
+		tok = l.newTokenPeekOrDefault(token.BANG, map[byte]token.TokenType{
+			'=': token.NEQ,
+		})
+
 	case ':':
 		tok = newToken(token.COLON, []byte{l.ch})
 	case '(':
@@ -191,6 +175,17 @@ func (l *Lexer) FormatLineCharacter() string {
 
 func newToken(tokenType token.TokenType, ch []byte) token.Token {
 	return token.Token{Type: tokenType, Literal: ch}
+}
+
+func (l *Lexer) newTokenPeekOrDefault(tokenType token.TokenType, expectedPeek map[byte]token.TokenType) token.Token {
+	peekToken, ok := expectedPeek[l.peekChar()]
+	if !ok {
+		return newToken(tokenType, []byte{l.ch})
+	}
+
+	ch := l.ch
+	l.readChar()
+	return newToken(peekToken, []byte{ch, l.ch})
 }
 
 func isLetter(ch byte) bool {

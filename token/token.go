@@ -6,9 +6,15 @@ import (
 
 type TokenType int8
 
+type Location struct {
+	Line   int32
+	Offset int32
+}
+
 type Token struct {
 	Type    TokenType
-	Literal []byte // be a string don't have same performance as using int or byte
+	Literal []byte
+	Location
 }
 
 // String() is used to transform TokenType int8 in it is string format, for better

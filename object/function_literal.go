@@ -15,9 +15,9 @@ type FunctionLiteral struct {
 func (f *FunctionLiteral) Type() ObjectType { return FUNCTION_OBJ }
 func (f *FunctionLiteral) Inspect() string {
 	var out bytes.Buffer
-	params := []string{}
-	for _, p := range f.Parameters {
-		params = append(params, p.String())
+	params := make([]string, len(f.Parameters))
+	for i, p := range f.Parameters {
+		params[i] = p.String()
 	}
 	out.WriteString("function")
 	out.WriteString("(")
