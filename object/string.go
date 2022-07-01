@@ -5,6 +5,7 @@ import (
 	"ninja/ast"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 type String struct {
@@ -33,6 +34,12 @@ func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environmen
 			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
 		}
 		return &String{Value: STRING_OBJ}
+	case "length":
+		if len(args) > 0 {
+			argStr := InspectArguments(args...)
+			return NewErrorFormat("string.length not accept any arguments. got: %s", argStr)
+		}
+		return &Integer{Value: int64(utf8.RuneCountInString(s.Value))}
 	case "split":
 		return stringSplit(s.Value, args...)
 	case "replace":

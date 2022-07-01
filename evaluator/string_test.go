@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -229,6 +230,65 @@ func TestStringMethodSplitWrongParameter(t *testing.T) {
 		{
 			`"ola".split(true)`,
 			"first argument must be string, got: BOOLEAN",
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input, t)
+
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+		}
+
+		if errObj.Message != tt.expectedErrorMessage {
+			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+		}
+	}
+}
+
+func TestStringMethodLength(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{
+			`"".length()`,
+			0,
+		},
+		{
+			`"hello".length()`,
+			5,
+		},
+		{
+			`"Acção".length()`,
+			5,
+		},
+		{
+			`"नमस्ते दुनिया".length()`,
+			13,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodLength_%d", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+
+			if !testIntegerObject(t, evaluated, tt.expected) {
+				t.Errorf("string.length() expected %d. Got: %s", tt.expected, evaluated.Inspect())
+			}
+		})
+	}
+}
+
+func TestStringMethodLengthWrongParameter(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{
+			`"ola".length(1)`,
+			"string.length not accept any arguments. got: [1]",
 		},
 	}
 

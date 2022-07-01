@@ -213,6 +213,18 @@ func TestArrayMethod(t *testing.T) {
 			"ARRAY",
 		},
 		{
+			`[].length()`,
+			0,
+		},
+		{
+			`[1].length()`,
+			1,
+		},
+		{
+			`[1,2,3].length()`,
+			3,
+		},
+		{
 			`[].join(",")`,
 			`[]`,
 		},
@@ -321,6 +333,10 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 		{
 			`[].join([])`,
 			"array.join expect first argument be string. Got: ARRAY",
+		},
+		{
+			`[1].length(1)`,
+			"array.length not accept any arguments. got: [1]",
 		},
 		{
 			`[].join()`,

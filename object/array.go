@@ -32,6 +32,12 @@ func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment
 			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
 		}
 		return &String{Value: ARRAY_OBJ}
+	case "length":
+		if len(args) > 0 {
+			argStr := InspectArguments(args...)
+			return NewErrorFormat("array.length not accept any arguments. got: %s", argStr)
+		}
+		return &Integer{Value: int64(len(s.Elements))}
 	case "join":
 		return arrayJoin(s.Elements, args...)
 	case "push":
@@ -62,7 +68,7 @@ func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment
 	case "slice":
 		return arraySlice(s.Elements, args...)
 	}
-	return NewErrorFormat("method %s not exists on string object.", method)
+	return NewErrorFormat("method %s not exists on array object.", method)
 }
 
 func arrayJoin(elements []Object, args ...Object) Object {

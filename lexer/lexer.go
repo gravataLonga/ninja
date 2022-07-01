@@ -3,6 +3,7 @@ package lexer
 import (
 	"io"
 	"ninja/token"
+	"unicode/utf8"
 )
 
 type Lexer struct {
@@ -62,7 +63,8 @@ func (l *Lexer) NextToken() token.Token {
 	case ';':
 		tok = l.newToken(token.SEMICOLON, []byte{l.ch})
 	case '"':
-		tok = l.newToken(token.STRING, l.readString())
+		tok.Type = token.STRING
+		tok.Literal = runesToUTF8(l.readString())
 	case '*':
 		tok = l.newToken(token.ASTERISK, []byte{l.ch})
 	case '/':
@@ -236,7 +238,7 @@ func (l *Lexer) peekChar() byte {
 	return l.input[l.readPosition]
 }
 
-func (l *Lexer) readString() []byte {
+func (l *Lexer) readString() []rune {
 	position := l.position + 1
 	for {
 		l.readChar()
@@ -244,5 +246,21 @@ func (l *Lexer) readString() []byte {
 			break
 		}
 	}
-	return []byte(l.input[position:l.position])
+	return []rune(l.input[position:l.position])
+}
+
+func runesToUTF8(rs []rune) []byte {
+	size := 0
+	for _, r := range rs {
+		size += utf8.RuneLen(r)
+	}
+
+	bs := make([]byte, size)
+
+	count := 0
+	for _, r := range rs {
+		count += utf8.EncodeRune(bs[count:], r)
+	}
+
+	return bs
 }
