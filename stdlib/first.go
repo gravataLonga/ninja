@@ -1,15 +1,22 @@
 package stdlib
 
-import "ninja/object"
+import (
+	"ninja/object"
+	"ninja/typing"
+)
 
 func First(args ...object.Object) object.Object {
-	if len(args) != 1 {
-		return object.NewErrorFormat("wrong number of arguments. got=%d, want=1", len(args))
+
+	err := typing.Check(
+		"first", args,
+		typing.ExactArgs(1),
+		typing.WithTypes(object.ARRAY_OBJ),
+	);
+
+	if err != nil {
+		return object.NewError(err.Error())
 	}
 
-	if args[0].Type() != object.ARRAY_OBJ {
-		return object.NewErrorFormat("argument to `first` must be ARRAY, got %s", args[0].Type())
-	}
 	arr := args[0].(*object.Array)
 	if len(arr.Elements) > 0 {
 		return arr.Elements[0]

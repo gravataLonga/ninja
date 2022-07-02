@@ -1,15 +1,20 @@
 package stdlib
 
-import "ninja/object"
+import (
+	"ninja/object"
+	"ninja/typing"
+)
 
 func Push(args ...object.Object) object.Object {
-	if len(args) != 2 {
-		return object.NewErrorFormat("wrong number of arguments. got=%d, want=2",
-			len(args))
-	}
-	if args[0].Type() != object.ARRAY_OBJ {
-		return object.NewErrorFormat("argument to `push` must be ARRAY, got %s",
-			args[0].Type())
+
+	err := typing.Check(
+		"push", args,
+		typing.ExactArgs(2),
+		typing.WithTypes(object.ARRAY_OBJ),
+	)
+
+	if err != nil {
+		return object.NewError(err.Error())
 	}
 
 	arr := args[0].(*object.Array)

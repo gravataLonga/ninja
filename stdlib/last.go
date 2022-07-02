@@ -1,15 +1,20 @@
 package stdlib
 
-import "ninja/object"
+import (
+	"ninja/object"
+	"ninja/typing"
+)
 
 func Last(args ...object.Object) object.Object {
-	if len(args) != 1 {
-		return object.NewErrorFormat("wrong number of arguments. got=%d, want=1",
-			len(args))
-	}
-	if args[0].Type() != object.ARRAY_OBJ {
-		return object.NewErrorFormat("argument to `last` must be ARRAY, got %s",
-			args[0].Type())
+
+	err := typing.Check(
+		"last", args,
+		typing.ExactArgs(1),
+		typing.WithTypes(object.ARRAY_OBJ),
+	)
+
+	if err != nil {
+		return object.NewError(err.Error())
 	}
 
 	arr := args[0].(*object.Array)

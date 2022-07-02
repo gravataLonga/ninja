@@ -1,11 +1,22 @@
 package stdlib
 
-import "ninja/object"
+import (
+	"ninja/object"
+	"ninja/typing"
+)
 
 func Len(args ...object.Object) object.Object {
-	if len(args) != 1 {
-		return object.NewErrorFormat("wrong number of arguments. got=%d, want=1", len(args))
+
+	err := typing.Check(
+		"len", args,
+		typing.ExactArgs(1),
+		typing.OneOfType(object.ARRAY_OBJ, object.STRING_OBJ),
+	)
+
+	if err != nil {
+		return object.NewError(err.Error())
 	}
+
 	switch arg := args[0].(type) {
 	case *object.Array:
 		return &object.Integer{Value: int64(len(arg.Elements))}

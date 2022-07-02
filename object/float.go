@@ -48,8 +48,13 @@ func (f *Float) Call(objectCall *ast.ObjectCall, method string, env *Environment
 			argStr := InspectArguments(args...)
 			return NewErrorFormat("method abs not accept any arguments. got: %s", argStr)
 		}
-		var absT float64 = math.Abs(f.Value)
-		return &Float{Value: absT}
+		return &Float{Value: math.Abs(f.Value)}
+	case "round":
+		if len(args) > 0 {
+			argStr := InspectArguments(args...)
+			return NewErrorFormat("method round not accept any arguments. got: %s", argStr)
+		}
+		return &Float{Value: math.Round(f.Value)}
 	}
 	return NewErrorFormat("method %s not exists on integer object.", method)
 

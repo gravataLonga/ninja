@@ -195,7 +195,7 @@ func TestStringMethodSplit(t *testing.T) {
 			`[a;b, c;d]`,
 		},
 		{
-			`"a;b,c;d" + "other,nice".split(",")`,
+			`("a;b,c;d" + "other,nice").split(",")`,
 			`[a;b, c;dother, nice]`,
 		},
 		{

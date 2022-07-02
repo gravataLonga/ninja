@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -35,9 +36,11 @@ func TestEvalFloatExpression(t *testing.T) {
 		{`var add = function() {return 1.2;}; [add(), add()][0] + 1.3`, 2.5},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		testFloatObject(t, evaluated, tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestEvalFloatExpression[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testFloatObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -80,18 +83,20 @@ func TestErrorFloatHandling(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestErrorFloatHandling[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 
@@ -112,12 +117,26 @@ func TestFloatMethod(t *testing.T) {
 			`-1.1.abs()`,
 			1.1,
 		},
+		{
+			`0.8.round()`,
+			1.0,
+		},
+		{
+			`0.4.round()`,
+			0.0,
+		},
+		{
+			`0.05.round()`,
+			0.0,
+		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestFloatMethod[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testObjectLiteral(t, evaluated, tt.expected)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -138,18 +157,25 @@ func TestFloatMethodWrongUsage(t *testing.T) {
 			`1.1.abs(1)`,
 			"method abs not accept any arguments. got: [1]",
 		},
+		{
+			`1.1.round(1)`,
+			"method round not accept any arguments. got: [1]",
+		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestFloatMethodWrongUsage[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }

@@ -30,20 +30,18 @@ type Hashable interface {
 }
 
 const (
-	NULL_OBJ  = "NULL"
-	ERROR_OBJ = "ERROR"
-
+	NULL_OBJ         = "NULL"
+	ERROR_OBJ        = "ERROR"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	BREAK_VALUE_OBJ  = "BREAK_VALUE"
 	FUNCTION_OBJ     = "FUNCTION"
 	BUILTIN_OBJ      = "BUILTIN"
-
-	INTEGER_OBJ = "INTEGER"
-	FLOAT_OBJ   = "FLOAT"
-	BOOLEAN_OBJ = "BOOLEAN"
-	STRING_OBJ  = "STRING"
-	ARRAY_OBJ   = "ARRAY"
-	HASH_OBJ    = "HASH"
+	INTEGER_OBJ      = "INTEGER"
+	FLOAT_OBJ        = "FLOAT"
+	BOOLEAN_OBJ      = "BOOLEAN"
+	STRING_OBJ       = "STRING"
+	ARRAY_OBJ        = "ARRAY"
+	HASH_OBJ         = "HASH"
 )
 
 func IsError(o Object) bool {
