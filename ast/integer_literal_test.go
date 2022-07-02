@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"fmt"
 	"ninja/token"
 	"testing"
 )
@@ -25,10 +26,13 @@ func TestIntegerLiteral_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		literal := &IntegerLiteral{Token: token.Token{Type: token.FLOAT, Literal: []byte(tt.expected)}, Value: tt.intValue}
+		t.Run(fmt.Sprintf("TestIntegerLiteral_String_%d", tt.intValue), func(t *testing.T) {
+			literal := &IntegerLiteral{Token: token.Token{Type: token.FLOAT, Literal: tt.expected}, Value: tt.intValue}
 
-		if literal.String() != tt.expected {
-			t.Errorf("IntegerLiteral.String() not match to %s. Got: %s", tt.expected, literal.String())
-		}
+			if literal.String() != tt.expected {
+				t.Errorf("IntegerLiteral.String() not match to %s. Got: %s", tt.expected, literal.String())
+			}
+		})
+
 	}
 }

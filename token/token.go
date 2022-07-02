@@ -14,7 +14,7 @@ type Location struct {
 
 type Token struct {
 	Type    TokenType
-	Literal []byte
+	Literal string
 	Location
 }
 

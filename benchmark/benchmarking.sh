@@ -4,73 +4,73 @@ echo "======================="
 echo "\n>>> SCRIPTING FIB(5);"
 
 echo "### PHP"
-time php ./benchmark/fib.php 5
+time php ./fib.php 5
 echo ""
 
 
 echo "### GO"
-time ./benchmark/fib-go 5
+time ./fib-go 5
 echo ""
 
 
 echo "### NINJA"
-time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(5)"
+time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(5)"
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(10);"
 
 echo "### PHP"
-time php ./benchmark/fib.php 10
+time php ./fib.php 10
 echo ""
 
 echo "### GO"
-time ./benchmark/fib-go 10
+time ./fib-go 10
 echo ""
 
 echo "### NINJA"
-time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(10)"
+time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(10)"
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(20);"
 
 echo "### PHP"
-time php ./benchmark/fib.php 20
+time php ./fib.php 20
 echo ""
 
 
 echo "### GO"
-time ./benchmark/fib-go 20
+time ./fib-go 20
 echo ""
 
 echo "### NINJA"
-time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(20)"
+time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(20)"
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(25);"
 
 echo "### PHP"
-time php ./benchmark/fib.php 25
+time php ./fib.php 25
 echo ""
 
 
 echo "### GO"
-time ./benchmark/fib-go 25
+time ./fib-go 25
 echo ""
 
 echo "### NINJA"
-time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(25)"
+time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(25)"
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(30);"
 
 echo "### PHP"
-time php ./benchmark/fib.php 30
+time php ./fib.php 30
 echo ""
 
 
 echo "### GO"
-time ./benchmark/fib-go 30
+time ./fib-go 30
 echo ""
 
 echo "### NINJA"
-time ./ninja-osx -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(30)"
+time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(30)"

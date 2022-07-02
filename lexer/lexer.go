@@ -1,8 +1,10 @@
 package lexer
 
 import (
+	"encoding/hex"
 	"io"
 	"ninja/token"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -39,8 +41,13 @@ func (l *Lexer) NextToken() token.Token {
 	case ';':
 		tok = l.newToken(token.SEMICOLON, []byte{l.ch})
 	case '"':
-		tok.Type = token.STRING
-		tok.Literal = runesToUTF8(l.readString())
+		str, err := l.readString()
+		if err != nil {
+			tok = l.newToken(token.ILLEGAL, []byte{l.ch})
+		} else {
+			tok.Type = token.STRING
+			tok.Literal = str
+		}
 	case '*':
 		tok = l.newToken(token.ASTERISK, []byte{l.ch})
 	case '/':
@@ -168,7 +175,7 @@ func (l *Lexer) keepTrackLineAndCharPosition() {
 
 func (l *Lexer) newToken(tokenType token.TokenType, ch []byte) token.Token {
 	location := token.Location{Line: l.lineNumber + 1, Offset: l.characterPositionInLine}
-	return token.Token{Type: tokenType, Literal: ch, Location: location}
+	return token.Token{Type: tokenType, Literal: string(ch), Location: location}
 }
 
 func (l *Lexer) newTokenPeekOrDefault(tokenType token.TokenType, expectedPeek map[byte]token.TokenType) token.Token {
@@ -239,15 +246,48 @@ func (l *Lexer) peekChar() byte {
 	return l.input[l.readPosition]
 }
 
-func (l *Lexer) readString() []rune {
-	position := l.position + 1
+func (l *Lexer) readString() (string, error) {
+	b := &strings.Builder{}
 	for {
 		l.readChar()
-		if l.ch == '"' {
-			break
+		// Support some basic escapes like \"
+		if l.ch == '\\' {
+			switch l.peekChar() {
+			case '"':
+				b.WriteByte('"')
+			case 'n':
+				b.WriteByte('\n')
+			case 'r':
+				b.WriteByte('\r')
+			case 't':
+				b.WriteByte('\t')
+			case '\\':
+				b.WriteByte('\\')
+			case 'x':
+				// Skip over the the '\\', 'x' and the next two bytes (hex)
+				l.readChar()
+				l.readChar()
+				prevCh := l.ch
+				l.readChar()
+				src := string([]byte{prevCh, l.ch})
+				dst, err := hex.DecodeString(src)
+				if err != nil {
+					return "", err
+				}
+				b.Write(dst)
+				continue
+			}
+			// Skip over the '\\' and the matched single escape char
+			l.readChar()
+			continue
+		} else {
+			if l.ch == '"' || l.ch == 0 {
+				break
+			}
 		}
+		b.WriteByte(l.ch)
 	}
-	return []rune(l.input[position:l.position])
+	return b.String(), nil
 }
 
 func runesToUTF8(rs []rune) []byte {

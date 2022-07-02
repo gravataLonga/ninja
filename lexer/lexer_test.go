@@ -163,3 +163,30 @@ func TestStringAcceptUtf8Character(t *testing.T) {
 	}
 
 }
+
+func TestLexerReadString(t *testing.T) {
+	input := `"\"foo\"";"\x00\x0a\x7f";"\r\n\t"`
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.STRING, "\"foo\""},
+		{token.SEMICOLON, ";"},
+		{token.STRING, "\x00\n\u007f"},
+		{token.SEMICOLON, ";"},
+		{token.STRING, "\r\n\t"},
+	}
+	lexer := New(strings.NewReader(input))
+
+	for _, test := range tests {
+		tok := lexer.NextToken()
+		if tok.Type != test.expectedType {
+			t.Fatalf("token type wrong. expected=%q, got=%q", test.expectedType, tok.Type)
+		}
+
+		if string(tok.Literal) != test.expectedLiteral {
+			t.Fatalf("literal wrong. expected=%q, got=%q", test.expectedLiteral, tok.Literal)
+		}
+	}
+}
