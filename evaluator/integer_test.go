@@ -116,7 +116,7 @@ func TestIntegerMethod(t *testing.T) {
 			1.0,
 		},
 		{
-			`-1.abs()`,
+			`var a = -1; a.abs()`,
 			1,
 		},
 	}
@@ -154,16 +154,18 @@ func TestIntegerMethodWrongUsage(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestIntegerMethodWrongUsage[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
 	}
 }
