@@ -36,9 +36,11 @@ func TestEvalIntegerExpression(t *testing.T) {
 		{`var add = function() {return 1;}; [add(), add()][0] + 1`, 2},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		testIntegerObject(t, evaluated, tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestEvalIntegerExpression[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testIntegerObject(t, evaluated, tt.expected)
+		})
 	}
 }
 

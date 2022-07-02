@@ -189,7 +189,11 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 		{
 			`"hello" + "world".type()`,
-			`((hello + world).type())`,
+			`(hello + (world.type()))`,
+		},
+		{
+			`"hello" + 2.string()`,
+			`(hello + (2.string()))`,
 		},
 		{
 			`"hello".type().split("_")`,

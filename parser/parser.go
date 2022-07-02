@@ -14,11 +14,10 @@ const (
 	LOGICAL      // || and &&
 	EQUALS       // ==
 	LESS_GREATER // > or <
-	OBJECT_CALL
-	SUM     //+
-	PRODUCT //*
-	PREFIX  // -X or !X
-	CALL    // myFunction(X)
+	SUM          //+
+	PRODUCT      //*
+	PREFIX       // -X or !X
+	CALL         // myFunction(X)
 	INDEX
 )
 
@@ -59,7 +58,7 @@ var precedences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
-	token.DOT:      OBJECT_CALL,
+	token.DOT:      CALL,
 }
 
 func New(l *lexer.Lexer) *Parser {
