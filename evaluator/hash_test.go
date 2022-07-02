@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -228,10 +229,6 @@ func TestHashMethod(t *testing.T) {
 			object.Array{Elements: []object.Object{}},
 		},
 		{
-			`{"a": 1, "b": true}.keys()`,
-			object.Array{Elements: []object.Object{&object.String{Value: "a"}, &object.String{Value: "b"}}},
-		},
-		{
 			`{}.has("a")`,
 			false,
 		},
@@ -245,10 +242,51 @@ func TestHashMethod(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestHashMethod_%d", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testObjectLiteral(t, evaluated, tt.expected)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+	}
+}
+
+func TestHashHasKeyMethod(t *testing.T) {
+	input := `{"a": 1, "b": true}.keys()`
+	slicesContain := []string{"a", "b"}
+
+	contain := func(slice []string, input string) bool {
+		for _, v := range slice {
+			if v == input {
+				return true
+			}
+		}
+		return false
+	}
+
+	evaluated := testEval(input, t)
+
+	arr, ok := evaluated.(*object.Array)
+	if !ok {
+		t.Fatalf("expect to be an array. Got: %T", evaluated)
+	}
+
+	stringPos1, ok := arr.Elements[0].(*object.String)
+	if !ok {
+		t.Fatalf("expect index 0 be a string. Got: %T", evaluated)
+	}
+
+	stringPos2, ok := arr.Elements[0].(*object.String)
+	if !ok {
+		t.Fatalf("expect index 0 be a string. Got: %T", evaluated)
+	}
+
+	if !contain(slicesContain, stringPos1.Value) {
+		t.Fatalf("hash.keys() don't contain %v. Got: %v", slicesContain, stringPos1)
+	}
+
+	if !contain(slicesContain, stringPos2.Value) {
+		t.Fatalf("hash.keys() don't contain %v. Got: %v", slicesContain, stringPos2)
 	}
 }
 

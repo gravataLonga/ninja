@@ -53,9 +53,11 @@ func hashKeys(keys map[HashKey]HashPair, args ...Object) Object {
 	if len(args) != 0 {
 		return NewErrorFormat("hash.keys() expect 0 arguments. Got: %s", InspectArguments(args...))
 	}
-	elements := []Object{}
+	elements := make([]Object, len(keys))
+	i := 0
 	for _, pair := range keys {
-		elements = append(elements, pair.Key)
+		elements[i] = pair.Key
+		i++
 	}
 
 	return &Array{Elements: elements}

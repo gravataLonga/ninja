@@ -26,30 +26,6 @@ func New(in io.Reader) *Lexer {
 	return l
 }
 
-func (l *Lexer) readChar() {
-
-	if l.readPosition >= len(l.input) {
-		l.ch = 0
-	} else {
-		l.ch = l.input[l.readPosition]
-	}
-
-	l.position = l.readPosition
-	l.readPosition += 1
-
-	l.keepTrackLineAndCharPosition()
-
-}
-
-func (l *Lexer) keepTrackLineAndCharPosition() {
-	if l.ch == '\n' {
-		l.lineNumber += 1
-		l.characterPositionInLine = 0
-	} else {
-		l.characterPositionInLine += 1
-	}
-}
-
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhitespace()
@@ -163,6 +139,31 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.readChar()
 	return tok
+}
+
+func (l *Lexer) readChar() {
+
+	if l.readPosition >= len(l.input) {
+		l.ch = 0
+	} else {
+		l.ch = l.input[l.readPosition]
+	}
+
+	l.position = l.readPosition
+	l.readPosition += 1
+
+	l.keepTrackLineAndCharPosition()
+}
+
+// keepTrackLineAndCharPosition is a method which keep tracking where position of
+// pointer of lexer is point at.
+func (l *Lexer) keepTrackLineAndCharPosition() {
+	if l.ch == '\n' {
+		l.lineNumber += 1
+		l.characterPositionInLine = 0
+	} else {
+		l.characterPositionInLine += 1
+	}
 }
 
 func (l *Lexer) newToken(tokenType token.TokenType, ch []byte) token.Token {
