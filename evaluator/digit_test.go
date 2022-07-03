@@ -96,6 +96,5 @@ func TestEvalDigitExpression(t *testing.T) {
 			evaluated := testEval(tt.input, t)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
-
 	}
 }

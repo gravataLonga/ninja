@@ -34,27 +34,47 @@ func (i *Integer) Compare(right Object) int8 {
 func (s *Integer) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		err := Check(
+			"int.type",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
 		return &String{Value: INTEGER_OBJ}
 	case "string":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method string not accept any arguments. got: %s", argStr)
+		err := Check(
+			"int.string",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
 		return &String{Value: strconv.FormatInt(s.Value, 10)}
 	case "float":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method float not accept any arguments. got: %s", argStr)
+		err := Check(
+			"int.float",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
 		return &Float{Value: float64(s.Value)}
 	case "abs":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method abs not accept any arguments. got: %s", argStr)
+		err := Check(
+			"int.abs",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
 		var absT int64 = s.Value
 		if s.Value < 0 {

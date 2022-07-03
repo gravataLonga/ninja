@@ -171,8 +171,8 @@ func TestStringMethodTypeWrongParameter(t *testing.T) {
 		t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
 	}
 
-	if errObj.Message != "method type not accept any arguments. got: [1]" {
-		t.Errorf("error message expected to be: \"%s\". got: \"%s\"", "method type not accept any arguments. Got: [1]", errObj.Message)
+	if errObj.Message != "TypeError: string.type() takes exactly 0 argument (1 given)" {
+		t.Errorf("error message expected to be: \"%s\". got: \"%s\"", "TypeError: string.type() takes exactly 0 argument (1 given)", errObj.Message)
 	}
 }
 
@@ -207,12 +207,14 @@ func TestStringMethodSplit(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodSplit[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		if evaluated.Inspect() != tt.expected {
-			t.Errorf("string.split() expected %s. Got: %s", tt.expected, evaluated.Inspect())
-		}
+			if evaluated.Inspect() != tt.expected {
+				t.Errorf("string.split() expected %s. Got: %s", tt.expected, evaluated.Inspect())
+			}
+		})
 	}
 
 }
@@ -224,15 +226,15 @@ func TestStringMethodSplitWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".split()`,
-			"split method expect exactly 1 argument",
+			"TypeError: string.split() takes exactly 1 argument (0 given)",
 		},
 		{
 			`"ola".split("hello", "abc")`,
-			"split method expect exactly 1 argument",
+			"TypeError: string.split() takes exactly 1 argument (2 given)",
 		},
 		{
 			`"ola".split(true)`,
-			"first argument must be string, got: BOOLEAN",
+			"TypeError: string.split() expected argument #1 to be `STRING` got `BOOLEAN`",
 		},
 	}
 
@@ -291,7 +293,7 @@ func TestStringMethodLengthWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".length(1)`,
-			"string.length not accept any arguments. got: [1]",
+			"TypeError: string.length() takes exactly 0 argument (1 given)",
 		},
 	}
 
@@ -346,29 +348,31 @@ func TestStringMethodContainWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".contain()`,
-			"contain method expect exactly 1 argument",
+			"TypeError: string.contain() takes exactly 1 argument (0 given)",
 		},
 		{
 			`"ola".contain("hello", "abc")`,
-			"contain method expect exactly 1 argument",
+			"TypeError: string.contain() takes exactly 1 argument (2 given)",
 		},
 		{
 			`"ola".contain(true)`,
-			"first argument must be string, got: BOOLEAN",
+			"TypeError: string.contain() expected argument #1 to be `STRING` got `BOOLEAN`",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodContainWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
 	}
 }
 
@@ -391,10 +395,12 @@ func TestStringMethodIndex(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodIndex[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testIntegerObject(t, evaluated, tt.expected)
+			testIntegerObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -405,29 +411,31 @@ func TestStringMethodIndexWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".index()`,
-			"index method expect exactly 1 argument",
+			"TypeError: string.index() takes exactly 1 argument (0 given)",
 		},
 		{
 			`"ola".index("hello", "abc")`,
-			"index method expect exactly 1 argument",
+			"TypeError: string.index() takes exactly 1 argument (2 given)",
 		},
 		{
 			`"ola".index(true)`,
-			"first argument must be string, got: BOOLEAN",
+			"TypeError: string.index() expected argument #1 to be `STRING` got `BOOLEAN`",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodIndexWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
 	}
 }
 
@@ -446,10 +454,12 @@ func TestStringMethodUpper(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodUpper[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testStringObject(t, evaluated, tt.expected)
+			testStringObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -460,21 +470,23 @@ func TestStringMethodUpperWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".upper("hello", "abc")`,
-			"upper method expect exactly 0 argument",
+			"TypeError: string.upper() takes exactly 0 argument (2 given)",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodUpperWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
 	}
 }
 
@@ -493,10 +505,12 @@ func TestStringMethodLower(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodLower[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testStringObject(t, evaluated, tt.expected)
+			testStringObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -507,7 +521,7 @@ func TestStringMethodLowerWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".lower("hello", "abc")`,
-			"lower method expect exactly 0 argument",
+			"TypeError: string.lower() takes exactly 0 argument (2 given)",
 		},
 	}
 
@@ -536,10 +550,12 @@ func TestStringMethodTrim(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodTrim[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testStringObject(t, evaluated, tt.expected)
+			testStringObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -550,21 +566,24 @@ func TestStringMethodTrimWrongParameter(t *testing.T) {
 	}{
 		{
 			`"ola".trim("hello")`,
-			"trim method expect exactly 0 argument",
+			"TypeError: string.trim() takes exactly 0 argument (1 given)",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodTrimWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 
@@ -583,10 +602,13 @@ func TestStringMethodInteger(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodInteger[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testIntegerObject(t, evaluated, tt.expected)
+			testIntegerObject(t, evaluated, tt.expected)
+		})
+
 	}
 }
 
@@ -597,25 +619,28 @@ func TestStringMethodIntegerWrongParameter(t *testing.T) {
 	}{
 		{
 			`"100".int("hello")`,
-			"int method expect exactly 0 argument",
+			"TypeError: string.int() takes exactly 0 argument (1 given)",
 		},
 		{
 			`"0x000".int()`,
-			"string.int() fail to convert to int. Got: strconv.ParseInt: parsing \"0x000\": invalid syntax",
+			"TypeError: string.int() fail to convert to int. Got: strconv.ParseInt: parsing \"0x000\": invalid syntax",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodIntegerWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 
@@ -634,10 +659,12 @@ func TestStringMethodFloat(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodFloat[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testFloatObject(t, evaluated, tt.expected)
+			testFloatObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -648,25 +675,28 @@ func TestStringMethodFloatWrongParameter(t *testing.T) {
 	}{
 		{
 			`"100.0".float("hello")`,
-			"float method expect exactly 0 argument",
+			"TypeError: string.float() takes exactly 0 argument (1 given)",
 		},
 		{
 			`"0x000".float()`,
-			"string.float() fail to convert to float. Got: strconv.ParseFloat: parsing \"0x000\": invalid syntax",
+			"TypeError: string.float() fail to convert to float. Got: strconv.ParseFloat: parsing \"0x000\": invalid syntax",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodFloatWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 
@@ -685,10 +715,12 @@ func TestStringMethodReplace(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodReplace[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testStringObject(t, evaluated, tt.expected)
+			testStringObject(t, evaluated, tt.expected)
+		})
 	}
 }
 
@@ -699,37 +731,40 @@ func TestStringMethodReplaceWrongParameter(t *testing.T) {
 	}{
 		{
 			`"Hello World".replace()`,
-			"replace method expect exactly 2 argument",
+			"TypeError: string.replace() takes exactly 2 argument (0 given)",
 		},
 		{
 			`"Hello World".replace("this")`,
-			"replace method expect exactly 2 argument",
+			"TypeError: string.replace() takes exactly 2 argument (1 given)",
 		},
 		{
 			`"Hello World".replace("this", "that", "other")`,
-			"replace method expect exactly 2 argument",
+			"TypeError: string.replace() takes exactly 2 argument (3 given)",
 		},
 		{
 			`"Hello World".replace(1, "other")`,
-			"first argument must be string, got: INTEGER",
+			"TypeError: string.replace() expected argument #1 to be `STRING` got `INTEGER`",
 		},
 		{
 			`"Hello World".replace("other", [])`,
-			"second argument must be string, got: ARRAY",
+			"TypeError: string.replace() expected argument #2 to be `STRING` got `ARRAY`",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodReplaceWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 

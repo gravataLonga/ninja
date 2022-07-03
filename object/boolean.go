@@ -30,10 +30,16 @@ func (b *Boolean) HashKey() HashKey {
 func (s *Boolean) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		err := Check(
+			"bool.type",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
+		
 		return &String{Value: BOOLEAN_OBJ}
 	}
 	return NewErrorFormat("method %s not exists on string object.", method)

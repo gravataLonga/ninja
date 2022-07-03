@@ -147,19 +147,19 @@ func TestFloatMethodWrongUsage(t *testing.T) {
 	}{
 		{
 			`1.1.type(1)`,
-			"method type not accept any arguments. got: [1]",
+			"TypeError: float.type() takes exactly 0 argument (1 given)",
 		},
 		{
 			`1.1.string(1)`,
-			"method string not accept any arguments. got: [1]",
+			"TypeError: float.string() takes exactly 0 argument (1 given)",
 		},
 		{
 			`1.1.abs(1)`,
-			"method abs not accept any arguments. got: [1]",
+			"TypeError: float.abs() takes exactly 0 argument (1 given)",
 		},
 		{
 			`1.1.round(1)`,
-			"method round not accept any arguments. got: [1]",
+			"TypeError: float.round() takes exactly 0 argument (1 given)",
 		},
 	}
 

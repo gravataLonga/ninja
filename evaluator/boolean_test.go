@@ -65,7 +65,6 @@ func TestEvalBooleanExpression(t *testing.T) {
 			evaluated := testEval(tt.input, t)
 			testBooleanObject(t, evaluated, tt.expected)
 		})
-
 	}
 }
 
@@ -173,11 +172,45 @@ func TestBooleanMethod(t *testing.T) {
 			`true.type()`,
 			"BOOLEAN",
 		},
+		{
+			`var a = false; a.type()`,
+			"BOOLEAN",
+		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestBooleanMethod[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testObjectLiteral(t, evaluated, tt.expected)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+	}
+}
+
+func TestBooleanWrongMethod(t *testing.T) {
+
+	tests := []struct {
+		input                string
+		expectedErrorMessage interface{}
+	}{
+		{
+			`true.type(1)`,
+			"TypeError: bool.type() takes exactly 0 argument (1 given)",
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestBooleanMethod[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
 	}
 }

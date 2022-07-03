@@ -42,15 +42,26 @@ func (s *String) Compare(right Object) int8 {
 func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		err := Check(
+			"string.type",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
+
 		return &String{Value: STRING_OBJ}
 	case "length":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("string.length not accept any arguments. got: %s", argStr)
+		err := Check(
+			"string.length",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
 		return &Integer{Value: int64(utf8.RuneCountInString(s.Value))}
 	case "split":
@@ -78,6 +89,17 @@ func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environmen
 // @todo performance for all methods
 
 func stringSplit(str string, args ...Object) Object {
+	err := Check(
+		"string.split",
+		args,
+		ExactArgs(1),
+		WithTypes(STRING_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
+	}
+
 	if len(args) != 1 {
 		return NewErrorFormat("split method expect exactly 1 argument")
 	}
@@ -96,33 +118,38 @@ func stringSplit(str string, args ...Object) Object {
 }
 
 func stringReplace(str string, args ...Object) Object {
-	if len(args) != 2 {
-		return NewErrorFormat("replace method expect exactly 2 argument")
+	err := Check(
+		"string.replace",
+		args,
+		ExactArgs(2),
+		WithTypes(STRING_OBJ, STRING_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
-	search, ok := args[0].(*String)
-	if !ok {
-		return NewErrorFormat("first argument must be string, got: %s", args[0].Type())
-	}
+	search, _ := args[0].(*String)
+	replace, _ := args[1].(*String)
 
-	replace, ok := args[1].(*String)
-	if !ok {
-		return NewErrorFormat("second argument must be string, got: %s", args[1].Type())
-	}
 	newStr := strings.ReplaceAll(str, search.Value, replace.Value)
-
 	return &String{Value: newStr}
 }
 
 func stringContains(str string, args ...Object) Object {
-	if len(args) != 1 {
-		return NewErrorFormat("contain method expect exactly 1 argument")
+
+	err := Check(
+		"string.contain",
+		args,
+		ExactArgs(1),
+		WithTypes(STRING_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
-	needle, ok := args[0].(*String)
-	if !ok {
-		return NewErrorFormat("first argument must be string, got: %s", args[0].Type())
-	}
+	needle, _ := args[0].(*String)
 
 	if strings.Contains(str, needle.Value) {
 		return TRUE
@@ -131,22 +158,32 @@ func stringContains(str string, args ...Object) Object {
 }
 
 func stringIndex(str string, args ...Object) Object {
-	if len(args) != 1 {
-		return NewErrorFormat("index method expect exactly 1 argument")
+	err := Check(
+		"string.index",
+		args,
+		ExactArgs(1),
+		WithTypes(STRING_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
-	needle, ok := args[0].(*String)
-	if !ok {
-		return NewErrorFormat("first argument must be string, got: %s", args[0].Type())
-	}
+	needle, _ := args[0].(*String)
 
 	val := strings.Index(str, needle.Value)
 	return &Integer{Value: int64(val)}
 }
 
 func stringUpper(str string, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("upper method expect exactly 0 argument")
+	err := Check(
+		"string.upper",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
 	val := strings.ToUpper(str)
@@ -154,41 +191,66 @@ func stringUpper(str string, args ...Object) Object {
 }
 
 func stringLower(str string, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("lower method expect exactly 0 argument")
+	err := Check(
+		"string.lower",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
+
 	val := strings.ToLower(str)
 	return &String{Value: val}
 }
 
 func stringTrim(str string, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("trim method expect exactly 0 argument")
+	err := Check(
+		"string.trim",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 	val := strings.Trim(str, "\n\r\t ")
 	return &String{Value: val}
 }
 
 func stringInteger(str string, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("int method expect exactly 0 argument")
+	err := Check(
+		"string.int",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
 	val, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
-		return NewErrorFormat("string.int() fail to convert to int. Got: %s", err)
+		return NewErrorFormat("TypeError: string.int() fail to convert to int. Got: %s", err)
 	}
 	return &Integer{Value: val}
 }
 
 func stringFloat(str string, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("float method expect exactly 0 argument")
+	err := Check(
+		"string.float",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
 	val, err := strconv.ParseFloat(str, 64)
 	if err != nil {
-		return NewErrorFormat("string.float() fail to convert to float. Got: %s", err)
+		return NewErrorFormat("TypeError: string.float() fail to convert to float. Got: %s", err)
 	}
 	return &Float{Value: val}
 }

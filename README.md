@@ -20,8 +20,8 @@ brew install ninja-lang
 To enable, add the following file `/etc/yum.repos.d/fury.repo`:
 
 ```sh
-[fury]
-name=Gemfury Private Repo
+[ninja]
+name=Ninja Programming Language
 baseurl=https://yum.fury.io/gravatalonga/
 enabled=1
 gpgcheck=0
@@ -30,7 +30,7 @@ gpgcheck=0
 Check if correctly created  
 
 ```
-yum --disablerepo=* --enablerepo=fury list available
+yum --disablerepo=* --enablerepo=ninja list available
 ```  
 
 To install you only need run following command:  
@@ -50,7 +50,7 @@ deb [trusted=yes] https://apt.fury.io/gravatalonga/ /
 Or use this one line command:  
 
 ```
-echo "deb [trusted=yes] https://apt.fury.io/gravatalonga/ /" > /etc/apt/sources.list.d/fury.list
+echo "deb [trusted=yes] https://apt.fury.io/gravatalonga/ /" > /etc/apt/sources.list.d/ninja.list
 ```  
 
 and them you can install  
