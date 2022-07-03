@@ -17,7 +17,7 @@ brew install ninja-lang
 
 ## YUM / RPM  
 
-To enable, add the following file `/etc/yum.repos.d/fury.repo`:
+To enable, add the following file `/etc/yum.repos.d/ninja.repo`:
 
 ```sh
 [ninja]
