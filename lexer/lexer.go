@@ -33,11 +33,9 @@ func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 	switch l.ch {
 	case '=':
-
 		tok = l.newTokenPeekOrDefault(token.ASSIGN, map[byte]token.TokenType{
 			'=': token.EQ,
 		})
-
 	case ';':
 		tok = l.newToken(token.SEMICOLON, []byte{l.ch})
 	case '"':
@@ -71,7 +69,6 @@ func (l *Lexer) NextToken() token.Token {
 			l.readChar()
 			tok = l.newToken(token.AND, []byte{ch, l.ch})
 		}
-
 	case '|':
 		if l.peekChar() != '|' {
 			ch := l.ch
@@ -82,36 +79,30 @@ func (l *Lexer) NextToken() token.Token {
 			l.readChar()
 			tok = l.newToken(token.OR, []byte{ch, l.ch})
 		}
-
 	case '-':
-
 		tok = l.newTokenPeekOrDefault(token.MINUS, map[byte]token.TokenType{
 			'-': token.DECRE,
 		})
-
 	case '+':
-
 		tok = l.newTokenPeekOrDefault(token.PLUS, map[byte]token.TokenType{
 			'+': token.INCRE,
 		})
+	case '%':
+		tok = l.newTokenPeekOrDefault(token.MOD, map[byte]token.TokenType{
+			'%': token.MOD,
+		})
 	case '>':
-
 		tok = l.newTokenPeekOrDefault(token.GT, map[byte]token.TokenType{
 			'=': token.GTE,
 		})
-
 	case '<':
-
 		tok = l.newTokenPeekOrDefault(token.LT, map[byte]token.TokenType{
 			'=': token.LTE,
 		})
-
 	case '!':
-
 		tok = l.newTokenPeekOrDefault(token.BANG, map[byte]token.TokenType{
 			'=': token.NEQ,
 		})
-
 	case ':':
 		tok = l.newToken(token.COLON, []byte{l.ch})
 	case '(':

@@ -22,17 +22,17 @@ function assertTrue() {
 Assertion basic variables
 */
 
-import "./tests/assert_variable.nj";
+import "./testdata/assert_variable.nj";
 
 /*
  Assertion Index
 */
 
-import "./tests/assert_index.nj";
+import "./testdata/assert_index.nj";
 
 
 /*
  Assertion advance stuff
 */
 
-import "./tests/assert_advance.nj";
+import "./testdata/assert_advance.nj";

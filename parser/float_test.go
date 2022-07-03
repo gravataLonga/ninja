@@ -39,6 +39,7 @@ func TestFloatLiteralExpression(t *testing.T) {
 	}
 
 	for i, tt := range tests {
+
 		stmt, ok := program.Statements[i].(*ast.ExpressionStatement)
 		if !ok {
 			t.Fatalf("program.Statements[%d] is not ast.ExpressionStatement. got=%T", i, program.Statements[i])

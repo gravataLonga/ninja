@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -36,11 +37,65 @@ func TestEvalDigitExpression(t *testing.T) {
 		{
 			`[1, 3.0][1] + 1.2`,
 			4.2,
+		}, {
+			`1 - 1`,
+			0,
+		},
+		{
+			`1.0 - 1.0`,
+			0.0,
+		},
+		{
+			`1 - 1.0`,
+			0.0,
+		},
+		{
+			`1.0 - 1`,
+			0.0,
+		},
+		{
+			`1.0 - 1`,
+			0.0,
+		},
+		{
+			`[1.0, 3.0][1] - 1`,
+			2.0,
+		},
+		{
+			`[1, 3.0][1] - 1.2`,
+			1.8,
+		},
+		{
+			`2 * 2`,
+			4,
+		},
+		{
+			`4 / 2`,
+			2,
+		},
+		{
+			`4 % 2`,
+			0,
+		},
+		{
+			`4.0 % 2.0`,
+			0.0,
+		},
+		{
+			`4 % 2.0`,
+			0.0,
+		},
+		{
+			`4.0 % 2`,
+			0.0,
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		testObjectLiteral(t, evaluated, tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestEvalDigitExpression[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+
 	}
 }

@@ -12,7 +12,7 @@ func TestNextToken(t *testing.T) {
 var true false if else
 break for () [] {} . ; : 
 != == <= >= < > && || = 
-+ - * / 
++ - * / % 
 // comment 
 ! 100 100.5 "hello" 
 ++5 --5 5++ 5-- count 
@@ -55,6 +55,8 @@ function delete @
 		{token.MINUS, "-"},
 		{token.ASTERISK, "*"},
 		{token.SLASH, "/"},
+
+		{token.MOD, "%"},
 		{token.BANG, "!"},
 
 		{token.INT, "100"},
@@ -79,13 +81,13 @@ function delete @
 	l := New(strings.NewReader(input))
 
 	for i, tt := range tests {
-		t.Run(fmt.Sprintf("Test_%s", tt.expectedType.String()), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Test[%d]", i), func(t *testing.T) {
 			tok := l.NextToken()
 			if tok.Type != tt.expectedType {
-				t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
+				t.Fatalf("testdata[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 			}
 			if string(tok.Literal) != tt.expectedLiteral {
-				t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Literal)
+				t.Fatalf("testdata[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedLiteral, tok.Literal)
 			}
 		})
 
