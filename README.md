@@ -4,6 +4,8 @@
 
 </p>
 
+[![Testing](https://github.com/gravataLonga/ninja/actions/workflows/main.yml/badge.svg)](https://github.com/gravataLonga/ninja/actions/workflows/main.yml)  
+
 # Install  
 
 ## Homebrew  
