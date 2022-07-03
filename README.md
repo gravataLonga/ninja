@@ -15,7 +15,7 @@ brew tap gravatalonga/ninja-lang
 brew install ninja-lang
 ```  
 
-## yum/rpm  
+## YUM / RPM  
 
 To enable, add the following file `/etc/yum.repos.d/fury.repo`:
 
@@ -39,7 +39,7 @@ To install you only need run following command:
 yum install ninja-lang  
 ```  
 
-## apt  
+## APT    
 
 To configure apt access, create a following file `/etc/apt/sources.list.d/fury.list` with content of :  
 
@@ -63,7 +63,7 @@ sudo apt install ninja-lang
 
 Download from [github](https://github.com/gravataLonga/ninja/releases)  
 
-## Manual Installtion  
+## Manual Installation  
 
 ```sh  
 git clone https://github.com/gravataLonga/ninja
@@ -101,6 +101,7 @@ var h = {"me":"Jonathan Fontes","age":1,"likes":["php","golang","ninja"]}
 var i = a < b;
 var j = true;
 var k = !j;
+var l = if (a) { "yes" } else { "no" };  
 
 g[0] = 10;
 g[4] = "new value"; // it will append to array.  
@@ -255,7 +256,7 @@ Logic's Operators
 10 || 10;
 !10;
 
-```
+```  
 
 `<expression>? <operator> <expression>`  
 Arithmetics Operators  
@@ -265,6 +266,7 @@ Arithmetics Operators
 1 - 1;
 1 / 1;
 1 * 1;  
+4 % 2;
 ++1;
 --1;
 
@@ -343,8 +345,7 @@ if (true) {
 
 `for (<initial>?;<condition>?;<iteration>?) { <statements> }`  
 
-> **Heads Up!!** Any of this conditions isn't required, but advice you always put a condition, because there aren't yet a break 
-keyword. 
+> **None** None statements are required  
 
 ```
 var i = 0;
@@ -360,13 +361,60 @@ for(var i = 0; i <= len(a); ++i) {
 for(var i = 0; i <= len(a); i = i + 1) {
     puts(a[i]);
 }
+
+for(;;) {
+    break;
+}
 ```  
 
-## Keywords  
+# Object Call  
+
+We support object call in any of data type.  
+
+## String  
+
+Here a full of list of support object call for string:  
+
+```
+"ola".type(); // "STRING"  
+"a,b,c".split(","); // ["a", "b", "c"];
+"hello world".replace("world", "ninja"); // "hello ninja"
+"hello world".contain("hello"); // TRUE
+"hello world".index("Hello"); // 0
+"hello world".upper(); // "HELLO WORLD"
+"HELLO WORLD".lower(); // "hello world"
+" hello world ".trim(); // "hello world"
+"1".int(); // 1
+"1.1".float(); // 1.1 
+```  
+
+## Integer  
+
+Here a full of list of support objec call for integer:  
+
+```
+1.type(); // "INTEGER"
+1.string(); // "1"  
+1.float(); // 1.0
+var a = -1; a.abs(); // 1.0
+```  
+
+## Float  
+
+Here a full of list of support objec call for integer:
+
+```
+1.0.type(); // "FLOAT"
+1.0.string(); // "1.0"  
+var a = -1.0; a.abs(); // 1.0
+1.5.round(); // 2.0  
+```  
+
+## Keywords
 
 ```
 var true false function delete
-return if else for import  
+return if else for import break
 ```
 
 ## Tricks  
