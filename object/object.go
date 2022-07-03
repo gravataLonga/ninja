@@ -18,6 +18,12 @@ type CallableMethod interface {
 	Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object
 }
 
+// Comparable is the interface for comparing two Object and their underlying
+// values. It is the responsibility of the caller (left) to check for types.
+type Comparable interface {
+	Compare(right Object) int8
+}
+
 // HashKey hold "key" on Hash
 type HashKey struct {
 	Type  ObjectType
@@ -79,7 +85,7 @@ func IsString(o Object) bool {
 	return o != nil && o.Type() == STRING_OBJ
 }
 
-func InspectArguments(args ...Object) string {
+func InspectObject(args ...Object) string {
 	var out bytes.Buffer
 	elements := make([]string, len(args))
 	for i, e := range args {

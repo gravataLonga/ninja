@@ -26,17 +26,30 @@ func (s *String) HashKey() HashKey {
 	return HashKey{Type: s.Type(), Value: s.hashKeyCached}
 }
 
+func (s *String) Compare(right Object) int8 {
+	str, ok := right.(*String)
+	if !ok {
+		return -1
+	}
+
+	if str.Value == s.Value {
+		return 1
+	}
+
+	return 0
+}
+
 func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
 		if len(args) > 0 {
-			argStr := InspectArguments(args...)
+			argStr := InspectObject(args...)
 			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
 		}
 		return &String{Value: STRING_OBJ}
 	case "length":
 		if len(args) > 0 {
-			argStr := InspectArguments(args...)
+			argStr := InspectObject(args...)
 			return NewErrorFormat("string.length not accept any arguments. got: %s", argStr)
 		}
 		return &Integer{Value: int64(utf8.RuneCountInString(s.Value))}

@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -59,9 +60,12 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"{\"0\": 1}[\"0\"] && false", false},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		testBooleanObject(t, evaluated, tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestEvalBooleanExpression[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testBooleanObject(t, evaluated, tt.expected)
+		})
+
 	}
 }
 

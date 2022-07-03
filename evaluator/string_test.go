@@ -53,9 +53,12 @@ func TestEvalStringExpression(t *testing.T) {
 		{`"Hello" != "World"`, true},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		testObjectLiteral(t, evaluated, tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestEvalStringExpression[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+
 	}
 }
 

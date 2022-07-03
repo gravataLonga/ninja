@@ -31,7 +31,7 @@ func (s *Boolean) Call(objectCall *ast.ObjectCall, method string, env *Environme
 	switch method {
 	case "type":
 		if len(args) > 0 {
-			argStr := InspectArguments(args...)
+			argStr := InspectObject(args...)
 			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
 		}
 		return &String{Value: BOOLEAN_OBJ}

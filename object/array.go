@@ -28,13 +28,13 @@ func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment
 	switch method {
 	case "type":
 		if len(args) > 0 {
-			argStr := InspectArguments(args...)
+			argStr := InspectObject(args...)
 			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
 		}
 		return &String{Value: ARRAY_OBJ}
 	case "length":
 		if len(args) > 0 {
-			argStr := InspectArguments(args...)
+			argStr := InspectObject(args...)
 			return NewErrorFormat("array.length not accept any arguments. got: %s", argStr)
 		}
 		return &Integer{Value: int64(len(s.Elements))}
@@ -163,7 +163,7 @@ func arrayShift(elements []Object, args ...Object) (shiftValue Object, newArray 
 
 func arraySlice(elements []Object, args ...Object) Object {
 	if len(args) <= 0 || len(args) >= 3 {
-		return NewErrorFormat("array.slice(start, offset) expected at least 1 argument and at max 2 arguments. Got: %s", InspectArguments(args...))
+		return NewErrorFormat("array.slice(start, offset) expected at least 1 argument and at max 2 arguments. Got: %s", InspectObject(args...))
 	}
 
 	start, ok := args[0].(*Integer)
