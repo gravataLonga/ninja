@@ -36,10 +36,16 @@ func (h *Hash) Inspect() string {
 func (s *Hash) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		err := Check(
+			"hash.type",
+			args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
+
 		return &String{Value: HASH_OBJ}
 	case "keys":
 		return hashKeys(s.Pairs, args...)
@@ -50,9 +56,16 @@ func (s *Hash) Call(objectCall *ast.ObjectCall, method string, env *Environment,
 }
 
 func hashKeys(keys map[HashKey]HashPair, args ...Object) Object {
-	if len(args) != 0 {
-		return NewErrorFormat("hash.keys() expect 0 arguments. Got: %s", InspectObject(args...))
+	err := Check(
+		"hash.keys",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
+
 	elements := make([]Object, len(keys))
 	i := 0
 	for _, pair := range keys {
@@ -64,8 +77,14 @@ func hashKeys(keys map[HashKey]HashPair, args ...Object) Object {
 }
 
 func hashHas(keys map[HashKey]HashPair, args ...Object) Object {
-	if len(args) != 1 {
-		return NewErrorFormat("hash.has() expect at least 1 argument. got: %s", InspectObject(args...))
+	err := Check(
+		"hash.has",
+		args,
+		ExactArgs(1),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
 	hashable, ok := args[0].(Hashable)

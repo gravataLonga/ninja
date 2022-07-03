@@ -297,24 +297,35 @@ func TestHashMethodWrongUsage(t *testing.T) {
 	}{
 		{
 			`{}.keys(1)`,
-			"hash.keys() expect 0 arguments. Got: [1]",
+			"TypeError: hash.keys() takes exactly 0 argument (1 given)",
 		},
 		{
 			`{}.has(1, 2)`,
-			"hash.has() expect at least 1 argument. got: [1, 2]",
+			"TypeError: hash.has() takes exactly 1 argument (2 given)",
+		},
+		{
+			`{}.has()`,
+			"TypeError: hash.has() takes exactly 1 argument (0 given)",
+		},
+		{
+			`{}.type(1)`,
+			"TypeError: hash.type() takes exactly 0 argument (1 given)",
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestHashMethodWrongUsage[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
