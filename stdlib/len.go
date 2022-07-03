@@ -4,8 +4,8 @@ import (
 	"ninja/object"
 )
 
+// Len will get length of object
 func Len(args ...object.Object) object.Object {
-
 	err := object.Check(
 		"len", args,
 		object.ExactArgs(1),

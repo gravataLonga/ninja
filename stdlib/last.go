@@ -4,6 +4,7 @@ import (
 	"ninja/object"
 )
 
+// Last get item from array
 func Last(args ...object.Object) object.Object {
 
 	err := object.Check(

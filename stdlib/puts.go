@@ -5,6 +5,7 @@ import (
 	"ninja/object"
 )
 
+// Puts print stuff to standard output
 func Puts(args ...object.Object) object.Object {
 	for _, arg := range args {
 		if arg == nil {

@@ -2,7 +2,6 @@ package object
 
 import (
 	"fmt"
-	"ninja/ast"
 )
 
 var (
@@ -27,7 +26,7 @@ func (b *Boolean) HashKey() HashKey {
 	return HashKey{Type: b.Type(), Value: value}
 }
 
-func (s *Boolean) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (s *Boolean) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(
@@ -39,7 +38,7 @@ func (s *Boolean) Call(objectCall *ast.ObjectCall, method string, env *Environme
 		if err != nil {
 			return NewError(err.Error())
 		}
-		
+
 		return &String{Value: BOOLEAN_OBJ}
 	}
 	return NewErrorFormat("method %s not exists on string object.", method)

@@ -3,7 +3,6 @@ package object
 import (
 	"bytes"
 	"fmt"
-	"ninja/ast"
 	"strings"
 )
 
@@ -33,7 +32,7 @@ func (h *Hash) Inspect() string {
 	return out.String()
 }
 
-func (s *Hash) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (s *Hash) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(

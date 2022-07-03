@@ -4,6 +4,7 @@ import (
 	"ninja/object"
 )
 
+// Push will push item to array
 func Push(args ...object.Object) object.Object {
 
 	err := object.Check(

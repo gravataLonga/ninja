@@ -72,7 +72,7 @@ func TestMain_execCode(t *testing.T) {
 	defer os.Remove(temporaryStdOut.Name())
 	os.Stdout = temporaryStdOut
 
-	execCode(`var a = 2 + 1; a;`, temporaryStdOut)
+	execCode(`var a = 2 + 1; a;`, temporaryStdOut, []string{})
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -95,7 +95,7 @@ func TestMain_execCodeSpecialCharacter(t *testing.T) {
 	defer os.Remove(temporaryStdOut.Name())
 	os.Stdout = temporaryStdOut
 
-	execCode("import \"./testdata/multiple_lines.nj\"; input.split(\"\n\")", temporaryStdOut)
+	execCode("import \"./testdata/multiple_lines.nj\"; input.split(\"\n\")", temporaryStdOut, []string{})
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -120,7 +120,7 @@ func TestMain_execCodeAssertions(t *testing.T) {
 
 	code := readFile(t, "./testdata/assertions.nj")
 	expected := readFile(t, "./testdata/expected.txt")
-	execCode(code, temporaryStdOut)
+	execCode(code, temporaryStdOut, []string{})
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {

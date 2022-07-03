@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"math"
-	"ninja/ast"
 	"strconv"
 )
 
@@ -43,7 +42,7 @@ func (f *Float) Compare(right Object) int8 {
 	return -1
 }
 
-func (f *Float) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (f *Float) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(

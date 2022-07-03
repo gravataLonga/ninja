@@ -29,33 +29,34 @@ func main() {
 	}
 
 	flag.Parse()
+	args := flag.Args()
 
 	if len(os.Args) == 1 {
-		runRepl(os.Stdin, os.Stdout)
+		runRepl(os.Stdin, os.Stdout, args)
 		return
 	}
 
 	if len(*exec) > 0 {
-		execCode(*exec, os.Stdout)
+		execCode(*exec, os.Stdout, args)
 		return
 	}
 
 	file, err := ioutil.ReadFile(os.Args[1])
 	if err == nil {
-		execCode(string(file), os.Stdout)
+		execCode(string(file), os.Stdout, args)
 		return
 	}
 }
 
-func runRepl(in io.Reader, out io.Writer) {
-	replProgram := repl.NewRepel(out, in)
-	replProgram.Verbose(true)
+func runRepl(in io.Reader, out io.Writer, args []string) {
+	replProgram := repl.NewRepel(out, in, args)
 	replProgram.Version(version)
 
 	replProgram.Start()
 }
 
-func execCode(input string, writer io.Writer) {
+func execCode(input string, writer io.Writer, args []string) {
+	object.Arguments = args
 	env := object.NewEnvironment()
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)

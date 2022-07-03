@@ -30,5 +30,5 @@ func evalObjectCallExpression(node *ast.ObjectCall, env *object.Environment) obj
 		return args[0]
 	}
 
-	return callable.Call(node, method.Value, env, args...)
+	return callable.Call(method.Value, args...)
 }

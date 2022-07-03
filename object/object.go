@@ -2,7 +2,6 @@ package object
 
 import (
 	"bytes"
-	"ninja/ast"
 	"strings"
 )
 
@@ -15,7 +14,7 @@ type Object interface {
 
 // CallableMethod is use for calling method in data type.
 type CallableMethod interface {
-	Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object
+	Call(method string, args ...Object) Object
 }
 
 // Comparable is the interface for comparing two Object and their underlying

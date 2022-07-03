@@ -5,6 +5,7 @@ import (
 	"ninja/object"
 )
 
+// Rand generate a random number from 0 ... 1 float
 func Rand(args ...object.Object) object.Object {
 	err := object.Check(
 		"rand", args,

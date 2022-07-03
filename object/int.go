@@ -2,7 +2,6 @@ package object
 
 import (
 	"fmt"
-	"ninja/ast"
 	"strconv"
 )
 
@@ -31,7 +30,7 @@ func (i *Integer) Compare(right Object) int8 {
 	return -1
 }
 
-func (s *Integer) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (s *Integer) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(

@@ -4,6 +4,7 @@ import (
 	"ninja/object"
 )
 
+// First get item from array object
 func First(args ...object.Object) object.Object {
 
 	err := object.Check(

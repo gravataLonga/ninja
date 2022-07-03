@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Time we get time in seconds
 func Time(args ...object.Object) object.Object {
 	err := object.Check(
 		"first", args,

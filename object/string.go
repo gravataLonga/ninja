@@ -2,7 +2,6 @@ package object
 
 import (
 	"hash/fnv"
-	"ninja/ast"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -39,7 +38,7 @@ func (s *String) Compare(right Object) int8 {
 	return 0
 }
 
-func (s *String) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (s *String) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(

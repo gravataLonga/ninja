@@ -2,7 +2,6 @@ package object
 
 import (
 	"bytes"
-	"ninja/ast"
 	"strconv"
 	"strings"
 )
@@ -24,7 +23,7 @@ func (ao *Array) Inspect() string {
 	return out.String()
 }
 
-func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
+func (s *Array) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":
 		err := Check(
@@ -51,29 +50,13 @@ func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment
 	case "join":
 		return arrayJoin(s.Elements, args...)
 	case "push":
-		result := arrayPush(s.Elements, args...)
-
-		ident, ok := objectCall.Object.(*ast.Identifier)
-		if ok {
-			env.Set(ident.Value, result)
-		}
-
+		result := arrayPush(s, args...)
 		return result
 	case "pop":
-		popValue, newArray := arrayPop(s.Elements, args...)
-
-		ident, ok := objectCall.Object.(*ast.Identifier)
-		if ok {
-			env.Set(ident.Value, newArray)
-		}
+		popValue := arrayPop(s, args...)
 		return popValue
 	case "shift":
-		shiftValue, newArray := arrayShift(s.Elements, args...)
-
-		ident, ok := objectCall.Object.(*ast.Identifier)
-		if ok {
-			env.Set(ident.Value, newArray)
-		}
+		shiftValue := arrayShift(s, args...)
 		return shiftValue
 	case "slice":
 		return arraySlice(s.Elements, args...)
@@ -119,7 +102,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 			}
 		case *Array:
 			v, _ := el.(*Array)
-			joinObject := v.Call(nil, "join", nil, args...)
+			joinObject := v.Call("join", args...)
 			strJoinObject, ok := joinObject.(*String)
 			if !ok {
 				return NewErrorFormat("Unable to join array")
@@ -138,7 +121,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 	return &String{Value: out.String()}
 }
 
-func arrayPush(elements []Object, args ...Object) Object {
+func arrayPush(array *Array, args ...Object) Object {
 	err := Check(
 		"array.push", args,
 		MinimumArgs(1),
@@ -148,50 +131,50 @@ func arrayPush(elements []Object, args ...Object) Object {
 		return NewError(err.Error())
 	}
 
-	arr := &Array{Elements: elements}
-
 	for _, v := range args {
-		arr.Elements = append(arr.Elements, v)
+		array.Elements = append(array.Elements, v)
 	}
 
-	return arr
+	return NULL
 }
 
-func arrayPop(elements []Object, args ...Object) (popValue Object, newArray Object) {
+func arrayPop(array *Array, args ...Object) Object {
 	err := Check(
 		"array.pop", args,
 		ExactArgs(0),
 	)
 
 	if err != nil {
-		return NewError(err.Error()), nil
+		return NewError(err.Error())
 	}
 
-	if len(elements) <= 0 {
-		return NULL, &Array{}
+	if len(array.Elements) <= 0 {
+		return NULL
 	}
 
-	return elements[len(elements)-1], &Array{Elements: elements[0 : len(elements)-1]}
+	poppedElement := array.Elements[len(array.Elements)-1]
+	array.Elements = array.Elements[:len(array.Elements)-1]
+
+	return poppedElement
 }
 
-func arrayShift(elements []Object, args ...Object) (shiftValue Object, newArray Object) {
+func arrayShift(array *Array, args ...Object) Object {
 	err := Check(
 		"array.shift", args,
 		ExactArgs(0),
 	)
 
 	if err != nil {
-		return NewError(err.Error()), nil
+		return NewError(err.Error())
 	}
 
-	if len(args) > 0 {
-		return NewErrorFormat("array.shift expect exactly 0 argument. Got: %d", len(args)), nil
+	if len(array.Elements) <= 0 {
+		return NULL
 	}
 
-	if len(elements) <= 0 {
-		return NULL, &Array{}
-	}
-	return elements[0], &Array{Elements: elements[1:]}
+	shiftedValue := array.Elements[0]
+	array.Elements = array.Elements[1:]
+	return shiftedValue
 }
 
 func arraySlice(elements []Object, args ...Object) Object {

@@ -39,7 +39,6 @@ type repl struct {
 	in      io.Reader
 	scan    *bufio.Scanner
 	env     *object.Environment
-	verbose bool
 	version string
 }
 
@@ -50,15 +49,15 @@ var colorName = map[string]*color.Color{
 	"error":   color.New(color.FgRed),
 }
 
-func NewRepel(out io.Writer, in io.Reader) *repl {
+func NewRepel(out io.Writer, in io.Reader, args []string) *repl {
+	object.StandardInput = in
+	object.StandardOutput = out
+	object.Arguments = args
+
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
 
-	return &repl{out: out, in: in, verbose: false, scan: scanner, env: env}
-}
-
-func (r *repl) Verbose(state bool) {
-	r.verbose = state
+	return &repl{out: out, in: in, scan: scanner, env: env}
 }
 
 func (r *repl) Version(vs string) {

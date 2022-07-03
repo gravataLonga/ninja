@@ -242,11 +242,11 @@ func TestArrayMethod(t *testing.T) {
 			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}},
 		},
 		{
-			`[1].push(2)`,
+			`var a = [1]; a.push(2); a`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}},
 		},
 		{
-			`[1].push(2, 3)`,
+			`var a = [1]; a.push(2, 3); a`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}}},
 		},
 		{
@@ -319,10 +319,13 @@ func TestArrayMethod(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestArrayMethod[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		testObjectLiteral(t, evaluated, tt.expected)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+
 	}
 }
 

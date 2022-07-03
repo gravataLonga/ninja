@@ -4,8 +4,8 @@ import (
 	"ninja/object"
 )
 
+// Args will get everthing from argument when executed from cli
 func Args(args ...object.Object) object.Object {
-
 	err := object.Check(
 		"args", args,
 		object.ExactArgs(0),

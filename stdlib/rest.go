@@ -4,6 +4,7 @@ import (
 	"ninja/object"
 )
 
+// Rest we get last items from array without first item
 func Rest(args ...object.Object) object.Object {
 
 	err := object.Check(
