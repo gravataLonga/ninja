@@ -3,13 +3,12 @@ package stdlib
 import (
 	"math/rand"
 	"ninja/object"
-	"ninja/typing"
 )
 
 func Rand(args ...object.Object) object.Object {
-	err := typing.Check(
+	err := object.Check(
 		"rand", args,
-		typing.ExactArgs(0),
+		object.ExactArgs(0),
 	)
 
 	if err != nil {

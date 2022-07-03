@@ -2,15 +2,14 @@ package stdlib
 
 import (
 	"ninja/object"
-	"ninja/typing"
 )
 
 func Push(args ...object.Object) object.Object {
 
-	err := typing.Check(
+	err := object.Check(
 		"push", args,
-		typing.ExactArgs(2),
-		typing.WithTypes(object.ARRAY_OBJ),
+		object.ExactArgs(2),
+		object.WithTypes(object.ARRAY_OBJ),
 	)
 
 	if err != nil {

@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -331,45 +332,52 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 		expectedErrorMessage string
 	}{
 		{
+			`[].type(1)`,
+			"TypeError: array.type() takes exactly 0 argument (1 given)",
+		},
+		{
 			`[].join([])`,
-			"array.join expect first argument be string. Got: ARRAY",
+			"TypeError: array.join() expected argument #1 to be `STRING` got `ARRAY`",
 		},
 		{
 			`[1].length(1)`,
-			"array.length not accept any arguments. got: [1]",
+			"TypeError: array.length() takes exactly 0 argument (1 given)",
 		},
 		{
 			`[].join()`,
-			"array.join expect exactly 1 argument. Got: 0",
+			"TypeError: array.join() takes exactly 1 argument (0 given)",
 		},
 		{
 			`[].push()`,
-			"array.push expect exactly 1 argument. Got: 0",
+			"TypeError: array.push() takes a minimum 1 arguments (0 given)",
 		},
 		{
 			`[1].pop(1)`,
-			"array.pop expect exactly 0 argument. Got: 1",
+			"TypeError: array.pop() takes exactly 0 argument (1 given)",
 		},
 		{
 			`[1].shift(1)`,
-			"array.shift expect exactly 0 argument. Got: 1",
+			"TypeError: array.shift() takes exactly 0 argument (1 given)",
 		},
 		{
 			`[1].slice(1, 2, 3)`,
-			`array.slice(start, offset) expected at least 1 argument and at max 2 arguments. Got: [1, 2, 3]`,
+			`TypeError: array.push() takes at least 1 arguments at most 2 (3 given)`,
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestArrayMethodWrongUsage[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }

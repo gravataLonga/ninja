@@ -27,16 +27,26 @@ func (ao *Array) Inspect() string {
 func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment, args ...Object) Object {
 	switch method {
 	case "type":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("method type not accept any arguments. got: %s", argStr)
+		err := Check(
+			"array.type", args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
+
 		return &String{Value: ARRAY_OBJ}
 	case "length":
-		if len(args) > 0 {
-			argStr := InspectObject(args...)
-			return NewErrorFormat("array.length not accept any arguments. got: %s", argStr)
+		err := Check(
+			"array.length", args,
+			ExactArgs(0),
+		)
+
+		if err != nil {
+			return NewError(err.Error())
 		}
+
 		return &Integer{Value: int64(len(s.Elements))}
 	case "join":
 		return arrayJoin(s.Elements, args...)
@@ -72,14 +82,18 @@ func (s *Array) Call(objectCall *ast.ObjectCall, method string, env *Environment
 }
 
 func arrayJoin(elements []Object, args ...Object) Object {
-	if len(args) != 1 {
-		return NewErrorFormat("array.join expect exactly 1 argument. Got: %d", len(args))
+
+	err := Check(
+		"array.join", args,
+		ExactArgs(1),
+		WithTypes(STRING_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
-	joinArgument, ok := args[0].(*String)
-	if !ok {
-		return NewErrorFormat("array.join expect first argument be string. Got: %s", args[0].Type())
-	}
+	joinArgument, _ := args[0].(*String)
 
 	var out bytes.Buffer
 	elementsString := []string{}
@@ -125,8 +139,13 @@ func arrayJoin(elements []Object, args ...Object) Object {
 }
 
 func arrayPush(elements []Object, args ...Object) Object {
-	if len(args) <= 0 {
-		return NewErrorFormat("array.push expect exactly 1 argument. Got: %d", len(args))
+	err := Check(
+		"array.push", args,
+		MinimumArgs(1),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
 	arr := &Array{Elements: elements}
@@ -139,8 +158,13 @@ func arrayPush(elements []Object, args ...Object) Object {
 }
 
 func arrayPop(elements []Object, args ...Object) (popValue Object, newArray Object) {
-	if len(args) > 0 {
-		return NewErrorFormat("array.pop expect exactly 0 argument. Got: %d", len(args)), nil
+	err := Check(
+		"array.pop", args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error()), nil
 	}
 
 	if len(elements) <= 0 {
@@ -151,6 +175,15 @@ func arrayPop(elements []Object, args ...Object) (popValue Object, newArray Obje
 }
 
 func arrayShift(elements []Object, args ...Object) (shiftValue Object, newArray Object) {
+	err := Check(
+		"array.shift", args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error()), nil
+	}
+
 	if len(args) > 0 {
 		return NewErrorFormat("array.shift expect exactly 0 argument. Got: %d", len(args)), nil
 	}
@@ -162,14 +195,17 @@ func arrayShift(elements []Object, args ...Object) (shiftValue Object, newArray 
 }
 
 func arraySlice(elements []Object, args ...Object) Object {
-	if len(args) <= 0 || len(args) >= 3 {
-		return NewErrorFormat("array.slice(start, offset) expected at least 1 argument and at max 2 arguments. Got: %s", InspectObject(args...))
+	err := Check(
+		"array.push", args,
+		RangeOfArgs(1, 2),
+		WithTypes(INTEGER_OBJ, INTEGER_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
 	}
 
-	start, ok := args[0].(*Integer)
-	if !ok {
-		return NewErrorFormat("array.slice(start, offset) first argument must be integer. Got: %s", args[0].Inspect())
-	}
+	start, _ := args[0].(*Integer)
 
 	maxLength := int64(len(elements))
 	offset := maxLength

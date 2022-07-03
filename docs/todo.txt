@@ -1,9 +1,0 @@
-# Errors
-
-Case 1:
-for(var i = 0; i <= len(b)-1; b = b +1) { puts(b[i]); }
-
-Case 2:
-var a = "hello";
-if (a.type() == "STRING") { puts(a.split("")); }
-

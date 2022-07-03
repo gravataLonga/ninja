@@ -2,14 +2,13 @@ package stdlib
 
 import (
 	"ninja/object"
-	"ninja/typing"
 )
 
 func Args(args ...object.Object) object.Object {
 
-	err := typing.Check(
+	err := object.Check(
 		"args", args,
-		typing.ExactArgs(0),
+		object.ExactArgs(0),
 	)
 
 	if err != nil {

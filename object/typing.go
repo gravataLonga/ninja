@@ -1,14 +1,13 @@
-package typing
+package object
 
 import (
 	"fmt"
-	"ninja/object"
 	"strings"
 )
 
-type CheckFunc func(name string, args []object.Object) error
+type CheckFunc func(name string, args []Object) error
 
-func Check(name string, args []object.Object, checks ...CheckFunc) error {
+func Check(name string, args []Object, checks ...CheckFunc) error {
 	for _, check := range checks {
 		if err := check(name, args); err != nil {
 			return err
@@ -18,7 +17,7 @@ func Check(name string, args []object.Object, checks ...CheckFunc) error {
 }
 
 func ExactArgs(n int) CheckFunc {
-	return func(name string, args []object.Object) error {
+	return func(name string, args []Object) error {
 		if len(args) != n {
 			return fmt.Errorf(
 				"TypeError: %s() takes exactly %d argument (%d given)",
@@ -29,7 +28,7 @@ func ExactArgs(n int) CheckFunc {
 	}
 }
 func MinimumArgs(n int) CheckFunc {
-	return func(name string, args []object.Object) error {
+	return func(name string, args []Object) error {
 		if len(args) < n {
 			return fmt.Errorf(
 				"TypeError: %s() takes a minimum %d arguments (%d given)",
@@ -40,7 +39,7 @@ func MinimumArgs(n int) CheckFunc {
 	}
 }
 func RangeOfArgs(n, m int) CheckFunc {
-	return func(name string, args []object.Object) error {
+	return func(name string, args []Object) error {
 		if len(args) < n || len(args) > m {
 			return fmt.Errorf(
 				"TypeError: %s() takes at least %d arguments at most %d (%d given)",
@@ -50,8 +49,8 @@ func RangeOfArgs(n, m int) CheckFunc {
 		return nil
 	}
 }
-func WithTypes(types ...object.ObjectType) CheckFunc {
-	return func(name string, args []object.Object) error {
+func WithTypes(types ...ObjectType) CheckFunc {
+	return func(name string, args []Object) error {
 		for i, t := range types {
 			if i < len(args) && args[i].Type() != t {
 				return fmt.Errorf(
@@ -64,8 +63,8 @@ func WithTypes(types ...object.ObjectType) CheckFunc {
 	}
 }
 
-func OneOfType(types ...object.ObjectType) CheckFunc {
-	return func(name string, args []object.Object) error {
+func OneOfType(types ...ObjectType) CheckFunc {
+	return func(name string, args []Object) error {
 		for _, vt := range types {
 			for _, va := range args {
 				if va.Type() == vt {

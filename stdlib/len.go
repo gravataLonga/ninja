@@ -2,15 +2,14 @@ package stdlib
 
 import (
 	"ninja/object"
-	"ninja/typing"
 )
 
 func Len(args ...object.Object) object.Object {
 
-	err := typing.Check(
+	err := object.Check(
 		"len", args,
-		typing.ExactArgs(1),
-		typing.OneOfType(object.ARRAY_OBJ, object.STRING_OBJ),
+		object.ExactArgs(1),
+		object.OneOfType(object.ARRAY_OBJ, object.STRING_OBJ),
 	)
 
 	if err != nil {

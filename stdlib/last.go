@@ -2,15 +2,14 @@ package stdlib
 
 import (
 	"ninja/object"
-	"ninja/typing"
 )
 
 func Last(args ...object.Object) object.Object {
 
-	err := typing.Check(
+	err := object.Check(
 		"last", args,
-		typing.ExactArgs(1),
-		typing.WithTypes(object.ARRAY_OBJ),
+		object.ExactArgs(1),
+		object.WithTypes(object.ARRAY_OBJ),
 	)
 
 	if err != nil {
