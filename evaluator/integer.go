@@ -1,6 +1,9 @@
 package evaluator
 
-import "ninja/object"
+import (
+	"math"
+	"ninja/object"
+)
 
 func evalIntegerInfixExpression(
 	operator string,
@@ -23,7 +26,16 @@ func evalIntegerInfixExpression(
 	case "%":
 		return &object.Integer{Value: leftVal % rightVal}
 	case "/":
-		return &object.Integer{Value: leftVal / rightVal}
+		left := float64(leftVal)
+		right := float64(rightVal)
+		total := left / right
+
+		// @todo check if we need a ELIPSON var or if there any way of doing
+		if math.Round(total)-total <= 0.00000000000001 {
+			return &object.Integer{Value: int64(total)}
+		}
+
+		return &object.Float{Value: left / right}
 	case "<":
 		return nativeBoolToBooleanObject(leftObject.Compare(rightObject) == -1)
 	case ">":

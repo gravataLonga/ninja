@@ -74,6 +74,10 @@ func TestEvalDigitExpression(t *testing.T) {
 			2,
 		},
 		{
+			`100 / 8`,
+			12.5,
+		},
+		{
 			`4 % 2`,
 			0,
 		},
