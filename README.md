@@ -41,7 +41,7 @@ yum install ninja-lang
 
 ## APT    
 
-To configure apt access, create a following file `/etc/apt/sources.list.d/fury.list` with content of :  
+To configure apt access, create a following file `/etc/apt/sources.list.d/ninja.list` with content of :  
 
 ```  
 deb [trusted=yes] https://apt.fury.io/gravatalonga/ /
