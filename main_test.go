@@ -62,7 +62,7 @@ func TestMain_execCode(t *testing.T) {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
 
-	execCode(`var a = 2 + 1; a;`, temporaryStdOut, []string{})
+	execCode(`var a = 2 + 1; a;`, temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -82,7 +82,7 @@ func TestMain_execCodeSpecialCharacter(t *testing.T) {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
 
-	execCode("import \"./testdata/multiple_lines.ninja\"; input.split(\"\n\")", temporaryStdOut, []string{})
+	execCode("import \"./testdata/multiple_lines.ninja\"; input.split(\"\n\")", temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -104,7 +104,7 @@ func TestMain_execCodeAssertions(t *testing.T) {
 
 	code := readFile(t, "./testdata/assertions.ninja")
 	expected := readFile(t, "./testdata/expected.txt")
-	execCode(code, temporaryStdOut, []string{})
+	execCode(code, temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
