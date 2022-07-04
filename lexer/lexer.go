@@ -5,7 +5,6 @@ import (
 	"io"
 	"ninja/token"
 	"strings"
-	"unicode/utf8"
 )
 
 type Lexer struct {
@@ -104,7 +103,9 @@ func (l *Lexer) NextToken() token.Token {
 			'=': token.NEQ,
 		})
 	case ':':
-		tok = l.newToken(token.COLON, []byte{l.ch})
+		tok = l.newTokenPeekOrDefault(token.COLON, map[byte]token.TokenType{
+			':': token.DOUBLE_COLON,
+		})
 	case '(':
 		tok = l.newToken(token.LPAREN, []byte{l.ch})
 	case ')':
@@ -279,20 +280,4 @@ func (l *Lexer) readString() (string, error) {
 		b.WriteByte(l.ch)
 	}
 	return b.String(), nil
-}
-
-func runesToUTF8(rs []rune) []byte {
-	size := 0
-	for _, r := range rs {
-		size += utf8.RuneLen(r)
-	}
-
-	bs := make([]byte, size)
-
-	count := 0
-	for _, r := range rs {
-		count += utf8.EncodeRune(bs[count:], r)
-	}
-
-	return bs
 }

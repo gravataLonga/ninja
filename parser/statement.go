@@ -20,6 +20,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseReturnStatement()
 	case token.BREAK:
 		return p.parseBreakStatement()
+	case token.ENUM:
+		return p.parseEnum()
 	default:
 		return p.parseExpressionStatement()
 	}

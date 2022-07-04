@@ -41,25 +41,26 @@ type (
 )
 
 var precedences = map[token.TokenType]int{
-	token.ASSIGN:   ASSIGN,
-	token.EQ:       EQUALS,
-	token.NEQ:      EQUALS,
-	token.LT:       LESS_GREATER,
-	token.GT:       LESS_GREATER,
-	token.GTE:      LESS_GREATER,
-	token.LTE:      LESS_GREATER,
-	token.OR:       LOGICAL,
-	token.AND:      LOGICAL,
-	token.PLUS:     SUM,
-	token.MINUS:    SUM,
-	token.DECRE:    SUM,
-	token.INCRE:    SUM,
-	token.SLASH:    PRODUCT,
-	token.ASTERISK: PRODUCT,
-	token.MOD:      PRODUCT,
-	token.LPAREN:   CALL,
-	token.LBRACKET: INDEX,
-	token.DOT:      CALL,
+	token.ASSIGN:       ASSIGN,
+	token.EQ:           EQUALS,
+	token.NEQ:          EQUALS,
+	token.LT:           LESS_GREATER,
+	token.GT:           LESS_GREATER,
+	token.GTE:          LESS_GREATER,
+	token.LTE:          LESS_GREATER,
+	token.OR:           LOGICAL,
+	token.AND:          LOGICAL,
+	token.PLUS:         SUM,
+	token.MINUS:        SUM,
+	token.DECRE:        SUM,
+	token.INCRE:        SUM,
+	token.SLASH:        PRODUCT,
+	token.ASTERISK:     PRODUCT,
+	token.MOD:          PRODUCT,
+	token.LPAREN:       CALL,
+	token.LBRACKET:     INDEX,
+	token.DOT:          CALL,
+	token.DOUBLE_COLON: CALL,
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -105,6 +106,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 	p.registerInfix(token.DOT, p.parseObjectCallExpression)
+	p.registerInfix(token.DOUBLE_COLON, p.parseEnumAccessorExpression)
 
 	p.postfixParseFns = make(map[token.TokenType]postfixParseFn)
 	p.registerPostfix(token.INCRE, p.parsePostfixExpression)

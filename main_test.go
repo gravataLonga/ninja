@@ -12,15 +12,6 @@ import (
 	"testing"
 )
 
-/*
-func Fib(n int) int {
-        if n < 2 {
-                return n
-        }
-        return Fib(n-1) + Fib(n-2)
-}
-*/
-
 var code = `function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };`
 
 var table = []struct {
@@ -64,13 +55,12 @@ func BenchmarkExecCode(b *testing.B) {
 }
 
 func TestMain_execCode(t *testing.T) {
-	originalStdOut := os.Stdout
-	temporaryStdOut, err := os.CreateTemp("", "TestMain_execCode")
+
+	temporaryStdOut, fn, err := createStdInOut("TestMain_execCode")
+	defer fn()
 	if err != nil {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
-	defer os.Remove(temporaryStdOut.Name())
-	os.Stdout = temporaryStdOut
 
 	execCode(`var a = 2 + 1; a;`, temporaryStdOut, []string{})
 
@@ -80,22 +70,19 @@ func TestMain_execCode(t *testing.T) {
 	}
 
 	if string(resultOut) != "3" {
-		os.Stdout = originalStdOut
 		fmt.Printf("--- stdout ---\n%s--- expected ---\n%s", resultOut, "3")
 		t.Errorf("%s: stdout does not match expected", "TestMain_execCode")
 	}
 }
 
 func TestMain_execCodeSpecialCharacter(t *testing.T) {
-	originalStdOut := os.Stdout
-	temporaryStdOut, err := os.CreateTemp("", "TestMain_execCode")
+	temporaryStdOut, fn, err := createStdInOut("TestMain_execCode")
+	defer fn()
 	if err != nil {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
-	defer os.Remove(temporaryStdOut.Name())
-	os.Stdout = temporaryStdOut
 
-	execCode("import \"./testdata/multiple_lines.nj\"; input.split(\"\n\")", temporaryStdOut, []string{})
+	execCode("import \"./testdata/multiple_lines.ninja\"; input.split(\"\n\")", temporaryStdOut, []string{})
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -103,22 +90,19 @@ func TestMain_execCodeSpecialCharacter(t *testing.T) {
 	}
 
 	if string(resultOut) != "[29x13x26, 11x11x14, 27x2x5, 6x10x13, 15x19x10, 26x29x15, 8x23x6, 17x8x26, 20x28x3, 14x3x5, 10x9x8]" {
-		os.Stdout = originalStdOut
 		fmt.Printf("--- stdout ---\n%s--- expected ---\n%s", resultOut, "3")
 		t.Errorf("%s: stdout does not match expected", "TestMain_execCode")
 	}
 }
 
 func TestMain_execCodeAssertions(t *testing.T) {
-	originalStdOut := os.Stdout
-	temporaryStdOut, err := os.CreateTemp("", "TestMain_execCodeAssertions")
+	temporaryStdOut, fn, err := createStdInOut("TestMain_execCodeAssertions")
+	defer fn()
 	if err != nil {
-		t.Fatalf("%s: %s", "TestMain_execCodeAssertions", err)
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
-	defer os.Remove(temporaryStdOut.Name())
-	os.Stdout = temporaryStdOut
 
-	code := readFile(t, "./testdata/assertions.nj")
+	code := readFile(t, "./testdata/assertions.ninja")
 	expected := readFile(t, "./testdata/expected.txt")
 	execCode(code, temporaryStdOut, []string{})
 
@@ -128,9 +112,7 @@ func TestMain_execCodeAssertions(t *testing.T) {
 	}
 
 	if string(resultOut) != expected {
-		os.Stdout = originalStdOut
-		fmt.Printf("--- stdout ---\n%s--- expected ---\n%s", resultOut, expected)
-		t.Errorf("%s: stdout does not match expected", "TestMain_execCodeAssertions")
+		t.Errorf("%s: stdout does not match expected. Output: %s", "TestMain_execCodeAssertions", resultOut)
 	}
 }
 
@@ -141,4 +123,19 @@ func readFile(t *testing.T, filename string) string {
 	}
 
 	return string(file)
+}
+
+func createStdInOut(name string) (*os.File, func(), error) {
+	originalStdOut := os.Stdout
+	temporaryStdOut, err := os.CreateTemp("", name)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	os.Stdout = temporaryStdOut
+
+	return temporaryStdOut, func() {
+		defer os.Remove(temporaryStdOut.Name())
+		os.Stdout = originalStdOut
+	}, nil
 }

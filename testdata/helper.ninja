@@ -17,22 +17,3 @@ function assertFalse()  {
 function assertTrue() {
     return true;
 };
-
-/*
-Assertion basic variables
-*/
-
-import "./testdata/assert_variable.nj";
-
-/*
- Assertion Index
-*/
-
-import "./testdata/assert_index.nj";
-
-
-/*
- Assertion advance stuff
-*/
-
-import "./testdata/assert_advance.nj";

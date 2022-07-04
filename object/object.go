@@ -17,6 +17,10 @@ type CallableMethod interface {
 	Call(method string, args ...Object) Object
 }
 
+type Cloneable interface {
+	Clone() Object
+}
+
 // Comparable is the interface for comparing two Object and their underlying
 // values. It is the responsibility of the caller (left) to check for types.
 type Comparable interface {
@@ -39,6 +43,7 @@ const (
 	ERROR_OBJ        = "ERROR"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 	BREAK_VALUE_OBJ  = "BREAK_VALUE"
+	ENUM_OBJ         = "ENUM"
 	FUNCTION_OBJ     = "FUNCTION"
 	BUILTIN_OBJ      = "BUILTIN"
 	INTEGER_OBJ      = "INTEGER"

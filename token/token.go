@@ -49,6 +49,7 @@ func (t TokenType) String() string {
 		",",
 		";",
 		":",
+		"::",
 		"(",
 		")",
 		"{",
@@ -68,6 +69,8 @@ func (t TokenType) String() string {
 		"FOR",
 		"DELETE",
 		"BREAK",
+		"ENUM",
+		"CASE",
 	}
 
 	if len(list)-1 < int(t) {
@@ -105,16 +108,17 @@ const (
 	AND // "&&"
 	OR  // "||"
 
-	DOT       // "."
-	COMMA     // ","
-	SEMICOLON // ";"
-	COLON     // ":"
-	LPAREN    // "("
-	RPAREN    // ")"
-	LBRACE    // "{"
-	RBRACE    // "}"
-	LBRACKET  // "["
-	RBRACKET  // "]"
+	DOT          // "."
+	COMMA        // ","
+	SEMICOLON    // ";"
+	COLON        // ":"
+	DOUBLE_COLON // "::"
+	LPAREN       // "("
+	RPAREN       // ")"
+	LBRACE       // "{"
+	RBRACE       // "}"
+	LBRACKET     // "["
+	RBRACKET     // "]"
 
 	FUNCTION         // "FUNCTION"
 	FUNCTION_LITERAL // "FUNCTION_LITERAL"
@@ -129,6 +133,8 @@ const (
 	FOR              // "FOR"
 	DELETE           // "DELETE"
 	BREAK            // "BREAK"
+	ENUM             // "ENUM"
+	CASE             // "CASE"
 
 	ENDTOKEN // Special token, only for testing purposes
 )
@@ -146,6 +152,8 @@ var keywords = map[string]TokenType{
 	"import":   IMPORT,
 	"delete":   DELETE,
 	"break":    BREAK,
+	"enum":     ENUM,
+	"case":     CASE,
 }
 
 // LookupIdentifier it will search from []byte() it's keyword token

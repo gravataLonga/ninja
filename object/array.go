@@ -23,6 +23,23 @@ func (ao *Array) Inspect() string {
 	return out.String()
 }
 
+func (s *Array) Clone() Object {
+	arr := Array{}
+	eles := make([]Object, len(s.Elements))
+	for i, e := range s.Elements {
+		cloneable, ok := e.(Cloneable)
+		if ok {
+			newE := cloneable.Clone()
+			eles[i] = newE
+		} else {
+			eles[i] = e
+		}
+
+	}
+	arr.Elements = eles
+	return &arr
+}
+
 func (s *Array) Call(method string, args ...Object) Object {
 	switch method {
 	case "type":

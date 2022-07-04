@@ -1,0 +1,26 @@
+var tests = [
+    {"expression": true && true, "expected": true, "name": "true && true"},
+    {"expression": true && false, "expected": false, "name": "true && false"},
+    {"expression": false && true, "expected": false, "name": "false && true"},
+    {"expression": !false && true, "expected": true, "name": "!false && true"},
+    {"expression": true && !false, "expected": true, "name": "true && !false"},
+    {"expression": true || true, "expected": true, "name": "true || true"},
+    {"expression": true || false, "expected": true, "name": "true || false"},
+    {"expression": false || true, "expected": true, "name": "false || true"},
+    {"expression": false || false, "expected": false, "name": "false || false"},
+    {"expression": !false || !false, "expected": true, "name": "!false || !false"},
+    {"expression": 0 || false, "expected": true, "name": "0 || false"}
+
+];
+
+for (var t = 0; t <= len(tests) - 1; t = t + 1) {
+    var expression = tests[t]["expression"];
+    var expected = tests[t]["expected"];
+    var name = tests[t]["name"];
+
+    if (expression != expected) {
+        var ok = assert("Operations Logic Operator: " + expected + " Got: " + expression + " in " + name, assertFalse);
+    } else {
+        var ok = assert("Operations Logic Operator " + name, assertTrue);
+    }
+}

@@ -17,7 +17,15 @@ func Last(args ...object.Object) object.Object {
 		return object.NewError(err.Error())
 	}
 
-	arr := args[0].(*object.Array)
+	cloneable, ok := args[0].(object.Cloneable)
+	if !ok {
+		return object.NewErrorFormat("object isn't cloneable.")
+	}
+
+	arrClone := cloneable.Clone()
+
+	arr := arrClone.(*object.Array)
+
 	length := len(arr.Elements)
 	if length > 0 {
 		return arr.Elements[length-1]

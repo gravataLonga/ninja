@@ -1,0 +1,59 @@
+enum all {
+    case INT: 1;
+    case FLOAT: 1.0;
+    case STR: "Hello";
+    case BOOL: true;
+    case INT_PLUS: 1+1;
+    case FLOAT_DIV: 100/8;
+    case STR_CONCAT: "Hello " + "World"
+    case BOOL_CONDITION: if (1) { false } else { true }
+}
+
+if (all::INT != 1) {
+    var ok = assert("Enum: 1 Got: " + all::INT, assertFalse);
+} else {
+    var ok = assert("Enum: 1", assertTrue);
+}
+
+
+if (all::FLOAT != 1.0) {
+    var ok = assert("Enum: 1.0 Got: " + all::FLOAT, assertFalse);
+} else {
+    var ok = assert("Enum: 1.0", assertTrue);
+}
+
+if (all::STR != "Hello") {
+    var ok = assert("Enum: Hello Got: " + all::STR, assertFalse);
+} else {
+    var ok = assert("Enum: Hello", assertTrue);
+}
+
+if (!all::BOOL) {
+    var ok = assert("Enum: True Got: " + all::BOOL, assertFalse);
+} else {
+    var ok = assert("Enum: True", assertTrue);
+}
+
+if (all::INT_PLUS != 2) {
+    var ok = assert("Enum: 2 Got: " + all::INT_PLUS, assertFalse);
+} else {
+    var ok = assert("Enum: 2", assertTrue);
+}
+
+if (all::FLOAT_DIV != 12.5) {
+    var ok = assert("Enum: 12.5 Got: " + all::FLOAT_DIV, assertFalse);
+} else {
+    var ok = assert("Enum: 12.5", assertTrue);
+}
+
+if (all::STR_CONCAT != "Hello World") {
+    var ok = assert("Enum: Hello World Got: " + all::STR_CONCAT, assertFalse);
+} else {
+    var ok = assert("Enum: Hello World", assertTrue);
+}
+
+if (all::BOOL_CONDITION) {
+    var ok = assert("Enum: false Got: " + all::BOOL_CONDITION, assertFalse);
+} else {
+    var ok = assert("Enum: false", assertTrue);
+}

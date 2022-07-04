@@ -53,6 +53,30 @@ func TestForStatement(t *testing.T) {
 	}
 }
 
+func TestForStatementWrongParameters(t *testing.T) {
+	tests := []struct {
+		input                string
+		expectedErrorMessage string
+	}{
+		{input: "for (var i = 0; i <= parts-1; i = i = 1) {}", expectedErrorMessage: "expected next token to be IDENT, got = (=) at [Line: 1, Offset: 37] instead."},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(strings.NewReader(tt.input))
+		p := New(l)
+		p.ParseProgram()
+
+		if len(p.Errors()) <= 0 {
+			t.Fatalf("expected error message. Got: 0")
+		}
+
+		if p.Errors()[0] != tt.expectedErrorMessage {
+			t.Errorf("expected error message %s. Got: %s", p.Errors()[0], tt.expectedErrorMessage)
+		}
+
+	}
+}
+
 func TestForStatement_String(t *testing.T) {
 	tests := []struct {
 		input    string

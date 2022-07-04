@@ -103,6 +103,7 @@ var x true;
 var = "123";
 var var;
 var = =;
+i = i = 1;
 `
 
 	l := lexer.New(strings.NewReader(input))
@@ -114,8 +115,8 @@ var = =;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(p.errors) != 4 {
-		t.Errorf("Expected 4 errors, got: %d", len(p.errors))
+	if len(p.errors) != 5 {
+		t.Fatalf("Expected 5 errors, got: %d", len(p.errors))
 	}
 
 	tests := []struct {
@@ -125,6 +126,7 @@ var = =;
 		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 3, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
 		{fmt.Sprintf("expected next token to be %s, got %s (var) at [Line: 4, Offset: 8] instead.", token.IDENT, token.VAR)},
 		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 5, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 6, Offset: 7] instead.", token.IDENT, token.ASSIGN)},
 	}
 
 	errors := p.Errors()

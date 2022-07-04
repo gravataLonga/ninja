@@ -9,12 +9,12 @@ import (
 
 func TestNextToken(t *testing.T) {
 	input := `
-var true false if else
-break for () [] {} . ; : 
+var true false if else import return
+break for enum case delete () [] {} . ; : :: ,
 != == <= >= < > && || = 
 + - * / % 
 // comment 
-! 100 100.5 "hello" 
+! 100 100.5 "hello" "\\"
 ++5 --5 5++ 5-- count 
 /* 
 multiple comment 
@@ -31,8 +31,13 @@ function delete @
 
 		{token.IF, "if"},
 		{token.ELSE, "else"},
+		{token.IMPORT, "import"},
+		{token.RETURN, "return"},
 		{token.BREAK, "break"},
 		{token.FOR, "for"},
+		{token.ENUM, "enum"},
+		{token.CASE, "case"},
+		{token.DELETE, "delete"},
 		{token.LPAREN, "("},
 		{token.RPAREN, ")"},
 		{token.LBRACKET, "["},
@@ -42,6 +47,8 @@ function delete @
 		{token.DOT, "."},
 		{token.SEMICOLON, ";"},
 		{token.COLON, ":"},
+		{token.DOUBLE_COLON, "::"},
+		{token.COMMA, ","},
 		{token.NEQ, "!="},
 		{token.EQ, "=="},
 		{token.LTE, "<="},
@@ -62,6 +69,7 @@ function delete @
 		{token.INT, "100"},
 		{token.FLOAT, "100.5"},
 		{token.STRING, "hello"},
+		{token.STRING, "\\"},
 		{token.INCRE, "++"},
 		{token.INT, "5"},
 		{token.DECRE, "--"},

@@ -24,6 +24,8 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`first([])`, nil, false},
 		{`first(1)`, "TypeError: first() expected argument #1 to be `ARRAY` got `INTEGER`", false},
 		{`last([1, 2, 3])`, 3, false},
+		// builtin function last must be immutable
+		{`var a = [[0, 1]];var b = last(a);b[0] = b[0] + 1; a[0][0];`, 0, false},
 		{`last([])`, nil, false},
 		{`last(1)`, "TypeError: last() expected argument #1 to be `ARRAY` got `INTEGER`", false},
 		{`rest([1, 2, 3])`, []int{2, 3}, false},

@@ -149,6 +149,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalForStatement(node, env)
 	case *ast.ObjectCall:
 		return evalObjectCallExpression(node, env)
+	case *ast.EnumStatement:
+		return evalEnumStatement(node, env)
+	case *ast.ScopeOperatorExpression:
+		return evalScopeOperatorExpression(node, env)
 	}
 	return nil
 }

@@ -1,0 +1,28 @@
+import "./testdata/helper.ninja";
+
+/*
+Assertion basic variables
+*/
+
+import "./testdata/assert_variable.ninja";
+
+/*
+Assertion enums
+*/
+
+import "./testdata/assert_enum.ninja";
+
+/*
+Assertion Logic Operators
+*/
+import "./testdata/assert_logic_operators.ninja";
+
+/*
+ Assertion Index
+*/
+import "./testdata/assert_index.ninja";
+
+/*
+ Assertion advance stuff
+*/
+import "./testdata/assert_advance.ninja";
