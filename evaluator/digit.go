@@ -6,15 +6,11 @@ func evalFloatOrIntegerInfixExpression(
 	operator string,
 	left, right object.Object,
 ) object.Object {
-	leftValFloat, okLeftFloat := left.(*object.Float)
-	rightValFloat, okRightFloat := right.(*object.Float)
+	leftValFloat, _ := left.(*object.Float)
+	rightValFloat, _ := right.(*object.Float)
 
 	leftValInteger, okLeftInteger := left.(*object.Integer)
 	rightValInteger, okRightInteger := right.(*object.Integer)
-
-	if okLeftFloat && okRightFloat {
-		return evalFloatInfixExpression(operator, leftValFloat, rightValFloat)
-	}
 
 	if okLeftInteger && okRightInteger {
 		return evalIntegerInfixExpression(operator, leftValInteger, rightValInteger)

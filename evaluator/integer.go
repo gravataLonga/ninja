@@ -17,6 +17,16 @@ func evalIntegerInfixExpression(
 	rightVal := rightObject.Value
 
 	switch operator {
+	case "&":
+		return &object.Integer{Value: leftVal & rightVal}
+	case "|":
+		return &object.Integer{Value: leftVal | rightVal}
+	case "^":
+		return &object.Integer{Value: leftVal ^ rightVal}
+	case "<<":
+		return &object.Integer{Value: leftVal << rightVal}
+	case ">>":
+		return &object.Integer{Value: leftVal >> rightVal}
 	case "+":
 		return &object.Integer{Value: leftVal + rightVal}
 	case "-":

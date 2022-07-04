@@ -59,25 +59,17 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		tok = l.newToken(token.SLASH, []byte{l.ch})
 	case '&':
-		if l.peekChar() != '&' {
-			ch := l.ch
-			l.readChar()
-			tok = l.newToken(token.ILLEGAL, []byte{ch, l.ch})
-		} else {
-			ch := l.ch
-			l.readChar()
-			tok = l.newToken(token.AND, []byte{ch, l.ch})
-		}
+		tok = l.newTokenPeekOrDefault(token.BIT_AND, map[byte]token.TokenType{
+			'&': token.AND,
+		})
 	case '|':
-		if l.peekChar() != '|' {
-			ch := l.ch
-			l.readChar()
-			tok = l.newToken(token.ILLEGAL, []byte{ch, l.ch})
-		} else {
-			ch := l.ch
-			l.readChar()
-			tok = l.newToken(token.OR, []byte{ch, l.ch})
-		}
+		tok = l.newTokenPeekOrDefault(token.BIT_OR, map[byte]token.TokenType{
+			'|': token.OR,
+		})
+	case '^':
+		tok = l.newToken(token.BIT_XOR, []byte{l.ch})
+	case '~':
+		tok = l.newToken(token.BIT_NOT, []byte{l.ch})
 	case '-':
 		tok = l.newTokenPeekOrDefault(token.MINUS, map[byte]token.TokenType{
 			'-': token.DECRE,
@@ -93,10 +85,12 @@ func (l *Lexer) NextToken() token.Token {
 	case '>':
 		tok = l.newTokenPeekOrDefault(token.GT, map[byte]token.TokenType{
 			'=': token.GTE,
+			'>': token.SHIFT_RIGHT,
 		})
 	case '<':
 		tok = l.newTokenPeekOrDefault(token.LT, map[byte]token.TokenType{
 			'=': token.LTE,
+			'<': token.SHIFT_LEFT,
 		})
 	case '!':
 		tok = l.newTokenPeekOrDefault(token.BANG, map[byte]token.TokenType{

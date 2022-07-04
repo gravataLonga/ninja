@@ -45,6 +45,12 @@ func (t TokenType) String() string {
 		"!=",
 		"&&",
 		"||",
+		"&",
+		"|",
+		"^",
+		"~",
+		"<<",
+		">>",
 		".",
 		",",
 		";",
@@ -108,6 +114,13 @@ const (
 	AND // "&&"
 	OR  // "||"
 
+	BIT_AND     // "&"
+	BIT_OR      // "|"
+	BIT_XOR     // "^"
+	BIT_NOT     // "~"
+	SHIFT_LEFT  // "<<"
+	SHIFT_RIGHT // ">>"
+
 	DOT          // "."
 	COMMA        // ","
 	SEMICOLON    // ";"
@@ -120,21 +133,20 @@ const (
 	LBRACKET     // "["
 	RBRACKET     // "]"
 
-	FUNCTION         // "FUNCTION"
-	FUNCTION_LITERAL // "FUNCTION_LITERAL"
-	VAR              // "VARIABLE"
-	TRUE             // "TRUE"
-	FALSE            // "FALSE"
-	IF               // "IF"
-	ELSEIF           // "ELSEIF"
-	ELSE             // "ELSE"
-	RETURN           // "RETURN"
-	IMPORT           // "IMPORT"
-	FOR              // "FOR"
-	DELETE           // "DELETE"
-	BREAK            // "BREAK"
-	ENUM             // "ENUM"
-	CASE             // "CASE"
+	FUNCTION // "FUNCTION"
+	VAR      // "VARIABLE"
+	TRUE     // "TRUE"
+	FALSE    // "FALSE"
+	IF       // "IF"
+	ELSEIF   // "ELSEIF"
+	ELSE     // "ELSE"
+	RETURN   // "RETURN"
+	IMPORT   // "IMPORT"
+	FOR      // "FOR"
+	DELETE   // "DELETE"
+	BREAK    // "BREAK"
+	ENUM     // "ENUM"
+	CASE     // "CASE"
 
 	ENDTOKEN // Special token, only for testing purposes
 )

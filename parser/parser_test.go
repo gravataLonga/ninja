@@ -68,12 +68,56 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"((a * b) % c)",
 		},
 		{
+			"a & b",
+			"(a & b)",
+		},
+		{
+			"a | b",
+			"(a | b)",
+		},
+		{
+			"a | b & c",
+			"((a | b) & c)",
+		},
+		{
+			"5 + a | b & c",
+			"(5 + ((a | b) & c))",
+		},
+		{
+			"5 + a | b & c ^ d ~ e",
+			"(5 + ((((a | b) & c) ^ d) ~ e))",
+		},
+		{
+			"a << b",
+			"(a << b)",
+		},
+		{
+			"a >> b",
+			"(a >> b)",
+		},
+		{
+			"a >> b + c",
+			"(a >> (b + c))",
+		},
+		{
+			"a >> b * c",
+			"(a >> (b * c))",
+		},
+		{
+			"e + a >> b * c",
+			"((e + a) >> (b * c))",
+		},
+		{
 			"3 + 4; -5 * 5",
 			"(3 + 4)((-5) * 5)",
 		},
 		{
 			"5 > 4 == 3 < 4",
 			"((5 > 4) == (3 < 4))",
+		},
+		{
+			"3 << 2 == 3 & 2",
+			"((3 << 2) == (3 & 2))",
 		},
 		{
 			"5 >= 4 == 3 <= 4",
@@ -209,16 +253,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		program := p.ParseProgram()
-		checkParserErrors(t, p)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestOperatorPrecedenceParsing[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
 
-		actual := program.String()
-		if actual != tt.expected {
-			t.Errorf("expected=%q, got=%q", tt.expected, actual)
-		}
+			actual := program.String()
+			if actual != tt.expected {
+				t.Errorf("expected=%q, got=%q", tt.expected, actual)
+			}
+		})
 	}
 }
 
