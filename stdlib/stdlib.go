@@ -12,4 +12,5 @@ var Builtins = map[string]*object.Builtin{
 	"time":  object.NewBuiltin(Time),
 	"rand":  object.NewBuiltin(Rand),
 	"args":  object.NewBuiltin(Args),
+	"exit":  object.NewBuiltin(Exit),
 }

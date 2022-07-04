@@ -381,6 +381,5 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 				t.Errorf("erro expected \"%s\". Got: %s", tt.expectedErrorMessage, errObj.Message)
 			}
 		})
-
 	}
 }

@@ -2,6 +2,8 @@ package repl
 
 import (
 	"bufio"
+	"fmt"
+	"github.com/TheZoraiz/ascii-image-converter/aic_package"
 	"io"
 	"ninja/evaluator"
 	"ninja/lexer"
@@ -13,26 +15,9 @@ import (
 	color "github.com/fatih/color"
 )
 
-const PROMPT = ">> "
+const PROMPT = ">>> "
 
-const NINJA_LICENSE = " License 2022 - Built by Jonathan Fontes - Version: %s"
-
-const NINJA_SPLASH = `
-
-
-$$\   $$\ $$\                         
-$$$\  $$ |\__|                        
-$$$$\ $$ |$$\ $$$$$$$\  $$\  $$$$$$\  
-$$ $$\$$ |$$ |$$  __$$\ \__| \____$$\ 
-$$ \$$$$ |$$ |$$ |  $$ |$$\  $$$$$$$ |
-$$ |\$$$ |$$ |$$ |  $$ |$$ |$$  __$$ |
-$$ | \$$ |$$ |$$ |  $$ |$$ |\$$$$$$$ |
-\__|  \__|\__|\__|  \__|$$ | \_______|
-                  $$\   $$ |          
-                  \$$$$$$  |          
-                   \______/           
-
-`
+const NINJA_LICENSE = "Ninja Language - MIT LICENSE - Version: %s"
 
 type repl struct {
 	out     io.Writer
@@ -45,15 +30,11 @@ type repl struct {
 var colorName = map[string]*color.Color{
 	"normal":  color.New(color.FgWhite),
 	"program": color.New(color.FgWhite, color.Bold),
-	"brand":   color.New(color.FgCyan, color.Bold),
+	"brand":   color.New(color.FgHiBlue, color.Bold),
 	"error":   color.New(color.FgRed),
 }
 
-func NewRepel(out io.Writer, in io.Reader, args []string) *repl {
-	object.StandardInput = in
-	object.StandardOutput = out
-	object.Arguments = args
-
+func NewRepel(out io.Writer, in io.Reader) *repl {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
 
@@ -79,11 +60,12 @@ func (r *repl) Start() {
 		panic(err)
 	}
 
-	r.printSplashLicense()
 	r.printSplashScreen()
+	r.printSplashLicense()
 
-	r.Output("normal", "Hi %s! This is Ninja Programming Language", user2.Username)
-	r.Output("normal", "Feel free to type in commands\n")
+	r.Output("program", "Hi %s! This is Ninja Programming Language\n", user2.Username)
+	r.Output("program", "Feel free to type in commands\n")
+	r.Output("program", "If found an error, open issue at github.com/gravataLonga/ninja\n")
 
 	for {
 		r.Output("normal", PROMPT)
@@ -122,7 +104,9 @@ func (r *repl) printSplashLicense() {
 }
 
 func (r *repl) printSplashScreen() {
-	r.Output("brand", NINJA_SPLASH)
+	fmt.Fprint(r.out, "\n\n")
+	fmt.Fprint(r.out, createSpashScreen())
+	fmt.Fprint(r.out, "\n\n")
 }
 
 func (r *repl) printParserErrors(errors []string) {
@@ -131,4 +115,23 @@ func (r *repl) printParserErrors(errors []string) {
 	for _, msg := range errors {
 		r.Output("error", "\t\t"+msg+"\n")
 	}
+}
+
+func createSpashScreen() string {
+	filePath := "./docs/ninja-logo.png"
+
+	flags := aic_package.DefaultFlags()
+
+	flags.Width = 50
+	flags.Colored = true
+	flags.CustomMap = " .-+$*"
+	flags.SaveBackgroundColor = [4]int{50, 50, 50, 100}
+
+	// Conversion for an image
+	asciiArt, err := aic_package.Convert(filePath, flags)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return fmt.Sprintf("%v\n", asciiArt)
 }
