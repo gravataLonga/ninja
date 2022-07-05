@@ -84,6 +84,10 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 			"(5 + ((a | b) & c))",
 		},
 		{
+			"-1.0.abs()",
+			"(-(1.0.abs()))",
+		},
+		{
 			"a << b",
 			"(a << b)",
 		},

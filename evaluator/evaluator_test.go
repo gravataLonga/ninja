@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"math"
 	"ninja/lexer"
 	"ninja/object"
 	"ninja/parser"
@@ -60,7 +61,11 @@ func testFloatObject(t *testing.T, obj object.Object, expected float64) bool {
 		t.Errorf("object is not Float. got=%T (%+v)", obj, obj)
 		return false
 	}
-	if result.Value-expected >= object.EPSILON {
+
+	max := math.Max(result.Value, expected)
+	min := math.Min(result.Value, expected)
+
+	if max-min >= object.EPSILON {
 		t.Errorf("object has wrong value. got=%.30f, want=%.30f", result.Value, expected)
 		return false
 	}

@@ -17,6 +17,7 @@ func TestEvalIntegerExpression(t *testing.T) {
 		{"-5", -5},
 		{"-10", -10},
 		{"++4", 5},
+		{"var a = 4; ++a; a;", 4},
 		{"--6", 5},
 		{"10 % 2", 0},
 		{"10 & 2", 2},
