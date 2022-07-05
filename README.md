@@ -325,6 +325,29 @@ delete a["key"];
 a["testing"] = "hello";  
 ```  
 
+### Enum  
+
+```
+enum STATUS {
+    case OK: true;
+    case NOK: false;
+}
+
+enum RESPONSE {
+    case OK: 200;
+    case NOT_FOUND: 404;
+    case ERR_MSG: "There are some errors"
+    case TIME: 32.2 + 43.3;
+    case TEST: if (true) { 0 } else { 1 };
+}
+```  
+
+
+then you can use his values:  
+
+```
+puts(STATUS::OK);  
+```
 
 ## Conditions  
 

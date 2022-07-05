@@ -23,7 +23,6 @@ func Last(args ...object.Object) object.Object {
 	}
 
 	arrClone := cloneable.Clone()
-
 	arr := arrClone.(*object.Array)
 
 	length := len(arr.Elements)

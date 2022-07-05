@@ -17,7 +17,14 @@ func First(args ...object.Object) object.Object {
 		return object.NewError(err.Error())
 	}
 
-	arr := args[0].(*object.Array)
+	cloneable, ok := args[0].(object.Cloneable)
+	if !ok {
+		return object.NewErrorFormat("object isn't cloneable.")
+	}
+
+	arrClone := cloneable.Clone()
+	arr := arrClone.(*object.Array)
+
 	if len(arr.Elements) > 0 {
 		return arr.Elements[0]
 	}

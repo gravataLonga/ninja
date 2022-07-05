@@ -95,6 +95,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
 	p.registerPrefix(token.FOR, p.parseLoopLiteral)
 	p.registerPrefix(token.IMPORT, p.parseImport)
+	// p.registerPrefix(token.BIT_NOT, p.parsePrefixExpression)
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.ASSIGN, p.parseInfixAssignExpression)
@@ -113,7 +114,6 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.OR, p.parseInfixExpression)
 	p.registerInfix(token.BIT_AND, p.parseInfixExpression)
 	p.registerInfix(token.BIT_OR, p.parseInfixExpression)
-	p.registerInfix(token.BIT_NOT, p.parseInfixExpression)
 	p.registerInfix(token.BIT_XOR, p.parseInfixExpression)
 	p.registerInfix(token.SHIFT_RIGHT, p.parseInfixExpression)
 	p.registerInfix(token.SHIFT_LEFT, p.parseInfixExpression)
