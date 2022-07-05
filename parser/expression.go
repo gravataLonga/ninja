@@ -23,6 +23,12 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	}
 	leftExp := prefix()
 
+	postfix := p.postfixParseFns[p.peekToken.Type]
+	if postfix != nil {
+		p.nextToken()
+		leftExp = postfix()
+	}
+
 	for precedence < p.peekPrecedence() {
 		infix := p.infixParseFns[p.peekToken.Type]
 		if infix == nil {
@@ -31,6 +37,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		p.nextToken()
 		leftExp = infix(leftExp)
 	}
+
 	return leftExp
 }
 

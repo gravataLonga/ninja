@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"ninja/ast"
 	"ninja/lexer"
 	"strings"
@@ -12,31 +13,33 @@ func TestParsingPosfixExpressions(t *testing.T) {
 		input    string
 		operator string
 	}{
-		{"i++;", "++"},
-		{"i--;", "--"},
+		{"i++", "++"},
+		{"i--", "--"},
 	}
 
-	for _, tt := range prefixTests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		program := p.ParseProgram()
-		checkParserErrors(t, p)
+	for i, tt := range prefixTests {
+		t.Run(fmt.Sprintf("TestParsingPosfixExpressions[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
 
-		if len(program.Statements) != 1 {
-			t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
-		}
+			if len(program.Statements) != 1 {
+				t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
+			}
 
-		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-		if !ok {
-			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
-		}
+			stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+			if !ok {
+				t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+			}
 
-		exp, ok := stmt.Expression.(*ast.PostfixExpression)
-		if !ok {
-			t.Fatalf("stmt is not ast.PostfixExpression. got=%T", stmt.Expression)
-		}
-		if exp.Operator != tt.operator {
-			t.Fatalf("exp.Operator is not '%s'. got=%s", tt.operator, exp.Operator)
-		}
+			exp, ok := stmt.Expression.(*ast.PostfixExpression)
+			if !ok {
+				t.Fatalf("stmt is not ast.PostfixExpression. got=%T", stmt.Expression)
+			}
+			if exp.Operator != tt.operator {
+				t.Fatalf("exp.Operator is not '%s'. got=%s", tt.operator, exp.Operator)
+			}
+		})
 	}
 }

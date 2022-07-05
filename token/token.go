@@ -63,7 +63,6 @@ func (t TokenType) String() string {
 		"[",
 		"]",
 		"FUNCTION",
-		"FUNCTION_LITERAL",
 		"VARIABLE",
 		"TRUE",
 		"FALSE",
