@@ -16,10 +16,25 @@ func TestEvalIntegerExpression(t *testing.T) {
 		{"10", 10},
 		{"-5", -5},
 		{"-10", -10},
+
+		// Prefix increment and decrement
 		{"++4", 5},
-		{"var a = 4; ++a; a;", 4},
-		{"--6", 5},
+		{"--4", 3},
+		{"var a = 4; ++a;", 5},
+		{"var a = 4; ++a; a;", 5},
+		{"var a = 4; --a;", 3},
+		{"var a = 4; --a; a;", 3},
+
+		// Postfix increment and decrement
+		{"4++", 5},
+		{"4--", 3},
+		{"var a = 4; a++;", 4},
+		{"var a = 4; a++; a;", 5},
+		{"var a = 4; a--;", 4},
+		{"var a = 4; a--; a;", 3},
+
 		{"10 % 2", 0},
+		{"3 ** 0", 1},
 		{"10 & 2", 2},
 		{"10 | 2", 10},
 		{"10 ^ 2", 8},

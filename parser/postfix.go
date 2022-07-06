@@ -2,9 +2,11 @@ package parser
 
 import "ninja/ast"
 
-func (p *Parser) parsePostfixExpression() ast.Expression {
-	return &ast.PostfixExpression{
-		Token:    p.prevToken,
-		Operator: p.curToken.Literal,
-	}
+func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
+
+	postfix := &ast.PostfixExpression{Left: left}
+	postfix.Token = p.curToken
+	postfix.Operator = p.curToken.Literal
+
+	return postfix
 }

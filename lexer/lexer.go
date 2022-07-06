@@ -46,7 +46,9 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = str
 		}
 	case '*':
-		tok = l.newToken(token.ASTERISK, []byte{l.ch})
+		tok = l.newTokenPeekOrDefault(token.ASTERISK, map[byte]token.TokenType{
+			'*': token.EXPONENCIAL,
+		})
 	case '/':
 		if l.peekChar() == '/' {
 			l.skipSingleLineComment()

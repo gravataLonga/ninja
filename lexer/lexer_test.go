@@ -12,7 +12,7 @@ func TestNextToken(t *testing.T) {
 var true false if else import return
 break for enum case delete () [] {} . ; : :: ,
 != == <= >= < > && || = & | ^ ~ << >>
-+ - * / % 
++ - * ** / % 
 // comment 
 ! 100 100.5 "hello" "\\"
 ++5 --5 5++ 5-- count 
@@ -69,6 +69,7 @@ function delete @
 		{token.PLUS, "+"},
 		{token.MINUS, "-"},
 		{token.ASTERISK, "*"},
+		{token.EXPONENCIAL, "**"},
 		{token.SLASH, "/"},
 
 		{token.MOD, "%"},

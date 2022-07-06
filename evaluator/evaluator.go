@@ -33,13 +33,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.AssignStatement:
 		return evalAssignStatement(node, env)
+
 		// PrefixExpression
 	case *ast.PrefixExpression:
-		right := Eval(node.Right, env)
-		if object.IsError(right) {
-			return right
-		}
-		return evalPrefixExpression(node.Operator, right)
+		return evalPrefixExpression(node, env)
 
 		// InfixExpression
 	case *ast.InfixExpression:
@@ -61,7 +58,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 		return evalInfixExpression(node.Operator, left, right)
 
-		// IfExpression
+	case *ast.PostfixExpression:
+		return evalPostfixExpression(node, env)
+
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 

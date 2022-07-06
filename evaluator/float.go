@@ -27,6 +27,8 @@ func evalFloatInfixExpression(
 		return &object.Float{Value: math.Mod(leftVal, rightVal)}
 	case "/":
 		return &object.Float{Value: leftVal / rightVal}
+	case "**":
+		return &object.Float{Value: math.Pow(leftVal, rightVal)}
 	case "<":
 		return nativeBoolToBooleanObject(leftObject.Compare(rightObject) == -1)
 	case ">":

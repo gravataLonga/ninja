@@ -35,6 +35,8 @@ func evalIntegerInfixExpression(
 		return &object.Integer{Value: leftVal * rightVal}
 	case "%":
 		return &object.Integer{Value: leftVal % rightVal}
+	case "**":
+		return &object.Integer{Value: int64(math.Pow(float64(leftVal), float64(rightVal)))}
 	case "/":
 		left := float64(leftVal)
 		right := float64(rightVal)

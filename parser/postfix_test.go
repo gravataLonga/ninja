@@ -12,9 +12,12 @@ func TestParsingPosfixExpressions(t *testing.T) {
 	prefixTests := []struct {
 		input    string
 		operator string
+		value    interface{}
 	}{
-		{"i++", "++"},
-		{"i--", "--"},
+		{"i++", "++", "i"},
+		{"i--", "--", "i"},
+		{"1--", "--", 1},
+		{"1++", "++", 1},
 	}
 
 	for i, tt := range prefixTests {
@@ -35,11 +38,13 @@ func TestParsingPosfixExpressions(t *testing.T) {
 
 			exp, ok := stmt.Expression.(*ast.PostfixExpression)
 			if !ok {
-				t.Fatalf("stmt is not ast.PostfixExpression. got=%T", stmt.Expression)
+				t.Fatalf("stmt is not ast.PrefixExpression. got=%T", stmt.Expression)
 			}
 			if exp.Operator != tt.operator {
 				t.Fatalf("exp.Operator is not '%s'. got=%s", tt.operator, exp.Operator)
 			}
+
+			testLiteralExpression(t, exp.Left, tt.value)
 		})
 	}
 }

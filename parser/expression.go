@@ -16,26 +16,21 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 }
 
 func (p *Parser) parseExpression(precedence int) ast.Expression {
-	prefix := p.prefixParseFns[p.curToken.Type]
-	if prefix == nil {
+	prefix, ok := p.prefixParseFns[p.curToken.Type]
+	if !ok {
 		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
-	leftExp := prefix()
 
-	postfix := p.postfixParseFns[p.peekToken.Type]
-	if postfix != nil {
-		p.nextToken()
-		leftExp = postfix()
-	}
+	leftExp := prefix.fn()
 
 	for precedence < p.peekPrecedence() {
-		infix := p.infixParseFns[p.peekToken.Type]
-		if infix == nil {
+		infix, ok := p.infixParseFns[p.peekToken.Type]
+		if !ok {
 			return leftExp
 		}
 		p.nextToken()
-		leftExp = infix(leftExp)
+		leftExp = infix.fn(leftExp)
 	}
 
 	return leftExp

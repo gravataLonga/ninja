@@ -145,8 +145,8 @@ puts(a);
   * Strings
   */
    
- "ola"
- "ola" + " " + "mundo";
+ "hello"
+ "hello \t world \x02\x03"
    
  /**
   * array
@@ -201,6 +201,15 @@ var say = function say(name) {
 ### Builtin Functions  
 There are severals builtin functions that you can use:  
 
+1. **puts** - print at console  
+2. **len** - get length of object  
+3. **first** - get first item of array  
+4. **last** - get last item of array  
+5. **rest** - get items after first one  
+6. **push** - add item to array  
+7. **exit** - exit program  
+8. **args** - get arguments passed to ninja programs  
+
 ```
 var a = [1, 2, 3, 4];
 puts(len(a)); // print 4
@@ -237,7 +246,8 @@ puts(push(a, 5)); // print [1, 2, 3, 4, 5];
 You can import another ninja files.  
 
 ```
-import "testing.nj";
+import "testing.ninja";  
+var lib = import "mylib.ninja"; // return function() {};  
 ```  
 
 ## Operators && Logics Operators  
@@ -262,16 +272,21 @@ Logic's Operators
 Arithmetics Operators  
 
 ```  
-1 + 1;
-1 - 1;
-1 / 1;
-1 * 1;  
-4 % 2;
+1 + 1;      // SUM
+1 - 1;      // SUBTRACT
+1 / 1;      // DIVIDER
+1 * 1;      // MULTIPLE
+4 % 2;      // MOD
+10 ** 0;    // POW
+10 & 2;     // AND Bitwise operator
+10 | 2;     // OR Bitwise operator 
+10 ^ 2;     // XOR Bitwise operator 
+10 << 2;    // Shift left (multiply each step)
+10 >> 2;    // Shift right (divide each step)
 ++1;
 --1;
-
-// we take in account procedences  
-1 + 1 * 1; // this will be interpreted as (1 + (1 * 1))  
+1++;
+1--; 
 ```  
 
 ## Data Structures  
@@ -368,7 +383,7 @@ if (true) {
 
 `for (<initial>?;<condition>?;<iteration>?) { <statements> }`  
 
-> **None** None statements are required  
+> **None** statements are optionals    
 
 ```
 var i = 0;
@@ -399,16 +414,16 @@ We support object call in any of data type.
 Here a full of list of support object call for string:  
 
 ```
-"ola".type(); // "STRING"  
-"a,b,c".split(","); // ["a", "b", "c"];
-"hello world".replace("world", "ninja"); // "hello ninja"
-"hello world".contain("hello"); // TRUE
-"hello world".index("Hello"); // 0
-"hello world".upper(); // "HELLO WORLD"
-"HELLO WORLD".lower(); // "hello world"
-" hello world ".trim(); // "hello world"
-"1".int(); // 1
-"1.1".float(); // 1.1 
+"ola".type();                               // "STRING"
+"a,b,c".split(",");                         // ["a", "b", "c"];
+"hello world".replace("world", "ninja");    // "hello ninja"
+"hello world".contain("hello");             // TRUE
+"hello world".index("Hello");               // 0
+"hello world".upper();                      // "HELLO WORLD"
+"HELLO WORLD".lower();                      // "hello world"
+" hello world ".trim();                     // "hello world"
+"1".int();                                  // 1
+"1.1".float();                              // 1.1 
 ```  
 
 ## Integer  
@@ -416,10 +431,10 @@ Here a full of list of support object call for string:
 Here a full of list of support objec call for integer:  
 
 ```
-1.type(); // "INTEGER"
-1.string(); // "1"  
-1.float(); // 1.0
-var a = -1; a.abs(); // 1.0
+1.type();               // "INTEGER"
+1.string();             // "1"
+1.float();              // 1.0
+var a = -1; a.abs();    // 1.0
 ```  
 
 ## Float  
@@ -427,79 +442,37 @@ var a = -1; a.abs(); // 1.0
 Here a full of list of support objec call for integer:
 
 ```
-1.0.type(); // "FLOAT"
-1.0.string(); // "1.0"  
-var a = -1.0; a.abs(); // 1.0
-1.5.round(); // 2.0  
+1.0.type();             // "FLOAT"
+1.0.string();           // "1.0"  
+var a = -1.0; a.abs();  // 1.0
+1.5.round();            // 2.0  
 ```  
 
-## Keywords
+## Boolean  
+
+// ...todo...   
+
+
+## Array   
+
+// ...todo...  
+
+## Object   
+
+// ...todo...  
+
+## Keywords  
 
 ```
-var true false function delete
-return if else for import break
-```
-
-## Tricks  
-
-### Helpers Functions   
-
-#### Array Map  
-
-```
-function map(arr, f) {
-     function iter(arr, accumulated) { 
-          if (len(arr) == 0) {
-               return accumulated
-          } else {
-               return iter(rest(arr), push(accumulated, f(first(arr))));
-          } 
-     };
-     iter(arr, []);
-};
+var true false function delete enum 
+return if else for import break case
 ```  
 
-Usage:  
-```
-var a = [1, 2, 3, 4];
-function double(x) { 
-    return x * 2; 
-}
-puts(map(a, double)); // prints [2, 4, 6, 8]  
-```  
+## Examples  
 
-#### Array Reduce  
+1. Check tests  
+2. Check resolved [katas](https://github.com/gravataLonga/ninja-lang-katas)  
 
-```
-function reduce(arr, initial, f) { 
-     function iter(arr, result) { 
-          if (len(arr) == 0) {
-               return result
-          } else {
-               return iter(rest(arr), f(result, first(arr)));
-          } 
-     };
-
-     iter(arr, initial);
-};
-```  
-
-#### Array Sum  
-
-```
-function sum(arr) {
-     return reduce(arr, 0, function(initial, acumulated) {
-          return initial + acumulated;
-     })
-}
-
-puts([1, 2, 3, 4]); // prints 10  
-
-```
-
-## Advance usage  
-
-Check at tests for more examples.  
 
 ## Tests  
 
@@ -528,185 +501,4 @@ go tool trace trace.out
 
 ```  
 go test -race
-```
-
----   
-
-# Technical don't read below this line.  
-
-This is for future me...  
-
-# Steps  
-
-1. Create Token Structure  
-2. Create Lexer
-3. Creating Parser
-4. Parser produces AST
-5. Evaluating AST to give behavior  
-
-# Parser Strategy  
-
-top down operator precedence parser, sometimes called “Pratt parser”
-
-## Var Statement  
-
-```
-var <identifier> = <expressions>  
-```
-
-Expressions produces values.  
-Statements don't.  
-
-```
-var x = 5
-```
-
-Don't produce a value, but 5 does.  
-
-```
-return 5;
-```
-
-Don't produce a value, but this does:  
-
-```
-function add(x, y) {
-    return x + y;
-}
-
-add(5, 10); // This produce a value.  
-```
-
-Sometime functions literals are expressions:  
-
-```
-funcao add(x, y) {  return x + y; }
-var add = function(x, y) { return x + y };  
-```
-
-### AST  
-
-```mermaid
-classDiagram
-    class Program {
-        - Statements[]
-    }
-    
-    class LetStatemets {
-        + Name
-        + Value
-    }
-    
-    class Identifier {
-
-    }
-    
-    class Expression {
-
-    }
-    
-    class InfixExpression {
-        + Left Expression
-        + Operator
-        + Right Expression
-    }
-    
-    Program -- LetStatemets
-    LetStatemets -- Identifier
-    LetStatemets -- Expression
-    
-    
-    
-```
-
-## Expressions  
-
-Expressions have operator:  
-
-Prefix Operators  
-
-```
--5
-!true
-!false
 ```  
-
-Infix Operators (binary operators):  
-
-```
-5 + 5
-5 - 5
-5 / 5
-5 * 5
-```  
-
-There can be "postfix" operator too, for `5++;`  
-
-Comparison Operators:  
-
-```
-foo == bar
-for != bar
-for > bar
-for < bar
-for >= bar
-for <= bar
-```  
-
-Using paratheses to group expressions and influence the order
-of evaluation:  
-
-```
-5 * (5 + 5)
-((5 + 5) * 5) * 5
-```  
-
-Call expressions:  
-
-```
-add(5, 5);
-add(add(5, 5), add(5, 5));
-max(5, add(5, (5 * 5)))  
-```  
-
-Functions must be first-class citizens   
-
-We also got "if-expressions"  
-
-```
-var result = if (10 > 5) { true; } else { false };
-```  
-
-## PRATT PARSING  
-
-Top Down Operator Procedence from Vaughan Pratt.  
-
-> is very simple to understand, trivial to implement, easy to use, extremely efficient in practice if not in theory, yet flexible enough to meet most reasonable syntactic needs of users
-
-A crucial part of this idea is that each token type can have two parsing functions associated with it, depending on the token’s position - infix or prefix.  
-
-
-### Terminology  
-
-Prefix Operator  
-
-```
---3
-```  
-
-Postfix Operator  
-
-```
-foobar++
-```  
-
-Infix Operator  
-
-```
-3 * 6
-```
-
-It's important to know about Operator Procedence or Order Of Operations  
-
-Each Token Type can have up two parsing functions, it depends if operator is found
-at prefix or infix position.  

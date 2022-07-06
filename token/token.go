@@ -33,6 +33,7 @@ func (t TokenType) String() string {
 		"-",
 		"!",
 		"*",
+		"**",
 		"%",
 		"/",
 		"++",
@@ -94,15 +95,16 @@ const (
 	FLOAT  // "FLOAT"
 	STRING // "STRING"
 
-	ASSIGN   // "="
-	PLUS     // "+"
-	MINUS    // "-"
-	BANG     // "!"
-	ASTERISK // "*"
-	MOD      // "%"
-	SLASH    // "/"
-	INCRE    // "++"
-	DECRE    // "--"
+	ASSIGN      // "="
+	PLUS        // "+"
+	MINUS       // "-"
+	BANG        // "!"
+	ASTERISK    // "*"
+	EXPONENCIAL // "**"
+	MOD         // "%"
+	SLASH       // "/"
+	INCRE       // "++"
+	DECRE       // "--"
 
 	LT  // "<"
 	GT  // ">"
