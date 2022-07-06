@@ -51,36 +51,7 @@ type Parser struct {
 	infixParseFns  map[token.TokenType]fnInfixPrecedence
 }
 
-var precedences = map[token.TokenType]int{
-	token.ASSIGN:       ASSIGN,
-	token.EQ:           EQUALS,
-	token.NEQ:          EQUALS,
-	token.LT:           LESS_GREATER,
-	token.GT:           LESS_GREATER,
-	token.GTE:          LESS_GREATER,
-	token.LTE:          LESS_GREATER,
-	token.OR:           LOGICAL,
-	token.AND:          LOGICAL,
-	token.BIT_AND:      BITWISE,
-	token.BIT_OR:       BITWISE,
-	token.BIT_XOR:      BITWISE,
-	token.BIT_NOT:      BITWISE,
-	token.SHIFT_RIGHT:  SHIFT_BITWISE,
-	token.SHIFT_LEFT:   SHIFT_BITWISE,
-	token.PLUS:         SUM,
-	token.MINUS:        SUM,
-	token.DECRE:        SUM,
-	token.INCRE:        SUM,
-	token.SLASH:        PRODUCT,
-	token.ASTERISK:     PRODUCT,
-	token.MOD:          PRODUCT,
-	token.LPAREN:       CALL,
-	token.LBRACKET:     INDEX,
-	token.DOT:          CALL,
-	token.DOUBLE_COLON: CALL,
-	token.EXPONENCIAL:  POW,
-}
-
+// associativity if 1 then is right, 0, mean left.
 var associativity = map[token.TokenType]int{
 	token.EXPONENCIAL: 1,
 }
@@ -252,10 +223,12 @@ func (p *Parser) curAssociativity() int {
 }
 
 func (p *Parser) curPrecedence() int {
-	if p, ok := precedences[p.curToken.Type]; ok {
-		return p
+	ps, ok := p.infixParseFns[p.curToken.Type]
+	if !ok {
+		return LOWEST
 	}
-	return LOWEST
+
+	return ps.precedence
 }
 
 func (p *Parser) nextToken() {
