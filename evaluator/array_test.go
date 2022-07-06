@@ -227,15 +227,15 @@ func TestArrayMethod(t *testing.T) {
 		},
 		{
 			`[].join(",")`,
-			`[]`,
+			``,
 		},
 		{
 			`[1, true, 1.1, "hello", function() {return 1;}()].join(",")`,
-			`[1,true,1.1,hello,1]`,
+			`1,true,1.1,hello,1`,
 		},
 		{
 			`var a = [1, 2]; a.join(";");`,
-			`[1;2]`,
+			`1;2`,
 		},
 		{
 			`var a = [1, 2]; a.join(";"); a`,

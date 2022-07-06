@@ -283,10 +283,10 @@ Arithmetics Operators
 10 ^ 2;     // XOR Bitwise operator 
 10 << 2;    // Shift left (multiply each step)
 10 >> 2;    // Shift right (divide each step)
-++1;
---1;
-1++;
-1--; 
+++1;        // First increment and then return incremented value  
+--1;        // First decrement and then return decremented value  
+1++;        // First return value and then increment value
+1--;        // First return value and then decrement value  
 ```  
 
 ## Data Structures  
@@ -392,11 +392,11 @@ for(;i<=3;++i) {
 }
 
 var a = [1, 2, 3];
-for(var i = 0; i <= len(a); ++i) {
+for(var i = 0; i <= len(a)-1; ++i) {
     puts(a[i]);
 }
 
-for(var i = 0; i <= len(a); i = i + 1) {
+for(var i = 0; i <= len(a)-1; i = i + 1) {
     puts(a[i]);
 }
 
@@ -450,16 +450,31 @@ var a = -1.0; a.abs();  // 1.0
 
 ## Boolean  
 
-// ...todo...   
+```
+true.type();     // "BOOLEAN"  
+```  
 
 
 ## Array   
 
-// ...todo...  
+```
+[1, 2, 3].type();            // "ARRAY"
+[1, 2, 3].length();          // 3
+[1, 2, 3].joint(",");        // "1,2,3"
+[1, 2, 3].push(4);           // return null, but underlie value of array was change to [1, 2, 3, 4]  
+[1, 2, 3].pop();             // return 3 and underlie value of array was change to [1, 2] 
+[1, 2, 3].shift();           // return 1 and underlie value of array was change to [2, 3]  
+[1, 2, 3].slice(1);          // copy array with following elements [2, 3] 
+[1, 2, 3].slice(1, 1);       // copy array with following elements [2] 
+```
 
 ## Object   
 
-// ...todo...  
+```
+{"a":1,"b":2}.type();       // "HASH"
+{"a":1,"b":2}.keys();       // ["a", "b"];
+{"a":1,"b":2}.has("a");     // true
+```
 
 ## Keywords  
 

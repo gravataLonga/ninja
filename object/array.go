@@ -132,9 +132,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 
 	}
 
-	out.WriteString("[")
 	out.WriteString(strings.Join(elementsString, joinArgument.Value))
-	out.WriteString("]")
 	return &String{Value: out.String()}
 }
 
