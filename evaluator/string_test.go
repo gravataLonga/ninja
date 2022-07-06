@@ -51,6 +51,7 @@ func TestEvalStringExpression(t *testing.T) {
 		{`"Hello" != "Hello"`, false},
 		{`"Hello" == "World"`, false},
 		{`"Hello" != "World"`, true},
+		{`"Hello"[0] != "World"[0]`, true},
 	}
 
 	for i, tt := range tests {
@@ -58,7 +59,6 @@ func TestEvalStringExpression(t *testing.T) {
 			evaluated := testEval(tt.input, t)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
-
 	}
 }
 
@@ -109,18 +109,19 @@ func TestErrorStringHandling(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestErrorStringHandling[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
 	}
 }
 
@@ -238,17 +239,20 @@ func TestStringMethodSplitWrongParameter(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStringMethodSplitWrongParameter[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("error message expected to be: \"%s\". got: \"%s\"", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 

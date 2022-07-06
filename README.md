@@ -414,7 +414,8 @@ We support object call in any of data type.
 Here a full of list of support object call for string:  
 
 ```
-"ola".type();                               // "STRING"
+"hello".type();                             // "STRING"
+"hello".length();                           // 5
 "a,b,c".split(",");                         // ["a", "b", "c"];
 "hello world".replace("world", "ninja");    // "hello ninja"
 "hello world".contain("hello");             // TRUE

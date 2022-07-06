@@ -6,6 +6,12 @@ OK: Operations (2 / 2 * 1)
 OK: Operations (2 / 2 * 1 - 20)
 OK: Operations (4 % 2)
 OK: Operations (100 / 8)
+OK: Operations (100 ** 0)
+OK: Operations (8 & 2)
+OK: Operations (8 | 2)
+OK: Operations (8 ^ 2)
+OK: Operations (8 << 2)
+OK: Operations (8 >> 2)
 OK: Enum: 1
 OK: Enum: 1.0
 OK: Enum: Hello
@@ -25,6 +31,24 @@ OK: Operations Logic Operator false || true
 OK: Operations Logic Operator false || false
 OK: Operations Logic Operator !false || !false
 OK: Operations Logic Operator 0 || false
+OK: Operations Logic Operator 1 == 1
+OK: Operations Logic Operator 1 == 2
+OK: Operations Logic Operator 2 == 1
+OK: Operations Logic Operator 1 != 1
+OK: Operations Logic Operator 2 != 1
+OK: Operations Logic Operator 1 != 2
+OK: Operations Logic Operator 1 < 1
+OK: Operations Logic Operator 1 < 2
+OK: Operations Logic Operator 2 < 1
+OK: Operations Logic Operator 1 <= 1
+OK: Operations Logic Operator 2 <= 1
+OK: Operations Logic Operator 1 <= 2
+OK: Operations Logic Operator 1 > 1
+OK: Operations Logic Operator 1 > 2
+OK: Operations Logic Operator 2 > 1
+OK: Operations Logic Operator 1 >= 1
+OK: Operations Logic Operator 2 >= 1
+OK: Operations Logic Operator 1 >= 2
 OK: Index Array
 OK: Index Array
 OK: Array Map -> Reduce

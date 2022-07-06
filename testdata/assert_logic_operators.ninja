@@ -4,13 +4,34 @@ var tests = [
     {"expression": false && true, "expected": false, "name": "false && true"},
     {"expression": !false && true, "expected": true, "name": "!false && true"},
     {"expression": true && !false, "expected": true, "name": "true && !false"},
+
     {"expression": true || true, "expected": true, "name": "true || true"},
     {"expression": true || false, "expected": true, "name": "true || false"},
     {"expression": false || true, "expected": true, "name": "false || true"},
     {"expression": false || false, "expected": false, "name": "false || false"},
     {"expression": !false || !false, "expected": true, "name": "!false || !false"},
-    {"expression": 0 || false, "expected": true, "name": "0 || false"}
+    {"expression": 0 || false, "expected": true, "name": "0 || false"},
 
+    {"expression": 1 == 1, "expected": true, "name": "1 == 1"},
+    {"expression": 1 == 2, "expected": false, "name": "1 == 2"},
+    {"expression": 2 == 1, "expected": false, "name": "2 == 1"},
+    {"expression": 1 != 1, "expected": false, "name": "1 != 1"},
+    {"expression": 2 != 1, "expected": true, "name": "2 != 1"},
+    {"expression": 1 != 2, "expected": true, "name": "1 != 2"},
+
+    {"expression": 1 < 1, "expected": false, "name": "1 < 1"},
+    {"expression": 1 < 2, "expected": true, "name": "1 < 2"},
+    {"expression": 2 < 1, "expected": false, "name": "2 < 1"},
+    {"expression": 1 <= 1, "expected": true, "name": "1 <= 1"},
+    {"expression": 2 <= 1, "expected": false, "name": "2 <= 1"},
+    {"expression": 1 <= 2, "expected": true, "name": "1 <= 2"},
+
+    {"expression": 1 > 1, "expected": false, "name": "1 > 1"},
+    {"expression": 1 > 2, "expected": false, "name": "1 > 2"},
+    {"expression": 2 > 1, "expected": true, "name": "2 > 1"},
+    {"expression": 1 >= 1, "expected": true, "name": "1 >= 1"},
+    {"expression": 2 >= 1, "expected": true, "name": "2 >= 1"},
+    {"expression": 1 >= 2, "expected": false, "name": "1 >= 2"}
 ];
 
 for (var t = 0; t <= len(tests) - 1; t = t + 1) {
