@@ -4,7 +4,8 @@ import "testing"
 
 func TestEnvironment_Get(t *testing.T) {
 	env := NewEnvironment()
-	env.Set("name", &String{Value: "Hello"})
+	str := &String{Value: "Hello"}
+	env.Set("name", str)
 
 	v, ok := env.Get("name")
 	if !ok {

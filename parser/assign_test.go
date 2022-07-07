@@ -122,11 +122,11 @@ i = i = 1;
 	tests := []struct {
 		expectedError string
 	}{
-		{fmt.Sprintf("expected next token to be %s, got %s (true) at [Line: 2, Offset: 11] instead.", token.ASSIGN, token.TRUE)},
-		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 3, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
-		{fmt.Sprintf("expected next token to be %s, got %s (var) at [Line: 4, Offset: 8] instead.", token.IDENT, token.VAR)},
-		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 5, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
-		{fmt.Sprintf("expected next token to be %s, got %s (=) at [Line: 6, Offset: 7] instead.", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s at [Line: 2, Offset: 11] instead.", token.ASSIGN, token.TRUE)},
+		{fmt.Sprintf("expected next token to be %s, got %s at [Line: 3, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s at [Line: 4, Offset: 8] instead.", token.IDENT, token.VAR)},
+		{fmt.Sprintf("expected next token to be %s, got %s at [Line: 5, Offset: 5] instead.", token.IDENT, token.ASSIGN)},
+		{fmt.Sprintf("expected next token to be %s, got %s at [Line: 6, Offset: 7] instead.", token.IDENT, token.ASSIGN)},
 	}
 
 	errors := p.Errors()

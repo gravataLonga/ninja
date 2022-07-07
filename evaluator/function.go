@@ -10,14 +10,14 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 	switch fn := fn.(type) {
 	case *object.FunctionLiteral:
 		if len(fn.Parameters) != len(args) {
-			return object.NewErrorFormat("Function expected %d arguments, got %d", len(fn.Parameters), len(args))
+			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", len(fn.Parameters), len(args), fn.Body.Token)
 		}
 		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 	case *object.Function:
 		if len(fn.Parameters) != len(args) {
-			return object.NewErrorFormat("Function expected %d arguments, got %d", len(fn.Parameters), len(args))
+			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", len(fn.Parameters), len(args), fn.Body.Token)
 		}
 		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
 		evaluated := Eval(fn.Body, extendedEnv)

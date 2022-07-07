@@ -1,6 +1,9 @@
 package evaluator
 
-import "ninja/object"
+import (
+	"ninja/ast"
+	"ninja/object"
+)
 
 func evalFloatOrIntegerInfixExpression(
 	operator string,
@@ -31,7 +34,7 @@ func evalFloatOrIntegerInfixExpression(
 	return evalFloatInfixExpression(operator, leftValFloat, rightValFloat)
 }
 
-func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
+func evalMinusPrefixOperatorExpression(node *ast.PrefixExpression, right object.Object) object.Object {
 	if right.Type() == object.INTEGER_OBJ {
 		value := right.(*object.Integer).Value
 		return &object.Integer{Value: -value}
@@ -42,7 +45,7 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 		return &object.Float{Value: -value}
 	}
 
-	return object.NewErrorFormat("unknown operator: -%s", right.Type())
+	return object.NewErrorFormat("unknown operator: -%s %s", right.Type(), node.Token)
 }
 
 func evalIncrementExpression(right object.Object) object.Object {

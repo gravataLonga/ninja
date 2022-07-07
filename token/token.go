@@ -189,5 +189,5 @@ func DigitType(digit []byte) TokenType {
 }
 
 func (t Token) String() string {
-	return fmt.Sprintf("%s (%s) at [Line: %d, Offset: %d]", t.Type, t.Literal, t.Line, t.Offset)
+	return fmt.Sprintf("%s at [Line: %d, Offset: %d]", t.Type, t.Line, t.Offset)
 }

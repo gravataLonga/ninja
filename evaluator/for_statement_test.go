@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -32,15 +33,17 @@ func TestForStatement(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestForStatement[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		integer, ok := tt.expected.(int)
-		if ok {
-			testIntegerObject(t, evaluated, int64(integer))
-		} else if evaluated != nil {
-			t.Errorf("result isnt nil. Got %v", evaluated)
-		}
+			integer, ok := tt.expected.(int)
+			if ok {
+				testIntegerObject(t, evaluated, int64(integer))
+			} else if evaluated != nil {
+				t.Errorf("result isnt nil. Got %v", evaluated)
+			}
+		})
 	}
 }
 

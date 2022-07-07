@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -109,14 +110,21 @@ func TestCallFunction(t *testing.T) {
 			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
 			40,
 		},
+		//{
+		//	"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
+		//	2,
+		// },
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.expression, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestCallFunction[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.expression, t)
 
-		if !testObjectLiteral(t, evaluated, tt.rs) {
-			t.Errorf("TestCallFunction unable to test")
-		}
+			if !testObjectLiteral(t, evaluated, tt.rs) {
+				t.Errorf("TestCallFunction unable to test")
+			}
+		})
+
 	}
 }
 
@@ -145,21 +153,24 @@ func TestCallWrongParameters(t *testing.T) {
 		input                string
 		expectedErrorMessage string
 	}{
-		{"function (x) {}();", "Function expected 1 arguments, got 0"},
-		{"function () {}(0);", "Function expected 0 arguments, got 1"},
+		{"function (x) {}();", "Function expected 1 arguments, got 0 at { at [Line: 1, Offset: 14]"},
+		{"function () {}(0);", "Function expected 0 arguments, got 1 at { at [Line: 1, Offset: 13]"},
+		{"function () { return add(); }();", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestCallWrongParameters[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedErrorMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedErrorMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedErrorMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedErrorMessage, errObj.Message)
+			}
+		})
+
 	}
 }

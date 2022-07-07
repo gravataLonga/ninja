@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"ninja/object"
 	"testing"
 )
@@ -47,15 +48,15 @@ func TestErrorIdentifierHandling(t *testing.T) {
 	}{
 		{
 			"foobar",
-			"identifier not found: foobar",
+			"identifier not found: foobar IDENT at [Line: 1, Offset: 7]",
 		},
 		{
 			"foobar = 1 + 1;",
-			"identifier not found: foobar",
+			"identifier not found: foobar IDENT at [Line: 1, Offset: 7]",
 		},
 		{
 			"var b = a + 1;",
-			"identifier not found: a",
+			"identifier not found: a IDENT at [Line: 1, Offset: 10]",
 		},
 		{
 			`"Hello" - "World"`,
@@ -79,18 +80,20 @@ func TestErrorIdentifierHandling(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestErrorIdentifierHandling[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q",
-				tt.expectedMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q",
+					tt.expectedMessage, errObj.Message)
+			}
+		})
+
 	}
 }

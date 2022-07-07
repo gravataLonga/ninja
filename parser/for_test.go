@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"ninja/ast"
 	"ninja/lexer"
 	"strings"
@@ -17,6 +18,7 @@ func TestForStatement(t *testing.T) {
 	}{
 		{input: "for (;;) {}", initialStatement: "", condition: "", iterationExpression: "", block: ""},
 		{input: "for (;;) {return;}", initialStatement: "", condition: "", iterationExpression: "", block: "return ;"},
+		{input: "for (;;) {break;}", initialStatement: "", condition: "", iterationExpression: "", block: "break"},
 		{input: "for (var i = 0;;) {}", initialStatement: "var i = 0;", condition: "", iterationExpression: "", block: ""},
 		{input: "for (var i = 0; i <= 3;) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "", block: ""},
 		{input: "for (var i = 0; i <= 3; var i = i + 1) {}", initialStatement: "var i = 0;", condition: "(i <= 3)", iterationExpression: "var i = (i + 1);", block: ""},
@@ -53,26 +55,29 @@ func TestForStatement(t *testing.T) {
 	}
 }
 
-func TestForStatementWrongParameters(t *testing.T) {
+func TestForStatementWrong(t *testing.T) {
 	tests := []struct {
 		input                string
 		expectedErrorMessage string
 	}{
-		{input: "for (var i = 0; i <= parts-1; i = i = 1) {}", expectedErrorMessage: "expected next token to be IDENT, got = (=) at [Line: 1, Offset: 37] instead."},
+		{input: "for (var i = 0; i <= parts-1; i = i = 1) {}", expectedErrorMessage: "expected next token to be IDENT, got = at [Line: 1, Offset: 37] instead."},
+		{input: "for (var i = 0; i <= parts-1; i = i + 1)", expectedErrorMessage: "expected next token to be {, got EOF at [Line: 1, Offset: 41] instead."},
 	}
 
-	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		p.ParseProgram()
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestForStatementWrong[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			p.ParseProgram()
 
-		if len(p.Errors()) <= 0 {
-			t.Fatalf("expected error message. Got: 0")
-		}
+			if len(p.Errors()) <= 0 {
+				t.Fatalf("expected error message. Got: 0")
+			}
 
-		if p.Errors()[0] != tt.expectedErrorMessage {
-			t.Errorf("expected error message %s. Got: %s", p.Errors()[0], tt.expectedErrorMessage)
-		}
+			if p.Errors()[0] != tt.expectedErrorMessage {
+				t.Errorf("expected error message %s. Got: %s", tt.expectedErrorMessage, p.Errors()[0])
+			}
+		})
 
 	}
 }

@@ -19,7 +19,7 @@ func evalIdentifier(
 		return builtin
 	}
 
-	return object.NewErrorFormat("identifier not found: " + node.Value)
+	return object.NewErrorFormat("identifier not found: %s %s", node.Value, node.Token)
 }
 
 func evalAssignStatement(node *ast.AssignStatement, env *object.Environment) object.Object {
@@ -42,12 +42,12 @@ func evalAssignIdentifier(node *ast.AssignStatement, env *object.Environment) ob
 
 	// Unecessary check..
 	if !ok {
-		return object.NewErrorFormat("node.Name is not type of identifier. Got %T", node.Name)
+		return object.NewErrorFormat("node.Name is not type of identifier. Got %T %s", node.Name, node.Token)
 	}
 
 	_, ok = env.Get(identifier.Value)
 	if !ok {
-		return object.NewErrorFormat("identifier not found: %s", identifier.Value)
+		return object.NewErrorFormat("identifier not found: %s %s", identifier.Value, node.Token)
 	}
 
 	val := Eval(node.Value, env)

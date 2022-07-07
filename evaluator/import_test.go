@@ -29,15 +29,15 @@ func TestErrorImportHandling(t *testing.T) {
 	}{
 		{
 			`import "non-exists-file"`,
-			"IO Error: error reading file 'non-exists-file': open non-exists-file: no such file or directory",
+			"IO Error: error reading file 'non-exists-file': open non-exists-file: no such file or directory IMPORT at [Line: 1, Offset: 7]",
 		},
 		{
 			`import "../fixtures/stub-with-error.nj"`,
-			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF (\x00) at [Line: 1, Offset: 13] instead.",
+			"../fixtures/stub-with-error.nj: expected next token to be (, got EOF at [Line: 1, Offset: 13] instead.",
 		},
 		{
 			`import "../fixtures/stub-with-error-in-function.nj"`,
-			"../fixtures/stub-with-error-in-function.nj: Function expected 2 arguments, got 3",
+			"../fixtures/stub-with-error-in-function.nj: Function expected 2 arguments, got 3 at { at [Line: 16, Offset: 38]",
 		},
 	}
 

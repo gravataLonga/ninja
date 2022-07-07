@@ -2,6 +2,7 @@ package repl
 
 import (
 	"bufio"
+	_ "embed"
 	"fmt"
 	"github.com/TheZoraiz/ascii-image-converter/aic_package"
 	"io"
@@ -9,11 +10,15 @@ import (
 	"ninja/lexer"
 	"ninja/object"
 	"ninja/parser"
+	"os"
 	"os/user"
 	"strings"
 
 	color "github.com/fatih/color"
 )
+
+//go:embed ninja-logo.png
+var logoImage []byte
 
 const PROMPT = ">>> "
 
@@ -118,7 +123,10 @@ func (r *repl) printParserErrors(errors []string) {
 }
 
 func createSpashScreen() string {
-	filePath := "./docs/ninja-logo.png"
+
+	file, err := os.CreateTemp("", "repl_logo")
+	file.Write(logoImage)
+	defer file.Close()
 
 	flags := aic_package.DefaultFlags()
 
@@ -128,7 +136,7 @@ func createSpashScreen() string {
 	flags.SaveBackgroundColor = [4]int{50, 50, 50, 100}
 
 	// Conversion for an image
-	asciiArt, err := aic_package.Convert(filePath, flags)
+	asciiArt, err := aic_package.Convert(file.Name(), flags)
 	if err != nil {
 		fmt.Println(err)
 	}

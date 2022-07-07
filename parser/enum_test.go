@@ -75,7 +75,7 @@ func TestEnumAccessorValueWrong(t *testing.T) {
 		t.Fatalf("expected got at least 1 error. Got: 0")
 	}
 
-	if p.Errors()[0] != "expected next token to be IDENT, got :: (::) at [Line: 1, Offset: 8] instead." {
+	if p.Errors()[0] != "expected next token to be IDENT, got :: at [Line: 1, Offset: 8] instead." {
 		t.Fatalf("Expected error to be %s. Got: %s", "expected next token to be IDENT, got :: (::) at [Line: 1, Offset: 8] instead.", p.Errors()[0])
 	}
 }
@@ -91,19 +91,19 @@ func TestEnumStatementWrong(t *testing.T) {
 		},
 		{
 			`enum { case T: 1; case T: 1 }`,
-			`expected next token to be IDENT, got { ({) at [Line: 1, Offset: 6] instead.`,
+			`expected next token to be IDENT, got { at [Line: 1, Offset: 6] instead.`,
 		},
 		{
 			`enum T case T: 1; case T: 1 }`,
-			`expected next token to be {, got CASE (case) at [Line: 1, Offset: 12] instead.`,
+			`expected next token to be {, got CASE at [Line: 1, Offset: 12] instead.`,
 		},
 		{
 			`enum T { T: 1; case T: 1 }`,
-			`expected next token to be CASE, got IDENT (T) at [Line: 1, Offset: 11] instead.`,
+			`expected next token to be CASE, got IDENT at [Line: 1, Offset: 11] instead.`,
 		},
 		{
 			`enum T { case T 1; case T: 1 }`,
-			`expected next token to be :, got INT (1) at [Line: 1, Offset: 18] instead.`,
+			`expected next token to be :, got INT at [Line: 1, Offset: 18] instead.`,
 		},
 	}
 

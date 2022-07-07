@@ -71,9 +71,9 @@ return >=;
 	tests := []struct {
 		expectedError string
 	}{
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (var) at [Line: 2, Offset: 11].", token.VAR)},
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (return) at [Line: 3, Offset: 14].", token.RETURN)},
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s (--) at [Line: 4, Offset: 9].", token.DECRE)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 2, Offset: 11].", token.VAR)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 3, Offset: 14].", token.RETURN)},
+		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 4, Offset: 9].", token.DECRE)},
 	}
 
 	errors := p.Errors()

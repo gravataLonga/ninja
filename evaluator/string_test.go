@@ -69,7 +69,7 @@ func TestErrorStringHandling(t *testing.T) {
 	}{
 		{
 			"-\"hello\"",
-			"unknown operator: -STRING",
+			"unknown operator: -STRING - at [Line: 1, Offset: 1]",
 		},
 		{
 			`"Hello" - "Nice"`,

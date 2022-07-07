@@ -75,7 +75,7 @@ func TestErrorBooleanHandling(t *testing.T) {
 	}{
 		{
 			"-true",
-			"unknown operator: -BOOLEAN",
+			"unknown operator: -BOOLEAN - at [Line: 1, Offset: 1]",
 		},
 		{
 			"true + false;",

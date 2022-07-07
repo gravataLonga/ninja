@@ -156,7 +156,7 @@ func TestErrorArrayHandling(t *testing.T) {
 	}{
 		{
 			"-[];",
-			"unknown operator: -ARRAY",
+			"unknown operator: -ARRAY - at [Line: 1, Offset: 1]",
 		},
 		{
 			"[] + [];",
@@ -188,18 +188,20 @@ func TestErrorArrayHandling(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestErrorArrayHandling[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
 
-		errObj, ok := evaluated.(*object.Error)
-		if !ok {
-			t.Errorf("no error object returned. got=%T(%+v)", evaluated, evaluated)
-			continue
-		}
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
 
-		if errObj.Message != tt.expectedMessage {
-			t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
-		}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+
 	}
 }
 

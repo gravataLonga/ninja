@@ -21,9 +21,10 @@ func evalPrefixExpression(node *ast.PrefixExpression, env *object.Environment) o
 	case "!":
 		return evalBangOperatorExpression(right)
 	case "-":
-		return evalMinusPrefixOperatorExpression(right)
+		return evalMinusPrefixOperatorExpression(node, right)
 	}
-	return object.NewErrorFormat("unknown operator: %s%s", node.Operator, right.Type())
+
+	return object.NewErrorFormat("unknown operator: %s%s %s", node.Operator, right.Type(), node.Token)
 }
 
 func evalPrefixExpressionAndAssing(node *ast.PrefixExpression, right object.Object, env *object.Environment) object.Object {

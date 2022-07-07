@@ -171,7 +171,7 @@ func TestErrorHashHandling(t *testing.T) {
 	}{
 		{
 			"-{};",
-			"unknown operator: -HASH",
+			"unknown operator: -HASH - at [Line: 1, Offset: 1]",
 		},
 		{
 			"{} + {}",
