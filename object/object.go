@@ -23,6 +23,7 @@ type Cloneable interface {
 
 // Comparable is the interface for comparing two Object and their underlying
 // values. It is the responsibility of the caller (left) to check for types.
+// E.g.: 1 > 1, it will return -1. left isn't greater than 1.
 type Comparable interface {
 	Compare(right Object) int8
 }
@@ -59,6 +60,10 @@ func IsError(o Object) bool {
 }
 
 func IsTruthy(o Object) bool {
+	if o == nil {
+		return false
+	}
+
 	switch o.Type() {
 	case NULL_OBJ:
 		return false

@@ -22,7 +22,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		return nil
 	}
 
-	leftExp := prefix.fn()
+	leftExp := prefix()
 
 	for precedence < p.peekPrecedence() {
 		infix, ok := p.infixParseFns[p.peekToken.Type]
@@ -30,7 +30,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 			return leftExp
 		}
 		p.nextToken()
-		leftExp = infix.fn(leftExp)
+		leftExp = infix(leftExp)
 	}
 
 	return leftExp

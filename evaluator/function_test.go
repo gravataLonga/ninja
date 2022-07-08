@@ -110,10 +110,10 @@ func TestCallFunction(t *testing.T) {
 			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
 			40,
 		},
-		//{
-		//	"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
-		//	2,
-		// },
+		/*{
+			"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
+			2,
+		},*/
 	}
 
 	for i, tt := range tests {

@@ -9,7 +9,7 @@ type BreakStatement struct {
 }
 
 func (rs *BreakStatement) statementNode()       {}
-func (rs *BreakStatement) TokenLiteral() string { return string(rs.Token.Literal) }
+func (rs *BreakStatement) TokenLiteral() string { return rs.Token.Literal }
 func (rs *BreakStatement) String() string {
 	return rs.TokenLiteral()
 }

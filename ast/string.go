@@ -8,7 +8,7 @@ type StringLiteral struct {
 }
 
 func (il *StringLiteral) expressionNode()      {}
-func (il *StringLiteral) TokenLiteral() string { return string(il.Token.Literal) }
+func (il *StringLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *StringLiteral) String() string {
 	return il.TokenLiteral()
 }

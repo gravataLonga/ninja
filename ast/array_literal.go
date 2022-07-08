@@ -12,7 +12,7 @@ type ArrayLiteral struct {
 }
 
 func (al *ArrayLiteral) expressionNode()      {}
-func (al *ArrayLiteral) TokenLiteral() string { return string(al.Token.Literal) }
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
 func (al *ArrayLiteral) String() string {
 	var out bytes.Buffer
 	elements := make([]string, len(al.Elements))

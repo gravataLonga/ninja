@@ -77,8 +77,7 @@ For more detail about language, you can check [here](https://ninja.jonathan.pt) 
 
 # Demo  
 
-Resolving katas you can check this repository  
-https://adventofcode.com/2015
+Resolved [katas](https://github.com/gravataLonga/ninja-lang-katas) from this [website](https://adventofcode.com/2015)  
 
 # Syntax  
 
@@ -483,6 +482,24 @@ true.type();     // "BOOLEAN"
 var true false function delete enum 
 return if else for import break case
 ```  
+
+## Lexical Scooping  
+
+[Inspiration](https://craftinginterpreters.com/resolving-and-binding.html)  
+
+> To “resolve” a variable usage, we only need to calculate how many “hops” away the declared variable will be in the 
+> environment chain. The interesting question is when to do this calculation—or, put differently, where in our 
+> interpreter’s implementation do we stuff the code for it?  
+
+## A variable resolution pass  
+
+> After the parser produces the syntax tree, but before the interpreter starts executing it, we’ll do a single walk over 
+> the tree to resolve all of the variables it contains. Additional passes between parsing and execution are common. 
+> If Lox had static types, we could slide a type checker in there. Optimizations are often implemented in separate 
+> passes like this too. Basically, any work that doesn't rely on state that’s only available at runtime can be done 
+> in this way.  
+
+When binding a variable we need to know how depth we are in rabbit hole.  
 
 ## Examples  
 

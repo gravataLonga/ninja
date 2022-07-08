@@ -8,7 +8,6 @@ import (
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 
-	// Ast Program Eval
 	case *ast.Program:
 		return evalProgram(node.Statements, env)
 
@@ -153,6 +152,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.ScopeOperatorExpression:
 		return evalScopeOperatorExpression(node, env)
 	}
+
 	return nil
 }
 

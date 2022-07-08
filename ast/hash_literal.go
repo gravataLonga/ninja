@@ -12,7 +12,7 @@ type HashLiteral struct {
 }
 
 func (hl *HashLiteral) expressionNode()      {}
-func (hl *HashLiteral) TokenLiteral() string { return string(hl.Token.Literal) }
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
 func (hl *HashLiteral) String() string {
 	var out bytes.Buffer
 	pairs := make([]string, len(hl.Pairs))

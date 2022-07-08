@@ -14,7 +14,7 @@ type ForStatement struct {
 }
 
 func (fs *ForStatement) expressionNode()      {}
-func (fs *ForStatement) TokenLiteral() string { return string(fs.Token.Literal) }
+func (fs *ForStatement) TokenLiteral() string { return fs.Token.Literal }
 func (fs *ForStatement) String() string {
 	var out bytes.Buffer
 

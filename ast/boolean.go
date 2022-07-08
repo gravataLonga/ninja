@@ -8,5 +8,5 @@ type Boolean struct {
 }
 
 func (il *Boolean) expressionNode()      {}
-func (il *Boolean) TokenLiteral() string { return string(il.Token.Literal) }
-func (il *Boolean) String() string       { return string(il.Token.Literal) }
+func (il *Boolean) TokenLiteral() string { return il.Token.Literal }
+func (il *Boolean) String() string       { return il.Token.Literal }

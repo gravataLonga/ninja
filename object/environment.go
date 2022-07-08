@@ -28,3 +28,16 @@ func (e *Environment) Set(name string, val Object) Object {
 	e.store[name] = val
 	return val
 }
+
+/*
+func (e *Environment) Set(name string, val Object) Object {
+	_, ok := e.store[name]
+	if !ok && e.outer != nil {
+		e.outer.Set(name, val)
+	} else {
+		e.store[name] = val
+	}
+
+	return val
+}
+*/

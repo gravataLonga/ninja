@@ -47,8 +47,11 @@ type Parser struct {
 	curToken  token.Token
 	peekToken token.Token
 
-	prefixParseFns map[token.TokenType]fnPrefixPrecedence
-	infixParseFns  map[token.TokenType]fnInfixPrecedence
+	prefixParseFns map[token.TokenType]prefixParseFn
+	infixParseFns  map[token.TokenType]infixParseFn
+
+	prefixParsePrecedence map[token.TokenType]int
+	infixParsePrecedence  map[token.TokenType]int
 }
 
 // associativity if 1 then is right, 0, mean left.
@@ -62,7 +65,8 @@ func New(l *lexer.Lexer) *Parser {
 		errors: []string{},
 	}
 
-	p.prefixParseFns = make(map[token.TokenType]fnPrefixPrecedence)
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	p.prefixParsePrecedence = make(map[token.TokenType]int)
 	p.registerPrefix(token.IDENT, p.parseIdentifier, LOWEST)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral, LOWEST)
 	p.registerPrefix(token.FLOAT, p.parseFloatLiteral, LOWEST)
@@ -82,7 +86,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.IMPORT, p.parseImport, LOWEST)
 	// p.registerPrefix(token.BIT_NOT, p.parsePrefixExpression)
 
-	p.infixParseFns = make(map[token.TokenType]fnInfixPrecedence)
+	p.infixParseFns = make(map[token.TokenType]infixParseFn)
+	p.infixParsePrecedence = make(map[token.TokenType]int)
 	p.registerInfix(token.ASSIGN, p.parseInfixAssignExpression, ASSIGN)
 	p.registerInfix(token.PLUS, p.parseInfixExpression, SUM)
 	p.registerInfix(token.MINUS, p.parseInfixExpression, SUM)
@@ -148,19 +153,13 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 }
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn, precedence int) {
-	st := fnPrefixPrecedence{
-		fn:         fn,
-		precedence: precedence,
-	}
-	p.prefixParseFns[tokenType] = st
+	p.prefixParseFns[tokenType] = fn
+	p.prefixParsePrecedence[tokenType] = precedence
 }
 
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn, precedence int) {
-	st := fnInfixPrecedence{
-		fn:         fn,
-		precedence: precedence,
-	}
-	p.infixParseFns[tokenType] = st
+	p.infixParseFns[tokenType] = fn
+	p.infixParsePrecedence[tokenType] = precedence
 }
 
 func (p *Parser) curTokenIs(tok token.TokenType) bool {
@@ -205,12 +204,12 @@ func (p *Parser) peekError(t ...token.TokenType) {
 }
 
 func (p *Parser) peekPrecedence() int {
-	ps, ok := p.infixParseFns[p.peekToken.Type]
+	precedence, ok := p.infixParsePrecedence[p.peekToken.Type]
 	if !ok {
 		return LOWEST
 	}
 
-	return ps.precedence
+	return precedence
 }
 
 // curAssociativity 0 means left associativity
@@ -223,12 +222,12 @@ func (p *Parser) curAssociativity() int {
 }
 
 func (p *Parser) curPrecedence() int {
-	ps, ok := p.infixParseFns[p.curToken.Type]
+	precedence, ok := p.infixParsePrecedence[p.curToken.Type]
 	if !ok {
 		return LOWEST
 	}
 
-	return ps.precedence
+	return precedence
 }
 
 func (p *Parser) nextToken() {
