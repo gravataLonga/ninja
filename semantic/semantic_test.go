@@ -8,51 +8,77 @@ import (
 	"testing"
 )
 
-func TestScopeVariables(t *testing.T) {
+func TestScopeVariable(t *testing.T) {
+	tests := []struct {
+		input string
+	}{
+		{
+			`function () { var a = 1; }`,
+		},
+		{
+			`function () { var a = true; }`,
+		},
+		{
+			`function () { var a = true; var b = a; }`,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestScopeVariable[%d]", i), func(t *testing.T) {
+			s := testSemantic(tt.input, t)
+
+			if len(s.Errors()) > 0 {
+				t.Fatalf("Semantic Analysis got errors. Got: %v", s.Errors())
+			}
+		})
+	}
+}
+
+func TestScopeVariablesWrong(t *testing.T) {
 	tests := []struct {
 		input       string
 		erroMessage interface{}
 	}{
 		{
-			`var a = a;`,
-			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 10]",
+			`function () { var a = a; }`,
+			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 24]",
 		},
 		{
-			`var a = [1, b];`,
-			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 14]",
+			`function () { var a = [1, b]; }`,
+			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 28]",
 		},
 		{
-			`var a = {"t": b}`,
-			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 16]",
+			`function () { var a = {"t": b} }`,
+			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 30]",
 		},
 		{
-			`var a = {b: 1}`,
-			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 11]",
+			`function () { var a = {b: 1} }`,
+			"Variable \"b\" not declare yet IDENT at [Line: 1, Offset: 25]",
 		},
 		{
-			`if (a) {} else {}`,
-			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 6]",
+			`function () { if (a) {} else {} }`,
+			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 20]",
 		},
 		{
-			`if (true) {a} else {}`,
-			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 13]",
+			`function () { if (true) {a} else {} }`,
+			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 27]",
 		},
 		{
-			`if (true) {} else {a}`,
-			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 21]",
+			`function () { if (true) {} else {a} }`,
+			"Variable \"a\" not declare yet IDENT at [Line: 1, Offset: 35]",
 		},
 		{
-			`if (true) {var b = b;} else {}`,
-			"Can't read local variable \"b\" in its own initializer IDENT at [Line: 1, Offset: 21]",
+			`function () { if (true) {var b = b;} else {} }`,
+			"Can't read local variable \"b\" in its own initializer IDENT at [Line: 1, Offset: 35]",
 		},
 		{
-			`var a = "local"; function () { var a = a; }`,
-			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 6]",
+			`function () { var a = "local"; function () { var a = a; } }`,
+			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 55]",
 		},
 	}
 
 	for i, tt := range tests {
-		t.Run(fmt.Sprintf("TestScopeVariables[%d]", i), func(t *testing.T) {
+		t.Run(fmt.Sprintf("TestScopeVariablesWrong[%d]", i), func(t *testing.T) {
 			s := testSemantic(tt.input, t)
 
 			if len(s.Errors()) <= 0 {
@@ -98,7 +124,7 @@ func testSemantic(input string, t *testing.T) *Semantic {
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
 	s := New()
-	s.Analyze(p.ParseProgram())
+	s.Analysis(p.ParseProgram())
 
 	checkParserErrors(t, p)
 	return s

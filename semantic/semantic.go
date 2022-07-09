@@ -5,7 +5,7 @@ import (
 	"ninja/ast"
 )
 
-// Semantic here is where we are going doing some semantic analyze
+// Semantic here is where we are going doing some semantic analysis
 // using visitor pattern
 type Semantic struct {
 	scopeStack     Stack
@@ -25,38 +25,33 @@ func (s *Semantic) NewError(format string, a ...interface{}) {
 	s.errors = append(s.errors, fmt.Sprintf(format, a...))
 }
 
-func (s *Semantic) Analyze(node *ast.Program) ast.Node {
-	return s.analyze(node)
+func (s *Semantic) Analysis(node *ast.Program) ast.Node {
+	return s.analysis(node)
 }
 
-// beginScope record scope how deep is
-func (s *Semantic) beginScope() {
+// newScope record scope how deep is
+func (s *Semantic) newScope() {
 	s.scopeStack.Push(&Scope{})
 }
 
-// endScope remove one scope top of head of scope
-func (s *Semantic) endScope() {
+// exitScope remove one scope top of head of scope
+func (s *Semantic) exitScope() {
 	s.scopeStack.Pop()
 }
 
 // declare will keep track of declare variables
 func (s *Semantic) declare(node *ast.VarStatement) {
-	peek, ok := s.scopeStack.Peek()
-	if !ok {
+	if s.scopeStack.IsEmpty() {
 		return
 	}
 
-	name := node.Name.Value
-	*peek = Scope{name: false}
+	peek, _ := s.scopeStack.Peek()
+	(*peek)[node.Name.Value] = false
 }
 
 // resolve after a variable been resolve we mark it as resolved.
 func (s *Semantic) resolve(node *ast.VarStatement) {
 	name := node.Name.Value
-	if !s.expectIdentifierDeclare(node.Name) {
-		return
-	}
-
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		return
@@ -87,43 +82,43 @@ func (s *Semantic) expectIdentifierDeclare(node *ast.Identifier) bool {
 	return true
 }
 
-func (s *Semantic) analyze(node ast.Node) ast.Node {
+func (s *Semantic) analysis(node ast.Node) ast.Node {
 	switch node := node.(type) {
 	case *ast.Program:
-		s.beginScope()
 		for _, v := range node.Statements {
-			s.analyze(v)
+			s.analysis(v)
 		}
-		s.endScope()
 	case *ast.ArrayLiteral:
 		for _, e := range node.Elements {
-			s.analyze(e)
+			s.analysis(e)
 		}
 	case *ast.IfExpression:
-		s.analyze(node.Condition)
-		s.analyze(node.Consequence)
-		s.analyze(node.Alternative)
+		s.analysis(node.Condition)
+		s.analysis(node.Consequence)
+		s.analysis(node.Alternative)
 	case *ast.HashLiteral:
 		for k, v := range node.Pairs {
-			s.analyze(k)
-			s.analyze(v)
+			s.analysis(k)
+			s.analysis(v)
 		}
 	case *ast.Identifier:
 		s.expectIdentifierDeclare(node)
 	case *ast.VarStatement:
 		s.declare(node)
-		s.analyze(node.Value)
+		if _, ok := node.Value.(ast.Expression); ok {
+			s.analysis(node.Value)
+		}
 		s.resolve(node)
 	case *ast.ExpressionStatement:
-		s.analyze(node.Expression)
+		s.analysis(node.Expression)
 	case *ast.FunctionLiteral:
-		s.analyze(node.Body)
+		s.analysis(node.Body)
 	case *ast.BlockStatement:
-		s.beginScope()
+		s.newScope()
 		for _, b := range node.Statements {
-			s.analyze(b)
+			s.analysis(b)
 		}
-		s.endScope()
+		s.exitScope()
 	}
 	return node
 }
