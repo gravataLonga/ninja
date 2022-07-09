@@ -21,6 +21,30 @@ func TestScopeVariable(t *testing.T) {
 		{
 			`function () { var a = true; var b = a; }`,
 		},
+		{
+			`var a = 1`,
+		},
+		{
+			`var a = true`,
+		},
+		{
+			`var a = []`,
+		},
+		{
+			`var a = {}`,
+		},
+		{
+			`function (x) { return x; }`,
+		},
+		{
+			`function () { function (y) { var a = y + 1; } }`,
+		},
+		{
+			`function () { var a = -1; }`,
+		},
+		{
+			`function () { var a = !true; }`,
+		},
 	}
 
 	for i, tt := range tests {
@@ -41,6 +65,10 @@ func TestScopeVariablesWrong(t *testing.T) {
 	}{
 		{
 			`function () { var a = a; }`,
+			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 24]",
+		},
+		{
+			`function () { var a = a + 1 }`,
 			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 24]",
 		},
 		{
@@ -74,6 +102,18 @@ func TestScopeVariablesWrong(t *testing.T) {
 		{
 			`function () { var a = "local"; function () { var a = a; } }`,
 			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 55]",
+		},
+		{
+			`function () { var a = "local"; function () { function () { var a = a; } } }`,
+			"Can't read local variable \"a\" in its own initializer IDENT at [Line: 1, Offset: 69]",
+		},
+		{
+			`function () { function (y) { var a = x + 1; } }`,
+			`Variable "x" not declare yet IDENT at [Line: 1, Offset: 39]`,
+		},
+		{
+			`function () { var a = !x; }`,
+			`Variable "x" not declare yet IDENT at [Line: 1, Offset: 25]`,
 		},
 	}
 

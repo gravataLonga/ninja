@@ -40,18 +40,17 @@ func (s *Semantic) exitScope() {
 }
 
 // declare will keep track of declare variables
-func (s *Semantic) declare(node *ast.VarStatement) {
+func (s *Semantic) declare(name string) {
 	if s.scopeStack.IsEmpty() {
 		return
 	}
 
 	peek, _ := s.scopeStack.Peek()
-	(*peek)[node.Name.Value] = false
+	(*peek)[name] = false
 }
 
 // resolve after a variable been resolve we mark it as resolved.
-func (s *Semantic) resolve(node *ast.VarStatement) {
-	name := node.Name.Value
+func (s *Semantic) resolve(name string) {
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		return
@@ -104,21 +103,30 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 	case *ast.Identifier:
 		s.expectIdentifierDeclare(node)
 	case *ast.VarStatement:
-		s.declare(node)
+		s.declare(node.Name.Value)
 		if _, ok := node.Value.(ast.Expression); ok {
 			s.analysis(node.Value)
 		}
-		s.resolve(node)
+		s.resolve(node.Name.Value)
 	case *ast.ExpressionStatement:
 		s.analysis(node.Expression)
+	case *ast.PrefixExpression:
+		s.analysis(node.Right)
+	case *ast.InfixExpression:
+		s.analysis(node.Left)
+		s.analysis(node.Right)
 	case *ast.FunctionLiteral:
-		s.analysis(node.Body)
-	case *ast.BlockStatement:
 		s.newScope()
+		for _, arg := range node.Parameters {
+			s.declare(arg.Value)
+			s.resolve(arg.Value)
+		}
+		s.analysis(node.Body)
+		s.exitScope()
+	case *ast.BlockStatement:
 		for _, b := range node.Statements {
 			s.analysis(b)
 		}
-		s.exitScope()
 	}
 	return node
 }
