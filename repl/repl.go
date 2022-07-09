@@ -22,7 +22,7 @@ var logoImage []byte
 
 const PROMPT = ">>> "
 
-const NINJA_LICENSE = "Ninja Language - MIT LICENSE - Version: %s"
+const NINJA_LICENSE = "Ninja Language - MIT LICENSE - Version: %s\n"
 
 type repl struct {
 	out     io.Writer

@@ -3,19 +3,18 @@ package semantic
 import (
 	"fmt"
 	"ninja/ast"
-	"ninja/parser"
 )
 
 // Semantic here is where we are going doing some semantic analyze
 // using visitor pattern
 type Semantic struct {
-	p          *parser.Parser
-	scopeStack Stack
-	errors     []string
+	scopeStack     Stack
+	globalVariable map[string]ast.Expression
+	errors         []string
 }
 
-func New(p *parser.Parser) *Semantic {
-	return &Semantic{p: p}
+func New() *Semantic {
+	return &Semantic{}
 }
 
 func (s *Semantic) Errors() []string {
@@ -26,8 +25,8 @@ func (s *Semantic) NewError(format string, a ...interface{}) {
 	s.errors = append(s.errors, fmt.Sprintf(format, a...))
 }
 
-func (s *Semantic) Analyze() ast.Node {
-	return s.analyze(s.p.ParseProgram())
+func (s *Semantic) Analyze(node *ast.Program) ast.Node {
+	return s.analyze(node)
 }
 
 // beginScope record scope how deep is
@@ -41,17 +40,23 @@ func (s *Semantic) endScope() {
 }
 
 // declare will keep track of declare variables
-func (s *Semantic) declare(name string) {
+func (s *Semantic) declare(node *ast.VarStatement) {
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		return
 	}
 
+	name := node.Name.Value
 	*peek = Scope{name: false}
 }
 
 // resolve after a variable been resolve we mark it as resolved.
-func (s *Semantic) resolve(name string) {
+func (s *Semantic) resolve(node *ast.VarStatement) {
+	name := node.Name.Value
+	if !s.expectIdentifierDeclare(node.Name) {
+		return
+	}
+
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		return
@@ -60,21 +65,22 @@ func (s *Semantic) resolve(name string) {
 	*peek = Scope{name: true}
 }
 
-func (s *Semantic) expectIdentifierDeclare(name string) bool {
+func (s *Semantic) expectIdentifierDeclare(node *ast.Identifier) bool {
+	name := node.Value
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
-		s.NewError("Can't read local variable %s in its own initializer", name)
+		s.NewError("There aren't any scope active %s", name)
 		return false
 	}
 
 	v, ok := (*peek)[name]
 	if !ok {
-		s.NewError("Identifier %s not exists on current scope", name)
+		s.NewError("Variable \"%s\" not declare yet %s", name, node.Token)
 		return false
 	}
 
 	if !v {
-		s.NewError("Can't read local variable %s in its own initializer", name)
+		s.NewError("Can't read local variable \"%s\" in its own initializer %s", name, node.Token)
 		return false
 	}
 
@@ -84,28 +90,40 @@ func (s *Semantic) expectIdentifierDeclare(name string) bool {
 func (s *Semantic) analyze(node ast.Node) ast.Node {
 	switch node := node.(type) {
 	case *ast.Program:
+		s.beginScope()
 		for _, v := range node.Statements {
 			s.analyze(v)
 		}
+		s.endScope()
+	case *ast.ArrayLiteral:
+		for _, e := range node.Elements {
+			s.analyze(e)
+		}
+	case *ast.IfExpression:
+		s.analyze(node.Condition)
+		s.analyze(node.Consequence)
+		s.analyze(node.Alternative)
+	case *ast.HashLiteral:
+		for k, v := range node.Pairs {
+			s.analyze(k)
+			s.analyze(v)
+		}
+	case *ast.Identifier:
+		s.expectIdentifierDeclare(node)
+	case *ast.VarStatement:
+		s.declare(node)
+		s.analyze(node.Value)
+		s.resolve(node)
 	case *ast.ExpressionStatement:
 		s.analyze(node.Expression)
-	case *ast.Function:
-		s.declare(node.Name.Value)
-		s.resolve(node.Name.Value)
-
+	case *ast.FunctionLiteral:
 		s.analyze(node.Body)
 	case *ast.BlockStatement:
 		s.beginScope()
-		for _, stmt := range node.Statements {
-			s.analyze(stmt)
+		for _, b := range node.Statements {
+			s.analyze(b)
 		}
 		s.endScope()
-	case *ast.Identifier:
-		s.expectIdentifierDeclare(node.Value)
-	case *ast.VarStatement:
-		s.declare(node.Name.Value)
-		s.analyze(node.Value)
-		s.resolve(node.Name.Value)
 	}
 	return node
 }
