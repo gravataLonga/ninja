@@ -535,3 +535,23 @@ go tool trace trace.out
 ```  
 go test -race
 ```  
+
+# References  
+
+ - Structure and Interpretation of Computer Programs, Second Edition  
+ - Engineering a Compiler, Second Edi- tion. Morgan Kaufmann.  
+ - Parsing Techniques. A Practical Guide.. Ellis Horwood Limited.  
+ - Modern Compiler Design, Second Edition. Springer  
+ - The Elements Of Computing Systems. MIT Press.  
+
+# Others   
+
+```
+Program code -> Lexical Analysis (Lexer) -> Syntactic Analysis (Parser) -> Semantic Analysis -> Generated/Optimization -> Machine Code
+```  
+
+1. Program code (Ninja Code)  
+2. Lexer -> Produce Tokens  
+3. Parser -> Produces AST Tree  
+4. Semantic Analysis -> Syntax of AST
+5. Evaluator -> Produce Object  

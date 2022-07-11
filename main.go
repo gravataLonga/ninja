@@ -11,6 +11,7 @@ import (
 	"ninja/object"
 	"ninja/parser"
 	"ninja/repl"
+	"ninja/semantic"
 	"os"
 	"strings"
 )
@@ -64,10 +65,17 @@ func execCode(input string, writer io.Writer) {
 	env := object.NewEnvironment()
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
+	s := semantic.New()
 
 	program := p.ParseProgram()
 	if len(p.Errors()) > 0 {
 		printParserErrors(p.Errors(), writer)
+		return
+	}
+
+	program = s.Analysis(program)
+	if len(s.Errors()) != 0 {
+		printSemanticErrorsErrors(s.Errors(), writer)
 		return
 	}
 
@@ -79,6 +87,13 @@ func execCode(input string, writer io.Writer) {
 
 func printParserErrors(errors []string, writer io.Writer) {
 	fmt.Fprintf(writer, "🔥 Fire at core! parser errors:")
+	for _, msg := range errors {
+		fmt.Fprintf(writer, "\t %s\n", msg)
+	}
+}
+
+func printSemanticErrorsErrors(errors []string, writer io.Writer) {
+	fmt.Fprintf(writer, "🔥 Fire at core! semantic errors:")
 	for _, msg := range errors {
 		fmt.Fprintf(writer, "\t %s\n", msg)
 	}

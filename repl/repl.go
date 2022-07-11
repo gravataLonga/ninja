@@ -122,6 +122,14 @@ func (r *repl) printParserErrors(errors []string) {
 	}
 }
 
+func (r *repl) printSemanticErrors(errors []string) {
+	r.Output("error", "We got some semantic errors.\n")
+	r.Output("error", "\tsemantic errors:\n")
+	for _, msg := range errors {
+		r.Output("error", "\t\t"+msg+"\n")
+	}
+}
+
 func createSpashScreen() string {
 
 	file, err := os.CreateTemp("", "repl_logo")

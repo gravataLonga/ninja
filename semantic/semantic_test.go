@@ -45,6 +45,9 @@ func TestScopeVariable(t *testing.T) {
 		{
 			`function () { var a = !true; }`,
 		},
+		{
+			`var a = 1; function () { var b = a; }`,
+		},
 	}
 
 	for i, tt := range tests {

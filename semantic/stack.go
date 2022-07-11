@@ -30,3 +30,7 @@ func (s *Stack) Peek() (*Scope, bool) {
 	scope := (*s)[index]
 	return scope, true
 }
+
+func (s *Scope) Put(name string, ready bool) {
+	(*s)[name] = ready
+}

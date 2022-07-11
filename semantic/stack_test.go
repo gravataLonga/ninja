@@ -78,3 +78,14 @@ func TestStack_Peek(t *testing.T) {
 		t.Errorf("Popped value wasn't change")
 	}
 }
+
+func TestScope_Put(t *testing.T) {
+	scope := Scope{}
+	scope.Put("test", true)
+
+	v := scope["test"]
+
+	if !v {
+		t.Fatalf("scope test isn't true")
+	}
+}

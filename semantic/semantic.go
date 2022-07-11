@@ -3,6 +3,7 @@ package semantic
 import (
 	"fmt"
 	"ninja/ast"
+	"ninja/token"
 )
 
 // Semantic here is where we are going doing some semantic analysis
@@ -11,6 +12,7 @@ type Semantic struct {
 	scopeStack     Stack
 	globalVariable map[string]ast.Expression
 	errors         []string
+	resolvingVar   string
 }
 
 func New() *Semantic {
@@ -25,8 +27,8 @@ func (s *Semantic) NewError(format string, a ...interface{}) {
 	s.errors = append(s.errors, fmt.Sprintf(format, a...))
 }
 
-func (s *Semantic) Analysis(node *ast.Program) ast.Node {
-	return s.analysis(node)
+func (s *Semantic) Analysis(node *ast.Program) *ast.Program {
+	return s.analysis(node).(*ast.Program)
 }
 
 // newScope record scope how deep is
@@ -59,22 +61,25 @@ func (s *Semantic) resolve(name string) {
 	*peek = Scope{name: true}
 }
 
-func (s *Semantic) expectIdentifierDeclare(node *ast.Identifier) bool {
-	name := node.Value
+func (s *Semantic) expectIdentifierDeclare(name string, tok token.Token) bool {
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		s.NewError("There aren't any scope active %s", name)
 		return false
 	}
 
-	v, ok := (*peek)[name]
+	if s.resolvingVar == "" {
+		return true
+	}
+
+	v, ok := (*peek)[s.resolvingVar]
 	if !ok {
-		s.NewError("Variable \"%s\" not declare yet %s", name, node.Token)
+		s.NewError("Variable \"%s\" not declare yet %s", name, tok)
 		return false
 	}
 
 	if !v {
-		s.NewError("Can't read local variable \"%s\" in its own initializer %s", name, node.Token)
+		s.NewError("Can't read local variable \"%s\" in its own initializer %s", name, tok)
 		return false
 	}
 
@@ -101,12 +106,13 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 			s.analysis(v)
 		}
 	case *ast.Identifier:
-		s.expectIdentifierDeclare(node)
+		s.expectIdentifierDeclare(node.Value, node.Token)
+		s.resolvingVar = ""
 	case *ast.VarStatement:
+		s.resolvingVar = node.Name.Value
+
 		s.declare(node.Name.Value)
-		if _, ok := node.Value.(ast.Expression); ok {
-			s.analysis(node.Value)
-		}
+		s.analysis(node.Value)
 		s.resolve(node.Name.Value)
 	case *ast.ExpressionStatement:
 		s.analysis(node.Expression)
