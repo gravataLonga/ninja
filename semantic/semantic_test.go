@@ -103,6 +103,15 @@ func TestScopeVariablesWrong(t *testing.T) {
 	}
 }
 
+func TestMarkVariableAsGlobal(t *testing.T) {
+	s := testSemantic("var a = 0", t)
+
+	if len(s.globalVariable) <= 0 {
+		t.Fatalf("Variable a isn't mark as global")
+	}
+
+}
+
 // checkParserErrors check if there are parser errors
 func checkParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()

@@ -3,14 +3,13 @@ package semantic
 import (
 	"fmt"
 	"ninja/ast"
-	"ninja/token"
 )
 
 // Semantic here is where we are going doing some semantic analysis
 // using visitor pattern
 type Semantic struct {
 	scopeStack     Stack
-	globalVariable map[string]ast.Expression
+	globalVariable []string
 	errors         []string
 }
 
@@ -43,6 +42,7 @@ func (s *Semantic) exitScope() {
 // declare will keep track of declare variables
 func (s *Semantic) declare(name string) {
 	if s.scopeStack.IsEmpty() {
+		s.globalVariable = append(s.globalVariable, name)
 		return
 	}
 
@@ -57,10 +57,12 @@ func (s *Semantic) resolve(name string) {
 		return
 	}
 
-	*peek = Scope{name: true}
+	(*peek)[name] = true
 }
 
-func (s *Semantic) expectIdentifierDeclare(name string, tok token.Token) bool {
+func (s *Semantic) expectIdentifierDeclare(ident *ast.Identifier) bool {
+	name := ident.Value
+	tok := ident.Token
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
 		s.NewError("There aren't any scope active %s", name)
@@ -101,7 +103,7 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 			s.analysis(v)
 		}
 	case *ast.Identifier:
-		s.expectIdentifierDeclare(node.Value, node.Token)
+		s.expectIdentifierDeclare(node)
 	case *ast.VarStatement:
 		s.declare(node.Name.Value)
 		s.analysis(node.Value)
