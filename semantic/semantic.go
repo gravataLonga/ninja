@@ -12,7 +12,6 @@ type Semantic struct {
 	scopeStack     Stack
 	globalVariable map[string]ast.Expression
 	errors         []string
-	resolvingVar   string
 }
 
 func New() *Semantic {
@@ -68,14 +67,10 @@ func (s *Semantic) expectIdentifierDeclare(name string, tok token.Token) bool {
 		return false
 	}
 
-	if s.resolvingVar == "" {
-		return true
-	}
-
-	v, ok := (*peek)[s.resolvingVar]
+	v, ok := (*peek)[name]
 	if !ok {
-		s.NewError("Variable \"%s\" not declare yet %s", name, tok)
-		return false
+		// probably is global environment
+		return true
 	}
 
 	if !v {
@@ -107,10 +102,7 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 		}
 	case *ast.Identifier:
 		s.expectIdentifierDeclare(node.Value, node.Token)
-		s.resolvingVar = ""
 	case *ast.VarStatement:
-		s.resolvingVar = node.Name.Value
-
 		s.declare(node.Name.Value)
 		s.analysis(node.Value)
 		s.resolve(node.Name.Value)
