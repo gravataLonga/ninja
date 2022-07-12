@@ -65,8 +65,8 @@ func (s *Semantic) expectIdentifierDeclare(ident *ast.Identifier) bool {
 	tok := ident.Token
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
-		s.NewError("There aren't any scope active %s", name)
-		return false
+		// probably is global environment
+		return true
 	}
 
 	v, ok := (*peek)[name]

@@ -48,10 +48,17 @@ func main() {
 	}
 
 	file, err := ioutil.ReadFile(os.Args[1])
-	if err == nil {
-		execCode(string(file), os.Stdout)
+	if err != nil {
+		_, err := fmt.Fprintf(os.Stderr, "%v", err)
+		if err != nil {
+			os.Exit(1)
+			return
+		}
+		os.Exit(1)
 		return
 	}
+
+	execCode(string(file), os.Stdout)
 }
 
 func runRepl(in io.Reader, out io.Writer) {
