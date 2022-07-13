@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"ninja/ast"
+	"github.com/gravataLonga/ninja/ast"
 	"strconv"
 )
 

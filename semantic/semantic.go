@@ -2,7 +2,7 @@ package semantic
 
 import (
 	"fmt"
-	"ninja/ast"
+	"github.com/gravataLonga/ninja/ast"
 )
 
 // Semantic here is where we are going doing some semantic analysis

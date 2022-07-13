@@ -6,12 +6,12 @@ import (
 	flag "github.com/spf13/pflag"
 	"io"
 	"io/ioutil"
-	"ninja/evaluator"
-	"ninja/lexer"
-	"ninja/object"
-	"ninja/parser"
-	"ninja/repl"
-	"ninja/semantic"
+	"github.com/gravataLonga/ninja/evaluator"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/parser"
+	"github.com/gravataLonga/ninja/repl"
+	"github.com/gravataLonga/ninja/semantic"
 	"os"
 	"strings"
 )
@@ -19,9 +19,10 @@ import (
 //go:embed version.txt
 var version string
 
+var exec = flag.StringP("exec", "e", "", "Runs the given code.")
+var astS = flag.BoolP("ast", "a", false, "Return AST structure")
+
 func main() {
-	exec := flag.StringP("exec", "e", "", "Runs the given code.")
-	_ = flag.BoolP("ast", "a", false, "Return AST structure")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Version: %s. \nUsage: ninja [flags] [program file] [arguments]\n\nAvailable flags:\n", version)

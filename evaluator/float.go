@@ -2,7 +2,7 @@ package evaluator
 
 import (
 	"math"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 func evalFloatInfixExpression(

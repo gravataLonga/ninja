@@ -1,6 +1,6 @@
 package ast
 
-import "ninja/token"
+import "github.com/gravataLonga/ninja/token"
 
 type IntegerLiteral struct {
 	Token token.Token

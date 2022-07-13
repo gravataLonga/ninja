@@ -3,7 +3,7 @@ package ast
 import (
 	"bytes"
 	"fmt"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 )
 
 type Import struct {

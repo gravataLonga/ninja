@@ -2,9 +2,9 @@ package parser
 
 import (
 	"fmt"
-	"ninja/ast"
-	"ninja/lexer"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/token"
 )
 
 const (

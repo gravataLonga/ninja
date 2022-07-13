@@ -1,10 +1,10 @@
 package evaluator
 
 import (
-	"ninja/ast"
-	"ninja/lexer"
-	"ninja/object"
-	"ninja/parser"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/parser"
 	"os"
 	"strings"
 )

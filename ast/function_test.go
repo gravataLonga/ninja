@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 	"strconv"
 	"testing"
 )

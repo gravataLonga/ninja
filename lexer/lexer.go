@@ -3,7 +3,7 @@ package lexer
 import (
 	"encoding/hex"
 	"io"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 	"strings"
 )
 

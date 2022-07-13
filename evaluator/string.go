@@ -1,6 +1,6 @@
 package evaluator
 
-import "ninja/object"
+import "github.com/gravataLonga/ninja/object"
 
 func evalStringInfixExpression(
 	operator string,

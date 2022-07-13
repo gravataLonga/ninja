@@ -1,6 +1,6 @@
 package ast
 
-import "ninja/token"
+import "github.com/gravataLonga/ninja/token"
 
 type Identifier struct {
 	Token token.Token // the token.IDENT token

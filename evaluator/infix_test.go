@@ -1,9 +1,9 @@
 package evaluator
 
 import (
-	"ninja/lexer"
-	"ninja/object"
-	"ninja/parser"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/parser"
 	"strings"
 	"testing"
 )

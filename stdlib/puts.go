@@ -2,7 +2,7 @@ package stdlib
 
 import (
 	"fmt"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 // Puts print stuff to standard output

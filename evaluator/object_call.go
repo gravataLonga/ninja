@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"ninja/ast"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/object"
 )
 
 func evalObjectCallExpression(node *ast.ObjectCall, env *object.Environment) object.Object {

@@ -2,7 +2,7 @@ package stdlib
 
 import (
 	"math/rand"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 // Rand generate a random number from 0 ... 1 float

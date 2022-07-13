@@ -2,7 +2,7 @@ package ast
 
 import (
 	"fmt"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 	"testing"
 )
 

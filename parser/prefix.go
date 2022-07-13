@@ -1,6 +1,6 @@
 package parser
 
-import "ninja/ast"
+import "github.com/gravataLonga/ninja/ast"
 
 func (p *Parser) parsePrefixExpression() ast.Expression {
 	expression := &ast.PrefixExpression{

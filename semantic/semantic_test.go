@@ -2,8 +2,8 @@ package semantic
 
 import (
 	"fmt"
-	"ninja/lexer"
-	"ninja/parser"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/parser"
 	"strings"
 	"testing"
 )

@@ -2,8 +2,8 @@ package parser
 
 import (
 	"fmt"
-	"ninja/ast"
-	"ninja/lexer"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
 	"strings"
 	"testing"
 )

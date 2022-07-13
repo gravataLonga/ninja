@@ -2,7 +2,7 @@ package ast
 
 import (
 	"bytes"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 )
 
 type BlockStatement struct {

@@ -1,7 +1,7 @@
 package stdlib
 
 import (
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 // First get item from array object

@@ -1,6 +1,6 @@
 package ast
 
-import "ninja/token"
+import "github.com/gravataLonga/ninja/token"
 
 type Boolean struct {
 	Token token.Token

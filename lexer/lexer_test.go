@@ -2,7 +2,7 @@ package lexer
 
 import (
 	"fmt"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/token"
 	"strings"
 	"testing"
 )

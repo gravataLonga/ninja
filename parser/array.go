@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"ninja/ast"
-	"ninja/token"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/token"
 )
 
 func (p *Parser) parseArrayLiteral() ast.Expression {

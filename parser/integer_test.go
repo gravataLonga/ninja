@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"ninja/ast"
-	"ninja/lexer"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
 	"strconv"
 	"strings"
 	"testing"

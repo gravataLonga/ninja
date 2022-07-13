@@ -1,6 +1,6 @@
 package stdlib
 
-import "ninja/object"
+import "github.com/gravataLonga/ninja/object"
 
 // ExitFunction
 

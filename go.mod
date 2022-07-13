@@ -1,4 +1,4 @@
-module ninja
+module github.com/gravataLonga/ninja
 
 go 1.17
 

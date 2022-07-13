@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"ninja/lexer"
+	"github.com/gravataLonga/ninja/lexer"
 	"strings"
 	"testing"
 )

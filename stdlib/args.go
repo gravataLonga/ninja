@@ -1,7 +1,7 @@
 package stdlib
 
 import (
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 // Args will get everthing from argument when executed from cli

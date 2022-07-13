@@ -1,9 +1,9 @@
 package evaluator
 
 import (
-	"ninja/ast"
-	"ninja/object"
-	"ninja/stdlib"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/stdlib"
 )
 
 func evalIdentifier(

@@ -1,6 +1,6 @@
 package evaluator
 
-import "ninja/object"
+import "github.com/gravataLonga/ninja/object"
 
 func evalArrayIndexExpression(array, index object.Object) object.Object {
 	arrayObject := array.(*object.Array)

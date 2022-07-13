@@ -1,7 +1,7 @@
 package stdlib
 
 import (
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 )
 
 // Rest we get last items from array without first item

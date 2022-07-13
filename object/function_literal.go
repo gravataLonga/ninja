@@ -2,7 +2,7 @@ package object
 
 import (
 	"bytes"
-	"ninja/ast"
+	"github.com/gravataLonga/ninja/ast"
 	"strings"
 )
 

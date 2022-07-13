@@ -2,7 +2,7 @@ package evaluator
 
 import (
 	"fmt"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/object"
 	"testing"
 )
 

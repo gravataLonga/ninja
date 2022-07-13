@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"ninja/ast"
-	"ninja/object"
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/object"
 )
 
 func evalDelete(left ast.Expression, index object.Object, env *object.Environment) object.Object {

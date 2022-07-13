@@ -1,6 +1,6 @@
 package evaluator
 
-import "ninja/object"
+import "github.com/gravataLonga/ninja/object"
 
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
