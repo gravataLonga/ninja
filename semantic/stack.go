@@ -34,3 +34,7 @@ func (s *Stack) Peek() (*Scope, bool) {
 func (s *Scope) Put(name string, ready bool) {
 	(*s)[name] = ready
 }
+
+func (s *Stack) Get(index int) *Scope {
+	return (*s)[index]
+}

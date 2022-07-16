@@ -89,3 +89,18 @@ func TestScope_Put(t *testing.T) {
 		t.Fatalf("scope test isn't true")
 	}
 }
+
+func TestStack_Get(t *testing.T) {
+	stack := &Stack{}
+	scope := Scope{"hello": true}
+	scope1 := Scope{"hello1": true}
+	stack.Push(&scope)
+	stack.Push(&scope1)
+
+	scopeGet := stack.Get(0)
+	_, ok := (*scopeGet)["hello"]
+
+	if !ok {
+		t.Fatalf("Unable to get stack by index")
+	}
+}

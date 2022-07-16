@@ -8,9 +8,10 @@ import (
 // Semantic here is where we are going doing some semantic analysis
 // using visitor pattern
 type Semantic struct {
-	scopeStack     Stack
-	globalVariable []string
-	errors         []string
+	scopeStack      Stack
+	globalVariables []string
+	localVariables  map[ast.Node]int
+	errors          []string
 }
 
 func New() *Semantic {
@@ -42,12 +43,12 @@ func (s *Semantic) exitScope() {
 // declare will keep track of declare variables
 func (s *Semantic) declare(name string) {
 	if s.scopeStack.IsEmpty() {
-		s.globalVariable = append(s.globalVariable, name)
+		s.globalVariables = append(s.globalVariables, name)
 		return
 	}
 
 	peek, _ := s.scopeStack.Peek()
-	(*peek)[name] = false
+	(*peek).Put(name, false)
 }
 
 // resolve after a variable been resolve we mark it as resolved.
@@ -57,7 +58,8 @@ func (s *Semantic) resolve(name string) {
 		return
 	}
 
-	(*peek)[name] = true
+	(*peek).Put(name, true)
+	// s.localVariables[node] =
 }
 
 func (s *Semantic) expectIdentifierDeclare(ident *ast.Identifier) bool {
@@ -65,7 +67,7 @@ func (s *Semantic) expectIdentifierDeclare(ident *ast.Identifier) bool {
 	tok := ident.Token
 	peek, ok := s.scopeStack.Peek()
 	if !ok {
-		// probably is global environment
+		// is global environment
 		return true
 	}
 
@@ -124,9 +126,11 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 		s.analysis(node.Body)
 		s.exitScope()
 	case *ast.BlockStatement:
+		s.newScope()
 		for _, b := range node.Statements {
 			s.analysis(b)
 		}
+		s.exitScope()
 	}
 	return node
 }
