@@ -38,3 +38,7 @@ func (s *Scope) Put(name string, ready bool) {
 func (s *Stack) Get(index int) *Scope {
 	return (*s)[index]
 }
+
+func (s *Stack) Size() int {
+	return len(*s)
+}

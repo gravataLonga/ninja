@@ -104,3 +104,31 @@ func TestStack_Get(t *testing.T) {
 		t.Fatalf("Unable to get stack by index")
 	}
 }
+
+func TestStack_Size(t *testing.T) {
+	tests := []struct {
+		stack Stack
+		size  int
+	}{
+		{
+			Stack{},
+			0,
+		},
+		{
+			Stack{&Scope{}},
+			1,
+		},
+		{
+			Stack{&Scope{}, &Scope{}},
+			2,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestStack_Size[%d]", i), func(t *testing.T) {
+			if tt.stack.Size() != tt.size {
+				t.Errorf("Expected %d, got: %d", tt.size, tt.stack.Size())
+			}
+		})
+	}
+}

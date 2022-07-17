@@ -82,6 +82,7 @@ func (s *Semantic) expectIdentifierDeclare(ident *ast.Identifier) bool {
 		return false
 	}
 
+	s.localVariables[ident] = s.scopeStack.Size()
 	return true
 }
 
