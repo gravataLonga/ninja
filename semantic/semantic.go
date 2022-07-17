@@ -15,7 +15,9 @@ type Semantic struct {
 }
 
 func New() *Semantic {
-	return &Semantic{}
+	return &Semantic{
+		localVariables: make(map[ast.Node]int),
+	}
 }
 
 func (s *Semantic) Errors() []string {
