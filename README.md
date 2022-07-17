@@ -208,6 +208,8 @@ There are severals builtin functions that you can use:
 6. **push** - add item to array  
 7. **exit** - exit program  
 8. **args** - get arguments passed to ninja programs  
+9. **rand** - get random number from 0 to 1 float point  
+10. **time** - return Unix time, the number of seconds elapsed  
 
 ```
 var a = [1, 2, 3, 4];
