@@ -1,13 +1,21 @@
 package evaluator
 
 import (
-	"math"
+	"fmt"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
+	"github.com/gravataLonga/ninja/semantic"
+	"math"
 	"strings"
 	"testing"
 )
+
+func TestEvalGeneric(t *testing.T) {
+	a := testEval("var a = 0; function add(x) { var b = x + a; return b; }; add(10);", t)
+
+	fmt.Println(a.Inspect())
+}
 
 // testBooleanObject helper for testing if object.Object is equal expected.
 func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
@@ -171,15 +179,33 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 	t.FailNow()
 }
 
+// checkSemanticErrors check if there are parser errors
+func checkSemanticErrors(t *testing.T, s *semantic.Semantic) {
+	errors := s.Errors()
+	if len(errors) == 0 {
+		return
+	}
+	t.Errorf("semantic has %d errors", len(errors))
+	for _, msg := range errors {
+		t.Errorf("semantic error: %q", msg)
+	}
+	t.FailNow()
+}
+
 // testEval execute input code and check if there are parser error
-// and return result object.Object
+// and return result object.Object{
 func testEval(input string, t *testing.T) object.Object {
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
 	program := p.ParseProgram()
-	env := object.NewEnvironment()
 
 	checkParserErrors(t, p)
 
+	s := semantic.New()
+	program = s.Analysis(program)
+
+	checkSemanticErrors(t, s)
+
+	env := object.NewEnvironment()
 	return Eval(program, env)
 }

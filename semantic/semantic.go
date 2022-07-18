@@ -101,7 +101,9 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 	case *ast.IfExpression:
 		s.analysis(node.Condition)
 		s.analysis(node.Consequence)
-		s.analysis(node.Alternative)
+		if node.Alternative != nil {
+			s.analysis(node.Alternative)
+		}
 	case *ast.HashLiteral:
 		for k, v := range node.Pairs {
 			s.analysis(k)
@@ -120,6 +122,14 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 	case *ast.InfixExpression:
 		s.analysis(node.Left)
 		s.analysis(node.Right)
+	case *ast.Function:
+		s.newScope()
+		for _, arg := range node.Parameters {
+			s.declare(arg.Value)
+			s.resolve(arg.Value)
+		}
+		s.analysis(node.Body)
+		s.exitScope()
 	case *ast.FunctionLiteral:
 		s.newScope()
 		for _, arg := range node.Parameters {
