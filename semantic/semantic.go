@@ -9,15 +9,20 @@ import (
 // using visitor pattern
 type Semantic struct {
 	scopeStack      Stack
-	globalVariables []string
+	globalVariables Scope
 	localVariables  map[ast.Node]int
 	errors          []string
 }
 
 func New() *Semantic {
-	return &Semantic{
-		localVariables: make(map[ast.Node]int),
+	s := &Semantic{
+		scopeStack:      make(Stack, 1, 8),
+		localVariables:  make(map[ast.Node]int),
+		globalVariables: Scope{},
 	}
+
+	s.scopeStack[0] = &s.globalVariables
+	return s
 }
 
 func (s *Semantic) Errors() []string {
@@ -45,7 +50,7 @@ func (s *Semantic) exitScope() {
 // declare will keep track of declare variables
 func (s *Semantic) declare(name string) {
 	if s.scopeStack.IsEmpty() {
-		s.globalVariables = append(s.globalVariables, name)
+		s.globalVariables[name] = true
 		return
 	}
 
