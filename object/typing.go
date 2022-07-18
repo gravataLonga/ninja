@@ -5,8 +5,10 @@ import (
 	"strings"
 )
 
+// CheckFunc signature for check arguments function
 type CheckFunc func(name string, args []Object) error
 
+// Check arguments passed to object call we can pass many CheckFunc as you want
 func Check(name string, args []Object, checks ...CheckFunc) error {
 	for _, check := range checks {
 		if err := check(name, args); err != nil {
@@ -16,6 +18,7 @@ func Check(name string, args []Object, checks ...CheckFunc) error {
 	return nil
 }
 
+// ExactArgs expect exact nums arguments
 func ExactArgs(n int) CheckFunc {
 	return func(name string, args []Object) error {
 		if len(args) != n {
@@ -27,6 +30,8 @@ func ExactArgs(n int) CheckFunc {
 		return nil
 	}
 }
+
+// MinimumArgs check if have at least n arguments
 func MinimumArgs(n int) CheckFunc {
 	return func(name string, args []Object) error {
 		if len(args) < n {
@@ -38,6 +43,8 @@ func MinimumArgs(n int) CheckFunc {
 		return nil
 	}
 }
+
+// RangeOfArgs expect n until m arguments
 func RangeOfArgs(n, m int) CheckFunc {
 	return func(name string, args []Object) error {
 		if len(args) < n || len(args) > m {
@@ -49,6 +56,8 @@ func RangeOfArgs(n, m int) CheckFunc {
 		return nil
 	}
 }
+
+// WithTypes combined with ExactArgs it will check if we got ObjectType by it is order.
 func WithTypes(types ...ObjectType) CheckFunc {
 	return func(name string, args []Object) error {
 		for i, t := range types {
@@ -63,6 +72,7 @@ func WithTypes(types ...ObjectType) CheckFunc {
 	}
 }
 
+// OneOfType almost same as WithTypes but check one of type of ObjectType
 func OneOfType(types ...ObjectType) CheckFunc {
 	return func(name string, args []Object) error {
 		for _, vt := range types {
@@ -83,7 +93,6 @@ func OneOfType(types ...ObjectType) CheckFunc {
 			got[i] = string(t.Type())
 		}
 
-		// expected argument to be STRING,ARRAY, got INTEGER
 		return fmt.Errorf(
 			"TypeError: %s() expected argument to be `%s` got `%s`",
 			name, strings.Join(expected, ","), strings.Join(got, ","),

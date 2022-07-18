@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// EPSILON is used only for internally usage only for now.
 var EPSILON float64 = 0.00000001
 
 type Float struct {
