@@ -257,17 +257,20 @@ var lib = import "mylib.ninja"; // return function() {};
 
 Logic's Operators  
 ```
-10 < 10;
-10 > 10;
-10 == 10;
-10 != 10;
-10 <= 10;
-10 >= 10;
-10 && 10;
-10 || 10;
-!10;
+10 < 10;    // FALSE
+10 > 10;    // FALSE
+10 == 10;   // TRUE
+10 != 10;   // FALSE
+10 <= 10;   // TRUE
+10 >= 10;   // TRUE
+10 && 10;   // TRUE
+10 || 10;   // TRUE
+!10;        // FALSE
+!!10;       // TRUE  
 
 ```  
+
+> **Note**: a value is considered truthy when a value is not nil or not false.  
 
 `<expression>? <operator> <expression>`  
 Arithmetics Operators  
@@ -377,14 +380,11 @@ if (true) {
 }  
 ```  
 
-> Note: a value is Truth if isn't null or false, 0 will evaulated like true.  
-
-
 ## Loop  
 
 `for (<initial>?;<condition>?;<iteration>?) { <statements> }`  
 
-> **None** statements are optionals    
+> **None** initial, condition and iteration is optional, you can omit   
 
 ```
 var i = 0;
@@ -430,8 +430,6 @@ Here a full of list of support object call for string:
 
 ## Integer  
 
-Here a full of list of support objec call for integer:  
-
 ```
 1.type();               // "INTEGER"
 1.string();             // "1"
@@ -440,8 +438,6 @@ var a = -1; a.abs();    // 1.0
 ```  
 
 ## Float  
-
-Here a full of list of support objec call for integer:
 
 ```
 1.0.type();             // "FLOAT"
@@ -497,7 +493,7 @@ return if else for import break case
 
 > After the parser produces the syntax tree, but before the interpreter starts executing it, we’ll do a single walk over 
 > the tree to resolve all of the variables it contains. Additional passes between parsing and execution are common. 
-> If Lox had static types, we could slide a type checker in there. Optimizations are often implemented in separate 
+> If <name-of-programming-language> had static types, we could slide a type checker in there. Optimizations are often implemented in separate 
 > passes like this too. Basically, any work that doesn't rely on state that’s only available at runtime can be done 
 > in this way.  
 
@@ -545,15 +541,3 @@ go test -race
  - Parsing Techniques. A Practical Guide.. Ellis Horwood Limited.  
  - Modern Compiler Design, Second Edition. Springer  
  - The Elements Of Computing Systems. MIT Press.  
-
-# Others   
-
-```
-Program code -> Lexical Analysis (Lexer) -> Syntactic Analysis (Parser) -> Semantic Analysis -> Generated/Optimization -> Machine Code
-```  
-
-1. Program code (Ninja Code)  
-2. Lexer -> Produce Tokens  
-3. Parser -> Produces AST Tree  
-4. Semantic Analysis -> Syntax of AST
-5. Evaluator -> Produce Object  
