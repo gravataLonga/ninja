@@ -7,6 +7,8 @@ import (
 	"github.com/gravataLonga/ninja/token"
 )
 
+// Here we will define for each type of Token what is precedence by
+// using iota, LOWEST start at 1, and each tokenType have next incremental value
 const (
 	_ int = iota
 	LOWEST
@@ -17,41 +19,42 @@ const (
 	SHIFT_BITWISE // >> or <<
 	SUM           //+
 	BITWISE       // ~, |, &, ^
-	PRODUCT       //*
+	PRODUCT       // *
 	POW           // **
-	POSTFIX       // -- or ++ but in postfix position
+	POSTFIX       // postfix like x++ or x--
 	PREFIX        // -X or !X
 	CALL          // myFunction(X)
 	INDEX
 )
 
 type (
+	// prefixParseFn will parse a expression
 	prefixParseFn func() ast.Expression
-	infixParseFn  func(ast.Expression) ast.Expression
+	// infixParseFn will take a left expression and return a new expression
+	// it can also be a postfix position
+	infixParseFn func(ast.Expression) ast.Expression
 )
 
-type fnInfixPrecedence struct {
-	fn         infixParseFn
-	precedence int
-}
-
-type fnPrefixPrecedence struct {
-	fn         prefixParseFn
-	precedence int
-}
-
 type Parser struct {
-	l      *lexer.Lexer
+	// l is a pointer for lexer.Lexer
+	l *lexer.Lexer
+	// errors slice of string which will keep track of error syntastic analysis
 	errors []string
 
-	curToken  token.Token
+	// curToken is current token.Token struct
+	curToken token.Token
+	// peekToken is next token.Token struct
 	peekToken token.Token
 
+	// prefixParseFns keep tracking registed functions for parsing prefix
 	prefixParseFns map[token.TokenType]prefixParseFn
-	infixParseFns  map[token.TokenType]infixParseFn
+	// infixParseFns keep tracking registed functions for parsing infix, but it also parses postfix
+	infixParseFns map[token.TokenType]infixParseFn
 
+	// prefixParsePrecedence for each prefix token.TokenType we associated some precedence
 	prefixParsePrecedence map[token.TokenType]int
-	infixParsePrecedence  map[token.TokenType]int
+	// infixParsePrecedence for each infix/postfix token.TokenType we associated some precedence
+	infixParsePrecedence map[token.TokenType]int
 }
 
 // associativity if 1 then is right, 0, mean left.
@@ -59,6 +62,7 @@ var associativity = map[token.TokenType]int{
 	token.EXPONENCIAL: 1,
 }
 
+// New will create a new Parser object
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
@@ -124,10 +128,12 @@ func New(l *lexer.Lexer) *Parser {
 	return p
 }
 
+// Errors get slice of errors
 func (p *Parser) Errors() []string {
 	return p.errors
 }
 
+// ParseProgram is main point for hole program
 func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
