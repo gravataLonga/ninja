@@ -48,6 +48,8 @@ func (s *Hash) Call(method string, args ...Object) Object {
 		return &String{Value: HASH_OBJ}
 	case "keys":
 		return hashKeys(s.Pairs, args...)
+	case "values":
+		return hashValues(s.Pairs, args...)
 	case "has":
 		return hashHas(s.Pairs, args...)
 	}
@@ -69,6 +71,27 @@ func hashKeys(keys map[HashKey]HashPair, args ...Object) Object {
 	i := 0
 	for _, pair := range keys {
 		elements[i] = pair.Key
+		i++
+	}
+
+	return &Array{Elements: elements}
+}
+
+func hashValues(keys map[HashKey]HashPair, args ...Object) Object {
+	err := Check(
+		"hash.values",
+		args,
+		ExactArgs(0),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
+	}
+
+	elements := make([]Object, len(keys))
+	i := 0
+	for _, pair := range keys {
+		elements[i] = pair.Value
 		i++
 	}
 

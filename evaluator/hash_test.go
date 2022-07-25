@@ -290,6 +290,45 @@ func TestHashHasKeyMethod(t *testing.T) {
 	}
 }
 
+func TestHashHasValueMethod(t *testing.T) {
+	input := `{"a": "a1", "b": "b2"}.values()`
+	slicesContain := []string{"a1", "b2"}
+
+	contain := func(slice []string, input string) bool {
+		for _, v := range slice {
+			if v == input {
+				return true
+			}
+		}
+		return false
+	}
+
+	evaluated := testEval(input, t)
+
+	arr, ok := evaluated.(*object.Array)
+	if !ok {
+		t.Fatalf("expect to be an array. Got: %T", evaluated)
+	}
+
+	stringPos1, ok := arr.Elements[0].(*object.String)
+	if !ok {
+		t.Fatalf("expect index 0 be a string. Got: %T", evaluated)
+	}
+
+	stringPos2, ok := arr.Elements[0].(*object.String)
+	if !ok {
+		t.Fatalf("expect index 0 be a string. Got: %T", evaluated)
+	}
+
+	if !contain(slicesContain, stringPos1.Value) {
+		t.Fatalf("hash.keys() don't contain %v. Got: %v", slicesContain, stringPos1)
+	}
+
+	if !contain(slicesContain, stringPos2.Value) {
+		t.Fatalf("hash.keys() don't contain %v. Got: %v", slicesContain, stringPos2)
+	}
+}
+
 func TestHashMethodWrongUsage(t *testing.T) {
 	tests := []struct {
 		input                string
