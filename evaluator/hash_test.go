@@ -329,6 +329,29 @@ func TestHashHasValueMethod(t *testing.T) {
 	}
 }
 
+func TestHashHasMergeMethod(t *testing.T) {
+	input := `{"a": 1, "b": 2}.merge({"c": 3})`
+	contain := `{"a": 1, "b": 2, "c": 3}`
+
+	evaluated := testEval(input, t)
+
+	expected := object.Hash{Pairs: make(map[object.HashKey]object.HashPair)}
+	aKey := &object.String{Value: "a"}
+	bKey := &object.String{Value: "b"}
+	cKey := &object.String{Value: "c"}
+	aValue := &object.Integer{Value: 1}
+	bValue := &object.Integer{Value: 2}
+	cValue := &object.Integer{Value: 3}
+
+	expected.Pairs[aKey.HashKey()] = object.HashPair{Key: aKey, Value: aValue}
+	expected.Pairs[bKey.HashKey()] = object.HashPair{Key: bKey, Value: bValue}
+	expected.Pairs[cKey.HashKey()] = object.HashPair{Key: cKey, Value: cValue}
+
+	if !testObjectLiteral(t, evaluated, expected) {
+		t.Fatalf("Expected %s, got: %s", contain, evaluated.Inspect())
+	}
+}
+
 func TestHashMethodWrongUsage(t *testing.T) {
 	tests := []struct {
 		input                string

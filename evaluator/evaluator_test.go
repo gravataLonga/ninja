@@ -111,8 +111,12 @@ func testObjectLiteral(
 			t.Fatalf("object.Hash pairs elements expected %d. got=%d", len(hashExpected.Pairs), len(hash.Pairs))
 		}
 
-		for _, hashPair := range hash.Pairs {
-			if !testObjectLiteral(t, hashPair.Value, expected) {
+		for k, hashPair := range hash.Pairs {
+			if !testObjectLiteral(t, hashPair.Key, hashExpected.Pairs[k].Key) {
+				return false
+			}
+
+			if !testObjectLiteral(t, hashPair.Value, hashExpected.Pairs[k].Value) {
 				return false
 			}
 		}

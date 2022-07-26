@@ -52,6 +52,8 @@ func (s *Hash) Call(method string, args ...Object) Object {
 		return hashValues(s.Pairs, args...)
 	case "has":
 		return hashHas(s.Pairs, args...)
+	case "merge":
+		return hashMerge(s.Pairs, args...)
 	}
 	return NewErrorFormat("method %s not exists on string object.", method)
 }
@@ -96,6 +98,27 @@ func hashValues(keys map[HashKey]HashPair, args ...Object) Object {
 	}
 
 	return &Array{Elements: elements}
+}
+
+func hashMerge(pairs map[HashKey]HashPair, args ...Object) Object {
+	err := Check(
+		"hash.merge",
+		args,
+		ExactArgs(1),
+		WithTypes(HASH_OBJ),
+	)
+
+	if err != nil {
+		return NewError(err.Error())
+	}
+
+	hashPairArg, _ := args[0].(*Hash)
+
+	for k, v := range pairs {
+		hashPairArg.Pairs[k] = v
+	}
+
+	return hashPairArg
 }
 
 func hashHas(keys map[HashKey]HashPair, args ...Object) Object {

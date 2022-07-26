@@ -469,10 +469,10 @@ true.type();     // "BOOLEAN"
 ## Object   
 
 ```
-{"a":1,"b":2}.type();       // "HASH"
-{"a":1,"b":2}.keys();       // ["a", "b"];
-{"a":1,"b":2}.values();     // [1, 2];
-{"a":1,"b":2}.has("a");     // true
+{"a":1,"b":2}.type();           // "HASH"
+{"a":1,"b":2}.keys();           // ["a", "b"];
+{"a":1,"b":2}.values();         // [1, 2];
+{"a":1,"b":2}.has("a");         // true
 ```
 
 ## Keywords  
