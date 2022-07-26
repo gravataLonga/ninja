@@ -2,8 +2,8 @@ package lexer
 
 import (
 	"encoding/hex"
-	"io"
 	"github.com/gravataLonga/ninja/token"
+	"io"
 	"strings"
 )
 
@@ -116,6 +116,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.newToken(token.RBRACKET, []byte{l.ch})
 	case ',':
 		tok = l.newToken(token.COMMA, []byte{l.ch})
+	case '?':
+		tok = l.newToken(token.QUESTION_MARK, []byte{l.ch})
 	case '.':
 		tok = l.newToken(token.DOT, []byte{l.ch})
 	case 0:

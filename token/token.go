@@ -52,6 +52,7 @@ func (t TokenType) String() string {
 		"~",
 		"<<",
 		">>",
+		"?",
 		".",
 		",",
 		";",
@@ -121,6 +122,8 @@ const (
 	BIT_NOT     // "~"
 	SHIFT_LEFT  // "<<"
 	SHIFT_RIGHT // ">>"
+
+	QUESTION_MARK // "?"
 
 	DOT          // "."
 	COMMA        // ","

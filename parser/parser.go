@@ -13,6 +13,7 @@ const (
 	_ int = iota
 	LOWEST
 	ASSIGN
+	TERNARY
 	LOGICAL       // || and &&
 	EQUALS        // ==
 	LESS_GREATER  // > or <
@@ -59,7 +60,8 @@ type Parser struct {
 
 // associativity if 1 then is right, 0, mean left.
 var associativity = map[token.TokenType]int{
-	token.EXPONENCIAL: 1,
+	token.EXPONENCIAL:   1,
+	token.QUESTION_MARK: 1,
 }
 
 // New will create a new Parser object
@@ -116,6 +118,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression, INDEX)
 	p.registerInfix(token.DOT, p.parseObjectCallExpression, CALL)
 	p.registerInfix(token.DOUBLE_COLON, p.parseEnumAccessorExpression, CALL)
+	p.registerInfix(token.QUESTION_MARK, p.parseTernaryOperator, TERNARY)
 
 	// Postfix but we only change associativity to right
 	p.registerInfix(token.INCRE, p.parsePostfixExpression, POSTFIX)
