@@ -3,15 +3,14 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	flag "github.com/spf13/pflag"
-	"io"
-	"io/ioutil"
 	"github.com/gravataLonga/ninja/evaluator"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
 	"github.com/gravataLonga/ninja/repl"
-	"github.com/gravataLonga/ninja/semantic"
+	flag "github.com/spf13/pflag"
+	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -73,7 +72,7 @@ func execCode(input string, writer io.Writer) {
 	env := object.NewEnvironment()
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
-	s := semantic.New()
+	// s := semantic.New()
 
 	program := p.ParseProgram()
 	if len(p.Errors()) > 0 {
@@ -81,11 +80,11 @@ func execCode(input string, writer io.Writer) {
 		return
 	}
 
-	program = s.Analysis(program)
+	/*program = s.Analysis(program)
 	if len(s.Errors()) != 0 {
 		printSemanticErrorsErrors(s.Errors(), writer)
 		return
-	}
+	}*/
 
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {

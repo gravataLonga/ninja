@@ -466,14 +466,17 @@ true.type();     // "BOOLEAN"
 [1, 2, 3].slice(1, 1);       // copy array with following elements [2] 
 ```
 
-## Object   
+## Hash     
 
 ```
 {"a":1,"b":2}.type();           // "HASH"
 {"a":1,"b":2}.keys();           // ["a", "b"];
 {"a":1,"b":2}.values();         // [1, 2];
+{"a":1,"b":2}.merge({"c":3});   // {"a":1,"b":2,"c":3}
 {"a":1,"b":2}.has("a");         // true
-```
+```  
+
+> **Note:** Order of keys isn't preserved.  
 
 ## Keywords  
 
