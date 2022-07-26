@@ -370,6 +370,8 @@ puts(STATUS::OK);
 
 ## Conditions  
 
+
+### If / Else 
 `if (<condition>) { <consequence> } else { <alternative> }`  
 
 ```
@@ -378,6 +380,14 @@ if (true) {
 } else {
     puts("Yes");
 }  
+```  
+
+### Ternary  
+
+`<condition> ? <consequence> : <alternative>`  
+
+```
+true ? 10 : 20
 ```  
 
 ## Loop  

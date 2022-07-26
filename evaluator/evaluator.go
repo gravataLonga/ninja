@@ -62,6 +62,8 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
+	case *ast.TernaryOperatorExpression:
+		return evalTernaryOperatorExpression(node, env)
 
 		// FunctionsLiteral
 	case *ast.FunctionLiteral:
