@@ -24,3 +24,22 @@ func TestTernaryOperatorExpressions(t *testing.T) {
 
 	}
 }
+
+func TestElvisOperatorExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"true?:false", true},
+		{`"hello"?:"world"`, "hello"},
+		{"false?:20", 20},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestElvisOperatorExpressions[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			testObjectLiteral(t, evaluated, tt.expected)
+		})
+
+	}
+}

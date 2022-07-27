@@ -11,7 +11,7 @@ func TestNextToken(t *testing.T) {
 	input := `
 var true false if else import return
 break for enum case delete () [] {} . ; : :: ,
-!= == <= >= < > && || = & | ^ ~ << >> ?
+!= == <= >= < > && || = & | ^ ~ << >> ? ?:
 + - * ** / % 
 // comment 
 ! 100 100.5 "hello" "\\"
@@ -67,6 +67,7 @@ function delete @
 		{token.SHIFT_RIGHT, ">>"},
 
 		{token.QUESTION_MARK, "?"},
+		{token.ELVIS_OPERATOR, "?:"},
 
 		{token.PLUS, "+"},
 		{token.MINUS, "-"},

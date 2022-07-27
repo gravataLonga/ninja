@@ -117,7 +117,9 @@ func (l *Lexer) NextToken() token.Token {
 	case ',':
 		tok = l.newToken(token.COMMA, []byte{l.ch})
 	case '?':
-		tok = l.newToken(token.QUESTION_MARK, []byte{l.ch})
+		tok = l.newTokenPeekOrDefault(token.QUESTION_MARK, map[byte]token.TokenType{
+			':': token.ELVIS_OPERATOR,
+		})
 	case '.':
 		tok = l.newToken(token.DOT, []byte{l.ch})
 	case 0:

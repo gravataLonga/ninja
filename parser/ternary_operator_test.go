@@ -39,3 +39,32 @@ func TestTernaryOperatorProcedence(t *testing.T) {
 		})
 	}
 }
+
+func TestElvisOperatorProcedence(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`1 ?: 0`,
+			`(1?:0)`,
+		},
+		{
+			`1 > 2 ?: b`,
+			`((1 > 2)?:b)`,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestTernaryOperatorProcedence[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
+
+			if tt.expected != program.String() {
+				t.Fatalf("Program didn't produce expected %s. Got: %s", tt.expected, program.String())
+			}
+		})
+	}
+}

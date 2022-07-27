@@ -17,3 +17,11 @@ func (p *Parser) parseTernaryOperator(left ast.Expression) ast.Expression {
 	ternary.Alternative = p.parseExpression(LOWEST)
 	return ternary
 }
+
+func (p *Parser) parseElvisOperator(left ast.Expression) ast.Expression {
+	elvisOperator := &ast.ElvisOperatorExpression{Token: p.curToken}
+	elvisOperator.Left = left
+	p.nextToken()
+	elvisOperator.Right = p.parseExpression(LOWEST)
+	return elvisOperator
+}

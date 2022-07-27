@@ -25,3 +25,21 @@ func (to *TernaryOperatorExpression) String() string {
 	out.WriteString(")")
 	return out.String()
 }
+
+type ElvisOperatorExpression struct {
+	Token token.Token // The '?:' token
+	Left  Expression
+	Right Expression
+}
+
+func (eo *ElvisOperatorExpression) expressionNode()      {}
+func (eo *ElvisOperatorExpression) TokenLiteral() string { return eo.Token.Literal }
+func (eo *ElvisOperatorExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(eo.Left.String())
+	out.WriteString("?:")
+	out.WriteString(eo.Right.String())
+	out.WriteString(")")
+	return out.String()
+}

@@ -20,3 +20,19 @@ func evalTernaryOperatorExpression(
 	}
 	return Eval(to.Alternative, env)
 }
+
+func evalElvisOperatorExpression(
+	to *ast.ElvisOperatorExpression,
+	env *object.Environment,
+) object.Object {
+	left := Eval(to.Left, env)
+
+	if object.IsError(left) {
+		return left
+	}
+
+	if object.IsTruthy(left) {
+		return left
+	}
+	return Eval(to.Right, env)
+}
