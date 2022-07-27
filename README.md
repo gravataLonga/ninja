@@ -386,6 +386,12 @@ if (true) {
 
 `<condition> ? <consequence> : <alternative>`  
 
+### Elvis Operator  
+
+`<expression> ?: <expression>`  
+
+
+
 ```
 true ? 10 : 20
 ```  
