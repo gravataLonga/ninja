@@ -386,14 +386,19 @@ if (true) {
 
 `<condition> ? <consequence> : <alternative>`  
 
+
+```
+true ? 10 : 20
+```  
+
+
 ### Elvis Operator  
 
 `<expression> ?: <expression>`  
 
-
-
 ```
-true ? 10 : 20
+var a = "hello";
+var b = a ?: "world";  
 ```  
 
 ## Loop  
