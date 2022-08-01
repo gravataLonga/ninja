@@ -187,28 +187,103 @@ func TestStringAcceptUtf8Character(t *testing.T) {
 }
 
 func TestLexerReadString(t *testing.T) {
-	input := `"\"foo\"";"\x00\x0a\x7f";"\r\n\t"`
-
 	tests := []struct {
-		expectedType    token.TokenType
-		expectedLiteral string
+		input    string
+		expected string
 	}{
-		{token.STRING, "\"foo\""},
-		{token.SEMICOLON, ";"},
-		{token.STRING, "\x00\n\u007f"},
-		{token.SEMICOLON, ";"},
-		{token.STRING, "\r\n\t"},
+		{
+			`"\"foo\"`,
+			`"foo"`,
+		},
+		{
+			`"\x00\x0a\x7f"`,
+			"\x00\n\u007f",
+		},
+		{
+			`"\r\n\t\b\f"`,
+			"\r\n\t\b\f",
+		},
+		{
+			`"\""`,
+			"\"",
+		},
+		{
+			`"\\"`,
+			"\\",
+		},
+		{
+			`"\/"`,
+			"/",
+		},
+		{
+			`"\u006E\u0069\u006E\u006A\u0061"`,
+			"ninja",
+		},
 	}
-	lexer := New(strings.NewReader(input))
 
-	for _, test := range tests {
-		tok := lexer.NextToken()
-		if tok.Type != test.expectedType {
-			t.Fatalf("token type wrong. expected=%q, got=%q", test.expectedType, tok.Type)
-		}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestLexerReadString[%d]", i), func(t *testing.T) {
+			lexer := New(strings.NewReader(tt.input))
+			tok := lexer.NextToken()
 
-		if string(tok.Literal) != test.expectedLiteral {
-			t.Fatalf("literal wrong. expected=%q, got=%q", test.expectedLiteral, tok.Literal)
-		}
+			if tok.Type != token.STRING {
+				t.Fatalf("token type wrong. expected=%q, got=%q", token.STRING, tok.Type)
+			}
+
+			if tok.Literal != tt.expected {
+				t.Fatalf("literal wrong. expected=%q, got=%q", tt.expected, tok.Literal)
+			}
+		})
+
+	}
+}
+
+func TestLexerReadNumber(t *testing.T) {
+	tests := []struct {
+		input             string
+		expected          string
+		expectedTokenType token.TokenType
+	}{
+		{
+			`1`,
+			`1`,
+			token.INT,
+		},
+		{
+			`1234`,
+			`1234`,
+			token.INT,
+		},
+		{
+			`0`,
+			`0`,
+			token.INT,
+		},
+		{
+			`0.0`,
+			`0.0`,
+			token.FLOAT,
+		},
+		{
+			`1e3`,
+			`1e3`,
+			token.INT,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestLexerReadNumber[%d]", i), func(t *testing.T) {
+			lexer := New(strings.NewReader(tt.input))
+			tok := lexer.NextToken()
+
+			if tok.Type != tt.expectedTokenType {
+				t.Fatalf("token type wrong. expected=%q, got=%q", token.INT, tok.Type)
+			}
+
+			if tok.Literal != tt.expected {
+				t.Fatalf("literal wrong. expected=%q, got=%q", tt.expected, tok.Literal)
+			}
+		})
+
 	}
 }

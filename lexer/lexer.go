@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"github.com/gravataLonga/ninja/token"
 	"io"
+	"strconv"
 	"strings"
 )
 
@@ -200,7 +201,7 @@ func (l *Lexer) readIdentifier() []byte {
 // readDigit read integer and floats
 func (l *Lexer) readDigit() []byte {
 	position := l.position
-	for isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) {
+	for isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) || (l.ch == 'e' && isDigit(l.peekChar())) {
 		l.readChar()
 	}
 	return []byte(l.input[position:l.position])
@@ -253,8 +254,30 @@ func (l *Lexer) readString() (string, error) {
 				b.WriteByte('\r')
 			case 't':
 				b.WriteByte('\t')
+			case 'b':
+				b.WriteByte('\b')
+			case 'f':
+				b.WriteByte('\f')
 			case '\\':
 				b.WriteByte('\\')
+			case '/':
+				b.WriteByte('/')
+			case 'u':
+				// Skip over the the '\\', 'u' and the next four bytes (unicode)
+				chars := []byte{}
+				l.readChar()
+				for n := 0; n <= 3; n++ {
+					chars = append(chars, l.ch)
+					l.readChar()
+				}
+				chars = append(chars, l.ch)
+				src := string(chars)
+				dst, err := strconv.Unquote(`"\` + src + `"`)
+				if err != nil {
+					return "", err
+				}
+				b.WriteString(dst)
+				continue
 			case 'x':
 				// Skip over the the '\\', 'x' and the next two bytes (hex)
 				l.readChar()
