@@ -372,7 +372,11 @@ func testLiteralExpression(
 	case int64:
 		return testIntegerLiteral(t, exp, v)
 	case string:
-		return testIdentifier(t, exp, v)
+		_, ok := exp.(*ast.Identifier)
+		if ok {
+			return testIdentifier(t, exp, v)
+		}
+		return testStringLiteral(t, exp, v)
 	case bool:
 		return testBooleanLiteral(t, exp, v)
 	case float64:

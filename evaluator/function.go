@@ -32,14 +32,16 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 
 func extendFunctionEnv(
 	fnEnv *object.Environment,
-	fnArguments []*ast.Identifier,
+	fnArguments []ast.Expression,
 	args []object.Object,
 ) *object.Environment {
 
 	env := object.NewEnclosedEnvironment(fnEnv)
 
 	for paramIdx, param := range fnArguments {
-		env.Set(param.Value, args[paramIdx])
+		// @todo need to test this
+		ident, _ := param.(*ast.Identifier)
+		env.Set(ident.Value, args[paramIdx])
 	}
 
 	return env

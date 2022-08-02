@@ -129,18 +129,18 @@ func (s *Semantic) analysis(node ast.Node) ast.Node {
 		s.analysis(node.Right)
 	case *ast.Function:
 		s.newScope()
-		for _, arg := range node.Parameters {
-			s.declare(arg.Value)
-			s.resolve(arg.Value)
-		}
+		// for _, arg := range node.Parameters {
+		// s.declare(arg.Value)
+		// s.resolve(arg.Value)
+		//}
 		s.analysis(node.Body)
 		s.exitScope()
 	case *ast.FunctionLiteral:
 		s.newScope()
-		for _, arg := range node.Parameters {
-			s.declare(arg.Value)
-			s.resolve(arg.Value)
-		}
+		// for _, arg := range node.Parameters {
+		// s.declare(arg.Value)
+		// s.resolve(arg.Value)
+		// }
 		s.analysis(node.Body)
 		s.exitScope()
 	case *ast.BlockStatement:

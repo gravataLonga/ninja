@@ -7,7 +7,7 @@ import (
 )
 
 type FunctionLiteral struct {
-	Parameters []*ast.Identifier
+	Parameters []ast.Expression
 	Body       *ast.BlockStatement
 	Env        *Environment
 }

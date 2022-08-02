@@ -8,7 +8,7 @@ import (
 
 type FunctionLiteral struct {
 	Token      token.Token // The 'function' token
-	Parameters []*Identifier
+	Parameters []Expression
 	Body       *BlockStatement
 }
 

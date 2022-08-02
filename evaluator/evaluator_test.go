@@ -205,10 +205,10 @@ func testEval(input string, t *testing.T) object.Object {
 
 	checkParserErrors(t, p)
 
-	s := semantic.New()
-	program = s.Analysis(program)
+	// s := semantic.New()
+	// program = s.Analysis(program)
 
-	checkSemanticErrors(t, s)
+	// checkSemanticErrors(t, s)
 
 	env := object.NewEnvironment()
 	return Eval(program, env)

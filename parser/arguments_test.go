@@ -72,3 +72,30 @@ func TestFunctionParameterParsing(t *testing.T) {
 		})
 	}
 }
+
+func TestFunctionParameterOptionalParsing(t *testing.T) {
+	l := lexer.New(strings.NewReader(`function (x, y = 0, z = "hello", k = true, a = b) {}`))
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if program.String() != "function(x, (y = 0), (z = hello), (k = true), (a = b)) " {
+		t.Fatalf("program didn't produce expected string, got: %q", program.String())
+	}
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	fn, ok := stmt.Expression.(*ast.FunctionLiteral)
+
+	if !ok {
+		t.Fatalf("Expression isn't FunctionLiteral. Got: %T", stmt.Expression)
+	}
+
+	if len(fn.Parameters) != 5 {
+		t.Fatalf("Arguments of function isn't equal 4. Got: %d", len(fn.Parameters))
+	}
+
+	testInfixExpression(t, fn.Parameters[1], "y", "=", 0)
+	testInfixExpression(t, fn.Parameters[2], "z", "=", "hello")
+	testInfixExpression(t, fn.Parameters[3], "k", "=", true)
+	testInfixExpression(t, fn.Parameters[4], "a", "=", "b")
+}

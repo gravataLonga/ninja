@@ -9,7 +9,7 @@ import (
 type Function struct {
 	Token      token.Token // The 'function' token
 	Name       *Identifier
-	Parameters []*Identifier
+	Parameters []Expression
 	Body       *BlockStatement
 }
 

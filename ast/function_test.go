@@ -33,7 +33,7 @@ func TestFunction_String(t *testing.T) {
 		}
 		blockStatement := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: "{"}, Statements: stmts}
 		nameIdentifier := &Identifier{Token: token.Token{Type: token.IDENT, Literal: "var"}, Value: tt.name}
-		argumentsIdentifier := []*Identifier{}
+		argumentsIdentifier := []Expression{}
 		for _, arg := range tt.parameters {
 			integerLiteral := &Identifier{Token: token.Token{Type: token.INT, Literal: strconv.FormatInt(arg, 10)}, Value: strconv.FormatInt(arg, 10)}
 			argumentsIdentifier = append(argumentsIdentifier, integerLiteral)
