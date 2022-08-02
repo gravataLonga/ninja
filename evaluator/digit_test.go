@@ -11,6 +11,22 @@ func TestEvalDigitExpression(t *testing.T) {
 		expected interface{}
 	}{
 		{
+			`1`,
+			1,
+		},
+		{
+			`0.2`,
+			0.2,
+		},
+		{
+			`1e3`,
+			1e3,
+		},
+		{
+			`1e-3`,
+			1e-3,
+		},
+		{
 			`1 + 1`,
 			2,
 		},

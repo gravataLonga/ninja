@@ -139,13 +139,21 @@ puts(a);
   
  100.20;
  5.20;
+ 
+ /**
+  * Scientific Notation  
+  */
+  
+  1e3;
+  2e-3;
   
  /**
   * Strings
   */
    
  "hello"
- "hello \t world \x02\x03"
+ "\u006E\u0069\u006E\u006A\u0061" // ninja in unicode chars  
+ "\n\r\t\b\f" // special caracters is also supported
    
  /**
   * array

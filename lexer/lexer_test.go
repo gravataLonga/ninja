@@ -250,6 +250,11 @@ func TestLexerReadNumber(t *testing.T) {
 			token.INT,
 		},
 		{
+			`2`,
+			`2`,
+			token.INT,
+		},
+		{
 			`1234`,
 			`1234`,
 			token.INT,
@@ -267,7 +272,12 @@ func TestLexerReadNumber(t *testing.T) {
 		{
 			`1e3`,
 			`1e3`,
-			token.INT,
+			token.FLOAT,
+		},
+		{
+			`1e-3`,
+			`1e-3`,
+			token.FLOAT,
 		},
 	}
 

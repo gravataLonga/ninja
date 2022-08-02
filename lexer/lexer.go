@@ -190,6 +190,10 @@ func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+func isScientificNotation(ch byte) bool {
+	return ch == 'e' || ch == 'E'
+}
+
 func (l *Lexer) readIdentifier() []byte {
 	position := l.position
 	for isLetter(l.ch) || isDigit(l.ch) {
@@ -201,8 +205,25 @@ func (l *Lexer) readIdentifier() []byte {
 // readDigit read integer and floats
 func (l *Lexer) readDigit() []byte {
 	position := l.position
-	for isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) || (l.ch == 'e' && isDigit(l.peekChar())) {
-		l.readChar()
+	isOnScientificNotation := false
+
+	for {
+		if isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) {
+			l.readChar()
+			continue
+		}
+
+		if l.ch == '-' && isOnScientificNotation {
+			l.readChar()
+			continue
+		}
+
+		if isScientificNotation(l.ch) && !isOnScientificNotation {
+			isOnScientificNotation = true
+			l.readChar()
+			continue
+		}
+		break
 	}
 	return []byte(l.input[position:l.position])
 }

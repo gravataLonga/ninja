@@ -5,7 +5,7 @@ import "github.com/gravataLonga/ninja/ast"
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
-		Operator: string(p.curToken.Literal),
+		Operator: p.curToken.Literal,
 		Left:     left,
 	}
 

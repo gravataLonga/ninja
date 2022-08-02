@@ -186,8 +186,9 @@ func LookupIdentifier(ident []byte) TokenType {
 // for now we only support integer and float, but later we
 // need to support Hex and Octa. @todo
 func DigitType(digit []byte) TokenType {
-	hasDot := bytes.IndexByte(digit, '.')
-	if hasDot >= 0 {
+	hasDot := bytes.IndexByte(digit, '.') >= 0
+	hasENotation := bytes.IndexByte(digit, 'e') >= 0 || bytes.IndexByte(digit, 'E') >= 0
+	if hasDot || hasENotation {
 		return FLOAT
 	}
 	return INT
