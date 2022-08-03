@@ -5,7 +5,6 @@ import (
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
-	"github.com/gravataLonga/ninja/semantic"
 	"math"
 	"strings"
 	"testing"
@@ -179,19 +178,6 @@ func checkParserErrors(t *testing.T, p *parser.Parser) {
 	t.Errorf("parser has %d errors", len(errors))
 	for _, msg := range errors {
 		t.Errorf("parser error: %q", msg)
-	}
-	t.FailNow()
-}
-
-// checkSemanticErrors check if there are parser errors
-func checkSemanticErrors(t *testing.T, s *semantic.Semantic) {
-	errors := s.Errors()
-	if len(errors) == 0 {
-		return
-	}
-	t.Errorf("semantic has %d errors", len(errors))
-	for _, msg := range errors {
-		t.Errorf("semantic error: %q", msg)
 	}
 	t.FailNow()
 }

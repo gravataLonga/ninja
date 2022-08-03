@@ -1,4 +1,4 @@
-package semantic
+package ast
 
 // Scope is a map structure that hold a identifier and if is ready
 // or not.

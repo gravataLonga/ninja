@@ -1,10 +1,13 @@
 package ast
 
-import "github.com/gravataLonga/ninja/token"
+import (
+	"github.com/gravataLonga/ninja/token"
+)
 
 type Identifier struct {
 	Token token.Token // the token.IDENT token
 	Value string
+	Stack Stack
 }
 
 func (i *Identifier) expressionNode()      {}
