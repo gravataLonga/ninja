@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/lexer"
 	"strings"
@@ -72,33 +73,36 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		program := p.ParseProgram()
-		checkParserErrors(t, p)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestCallExpressionParameterParsing[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
 
-		stmt := program.Statements[0].(*ast.ExpressionStatement)
-		exp, ok := stmt.Expression.(*ast.CallExpression)
-		if !ok {
-			t.Fatalf("stmt.Expression is not ast.CallExpression. got=%T",
-				stmt.Expression)
-		}
-
-		if !testIdentifier(t, exp.Function, tt.expectedIdent) {
-			return
-		}
-
-		if len(exp.Arguments) != len(tt.expectedArgs) {
-			t.Fatalf("wrong number of arguments. want=%d, got=%d",
-				len(tt.expectedArgs), len(exp.Arguments))
-		}
-
-		for i, arg := range tt.expectedArgs {
-			if exp.Arguments[i].String() != arg {
-				t.Errorf("argument %d wrong. want=%q, got=%q", i,
-					arg, exp.Arguments[i].String())
+			stmt := program.Statements[0].(*ast.ExpressionStatement)
+			exp, ok := stmt.Expression.(*ast.CallExpression)
+			if !ok {
+				t.Fatalf("stmt.Expression is not ast.CallExpression. got=%T",
+					stmt.Expression)
 			}
-		}
+
+			if !testIdentifier(t, exp.Function, tt.expectedIdent) {
+				return
+			}
+
+			if len(exp.Arguments) != len(tt.expectedArgs) {
+				t.Fatalf("wrong number of arguments. want=%d, got=%d",
+					len(tt.expectedArgs), len(exp.Arguments))
+			}
+
+			for i, arg := range tt.expectedArgs {
+				if exp.Arguments[i].String() != arg {
+					t.Errorf("argument %d wrong. want=%q, got=%q", i,
+						arg, exp.Arguments[i].String())
+				}
+			}
+		})
+
 	}
 }

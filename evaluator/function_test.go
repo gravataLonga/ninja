@@ -56,6 +56,48 @@ func TestFunctionObject(t *testing.T) {
 	}
 }
 
+func TestFunctionWithDefaultArguments(t *testing.T) {
+	tests := []struct {
+		input  string
+		result interface{}
+	}{
+		{
+			`function (a = 0) { return a;}();`,
+			0,
+		},
+		{
+			`function (a = 0) { return a;}(2);`,
+			2,
+		},
+		{
+			`function add (a = 0) { return a;}; add();`,
+			0,
+		},
+		{
+			`function add (a = 0) { return a;}; add(2);`,
+			2,
+		},
+		{
+			`function (a, b = 1) { return a + b;}(1);`,
+			2,
+		},
+		{
+			`function (a, b = 1) { return a + b;}(1, 2);`,
+			3,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestFunctionWithDefaultArguments[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+
+			if !testObjectLiteral(t, evaluated, tt.result) {
+				t.Errorf("TestCallFunction unable to test")
+			}
+		})
+	}
+}
+
 func TestCallFunction(t *testing.T) {
 	tests := []struct {
 		expression string

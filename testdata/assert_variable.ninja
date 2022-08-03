@@ -26,7 +26,9 @@ var tests = [
     {"expression": 8 | 2 , "total": 10, "name": "(8 | 2)"},
     {"expression": 8 ^ 2 , "total": 10, "name": "(8 ^ 2)"},
     {"expression": 8 << 2 , "total": 32, "name": "(8 << 2)"},
-    {"expression": 8 >> 2 , "total": 2, "name": "(8 >> 2)"}
+    {"expression": 8 >> 2 , "total": 2, "name": "(8 >> 2)"},
+    {"expression": 1e3, "total": 1000, "name": "1e3"},
+    {"expression": "\u006E\u0069\u006E\u006A\u0061", "total": "ninja", "name": "\\u006E\\u0069\\u006E\\u006A\\u0061"}
 ];
 
 for (var t = 0; t <= len(tests) - 1; t = t + 1) {

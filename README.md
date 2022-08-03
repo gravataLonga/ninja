@@ -390,16 +390,51 @@ puts(STATUS::OK);
 ## Conditions  
 
 
-### If / Else 
-`if (<condition>) { <consequence> } else { <alternative> }`  
+### If / ElseIf / Else 
+`if (<condition>) { <consequence> } elseif (<condition1>) { <consequence1> } else { <alternative> }`  
 
-```
+#### Simple If Condition  
+```  
+if (true) {
+    puts("Hello");
+}
+```  
+
+#### If / Else 
+
+```  
 if (true) {
     puts("Hello");
 } else {
-    puts("Yes");
-}  
+    puts("Nope");
+}
+```   
+
+#### If / ElseIf / Else   
+
 ```  
+if (true) {
+    puts("Hello");
+} elseif (1 > 2) {
+    puts("1 is greater than 2");
+} else {
+    puts("Nope");
+}
+```   
+
+We can omit else condition  
+
+```  
+if (true) {
+    puts("Hello");
+} elseif (1 > 2) {
+    puts("1 is greater than 2");
+}
+
+if (true) {
+    puts("Hello");
+}  
+```   
 
 ### Ternary  
 
@@ -521,8 +556,8 @@ true.type();     // "BOOLEAN"
 ## Keywords  
 
 ```
-var true false function delete enum 
-return if else for import break case
+var true false function return if
+else for import delete break enum case
 ```  
 
 ## Lexical Scooping  

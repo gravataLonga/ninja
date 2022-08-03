@@ -84,6 +84,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.DECRE, p.parsePrefixExpression, PREFIX)
 	p.registerPrefix(token.INCRE, p.parsePrefixExpression, PREFIX)
 	p.registerPrefix(token.IF, p.parseIfExpression, LOWEST)
+	p.registerPrefix(token.ELSEIF, p.parseIfExpression, LOWEST)
 	p.registerPrefix(token.FUNCTION, p.parseFunction, LOWEST)
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression, LOWEST)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral, LOWEST)

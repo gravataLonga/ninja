@@ -1,3 +1,5 @@
+## Testing Assertion Variables
+
 OK: Assign var a = 0
 OK: Reassign var a = 0
 OK: Operations (1 + 1)
@@ -12,6 +14,12 @@ OK: Operations (8 | 2)
 OK: Operations (8 ^ 2)
 OK: Operations (8 << 2)
 OK: Operations (8 >> 2)
+OK: Operations 1e3
+OK: Operations \u006E\u0069\u006E\u006A\u0061
+
+
+## Testing Assertion Enum
+
 OK: Enum: 1
 OK: Enum: 1.0
 OK: Enum: Hello
@@ -20,6 +28,10 @@ OK: Enum: 2
 OK: Enum: 12.5
 OK: Enum: Hello World
 OK: Enum: false
+
+
+## Testing Assertion Logic Operators
+
 OK: Operations Logic Operator true && true
 OK: Operations Logic Operator true && false
 OK: Operations Logic Operator false && true
@@ -49,7 +61,23 @@ OK: Operations Logic Operator 2 > 1
 OK: Operations Logic Operator 1 >= 1
 OK: Operations Logic Operator 2 >= 1
 OK: Operations Logic Operator 1 >= 2
+
+
+## Testing Assertion Index
+
 OK: Index Array
 OK: Index Array
+
+
+## Testing Assertion Functions Call
+
+OK: Function call: getNumber()
+OK: Function call: passingArguments(3)
+OK: Function call: passingRequireArgumentsAndOptional(1)
+OK: Function call: passingRequireArgumentsAndOptional(5, 5)
+
+
+## Testing Assertion Advance Stuffs
+
 OK: Array Map -> Reduce
 OK: Array Filter -> >= 3

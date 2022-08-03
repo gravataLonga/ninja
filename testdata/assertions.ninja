@@ -1,28 +1,46 @@
 import "./testdata/helper.ninja";
 
-/*
-Assertion basic variables
-*/
-
+/**
+ * Assertion basic variables
+ */
+puts("## Testing Assertion Variables\n");
 import "./testdata/assert_variable.ninja";
+
+// ============= END ==============
 
 /*
 Assertion enums
 */
-
+puts("\n\n## Testing Assertion Enum\n");
 import "./testdata/assert_enum.ninja";
+
+// ============= END ==============
 
 /*
 Assertion Logic Operators
 */
+puts("\n\n## Testing Assertion Logic Operators\n");
 import "./testdata/assert_logic_operators.ninja";
+
+// ============= END ==============
 
 /*
  Assertion Index
 */
+puts("\n\n## Testing Assertion Index\n");
 import "./testdata/assert_index.ninja";
+// ============= END ==============
+
+/*
+Assertion for Functions
+*/
+puts("\n\n## Testing Assertion Functions Call\n");
+import "./testdata/assert_function.ninja";
+// ============= END ==============
 
 /*
  Assertion advance stuff
 */
+puts("\n\n## Testing Assertion Advance Stuffs\n");
 import "./testdata/assert_advance.ninja";
+// ============= END ==============

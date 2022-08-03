@@ -99,3 +99,31 @@ func TestFunctionParameterOptionalParsing(t *testing.T) {
 	testInfixExpression(t, fn.Parameters[3], "k", "=", true)
 	testInfixExpression(t, fn.Parameters[4], "a", "=", "b")
 }
+
+func TestArgumentErrorMessageWhenDeclareOptionalArgumentFirst(t *testing.T) {
+	l := lexer.New(strings.NewReader(`function (a = 1, b) {}`))
+	p := New(l)
+	p.ParseProgram()
+
+	if len(p.Errors()) <= 0 {
+		t.Fatalf("Expected at least 1 error. Got 0")
+	}
+
+	if p.Errors()[0] != "require arguments must be on declare first" {
+		t.Errorf("Expected error to be %s. Got: %s", "require arguments must be on declare first", p.Errors()[0])
+	}
+}
+
+func TestArgumentErrorMessageWhenMixingOrderOfOptionalArguments(t *testing.T) {
+	l := lexer.New(strings.NewReader(`function (a, b = 1, c) {}`))
+	p := New(l)
+	p.ParseProgram()
+
+	if len(p.Errors()) <= 0 {
+		t.Fatalf("Expected at least 1 error. Got 0")
+	}
+
+	if p.Errors()[0] != "require arguments must be on declare first" {
+		t.Errorf("Expected error to be %s. Got: %s", "require arguments must be on declare first", p.Errors()[0])
+	}
+}

@@ -21,7 +21,7 @@ func (p *Parser) parseFunction() ast.Expression {
 
 	lit := &ast.Function{}
 	p.nextToken()
-	lit.Name = &ast.Identifier{Token: p.curToken, Value: string(p.curToken.Literal)}
+	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.LPAREN) {
 		return nil
