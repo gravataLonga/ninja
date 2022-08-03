@@ -11,16 +11,9 @@ func New(node ast.Node) *Semantic {
 }
 
 func (s *Semantic) Analysis() ast.Node {
-	return s.analysis(s.program)
+	return analysis(s.program)
 }
 
 func analysis(node ast.Node) ast.Node {
-	switch node := node.(type) {
-	case *ast.Program:
-		for i, stmt := range node.Statements {
-			node.Statements[i] = analysis(stmt)
-		}
-		return node
-	}
 	return node
 }
