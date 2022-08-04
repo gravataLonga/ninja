@@ -1,6 +1,7 @@
 package token
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -46,36 +47,34 @@ func TestTokenType_String(t *testing.T) {
 
 func TestDigitType(t *testing.T) {
 	tests := []struct {
-		digit    []byte
+		digit    DigitType
 		expected TokenType
 	}{
 		{
-			[]byte("1"),
+			DIGIT_TYPE_DECIMAL,
 			INT,
 		},
 		{
-			[]byte("100000"),
+			DIGIT_TYPE_FLOAT,
+			FLOAT,
+		},
+		{
+			DIGIT_TYPE_SCIENTIFIC_NOTATION,
+			FLOAT,
+		},
+		{
+			DIGIT_TYPE_HEXADECIMAL,
 			INT,
-		},
-		{
-			[]byte("1.44"),
-			FLOAT,
-		},
-		{
-			[]byte("0.343"),
-			FLOAT,
-		},
-		{
-			[]byte(".1232"),
-			FLOAT,
 		},
 	}
 
-	for _, tt := range tests {
-		v := DigitType(tt.digit)
-		if v != tt.expected {
-			t.Errorf("Expected TokenType %s. Got: %s", tt.expected, v)
-		}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestDigitType[%d]", i), func(t *testing.T) {
+			if tt.digit.TokenType() != tt.expected {
+				t.Errorf("Expecetd %v. Got: %v", tt.digit.TokenType(), tt.expected)
+			}
+		})
+
 	}
 }
 

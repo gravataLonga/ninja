@@ -15,14 +15,7 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 			return object.NewErrorFormat(err.Error()+" at %s", fn.Body.Token)
 		}
 		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
-		evaluated := Eval(fn.Body, extendedEnv)
-		return unwrapReturnValue(evaluated)
-	case *object.Function:
-		if err := argumentsIsValid(args, fn.Parameters); err != nil {
-			return object.NewErrorFormat(err.Error()+" at %s", fn.Body.Token)
-		}
-		extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
-		evaluated := Eval(fn.Body, extendedEnv)
+		evaluated := evalBlockStatement(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 	case *object.Builtin:
 		return fn.Fn(args...)

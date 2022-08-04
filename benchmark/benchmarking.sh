@@ -15,6 +15,12 @@ echo ""
 
 echo "### NINJA"
 time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(5)"
+echo ""
+
+echo "### NINJA APLHA"
+time ./ninja-alpha -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(5)"
+echo ""
+
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(10);"
@@ -29,6 +35,12 @@ echo ""
 
 echo "### NINJA"
 time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(10)"
+echo ""
+
+echo "### NINJA APLHA"
+time ./ninja-alpha -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(10)"
+echo ""
+
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(20);"
@@ -44,6 +56,11 @@ echo ""
 
 echo "### NINJA"
 time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(20)"
+echo ""
+
+echo "### NINJA APLHA"
+time ./ninja-alpha -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(20)"
+echo ""
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(25);"
@@ -52,13 +69,17 @@ echo "### PHP"
 time php ./fib.php 25
 echo ""
 
-
 echo "### GO"
 time ./fib-go 25
 echo ""
 
 echo "### NINJA"
 time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(25)"
+echo ""
+
+echo "### NINJA APLHA"
+time ./ninja-alpha -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(25)"
+echo ""
 
 echo "======================="
 echo "\n>>> SCRIPTING FIB(30);"
@@ -74,3 +95,8 @@ echo ""
 
 echo "### NINJA"
 time ninja-lang -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(30)"
+echo ""
+
+echo "### NINJA APLHA"
+time ./ninja-alpha -e "function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };fib(30)"
+echo ""

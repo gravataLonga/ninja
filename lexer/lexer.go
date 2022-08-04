@@ -130,8 +130,8 @@ func (l *Lexer) NextToken() token.Token {
 			literal := l.readIdentifier()
 			return l.newToken(token.LookupIdentifier(literal), literal)
 		} else if isDigit(l.ch) {
-			literal := l.readDigit()
-			return l.newToken(token.DigitType(literal), literal)
+			digitType, literal := l.readDigit()
+			return l.newToken(digitType.TokenType(), literal)
 		} else {
 			tok = l.newToken(token.ILLEGAL, []byte{l.ch})
 		}
@@ -190,6 +190,10 @@ func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+func isHexDigit(ch byte) bool {
+	return isDigit(ch) || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F')
+}
+
 func isScientificNotation(ch byte) bool {
 	return ch == 'e' || ch == 'E'
 }
@@ -203,29 +207,52 @@ func (l *Lexer) readIdentifier() []byte {
 }
 
 // readDigit read integer and floats
-func (l *Lexer) readDigit() []byte {
+func (l *Lexer) readDigit() (token.DigitType, []byte) {
 	position := l.position
-	isOnScientificNotation := false
+	currentDigitType := token.DIGIT_TYPE_DECIMAL
 
 	for {
-		if isDigit(l.ch) || (l.ch == '.' && isDigit(l.peekChar())) {
+		if isDigit(l.ch) && l.peekChar() == 'x' {
+			currentDigitType = token.DIGIT_TYPE_HEXADECIMAL
 			l.readChar()
 			continue
 		}
 
-		if l.ch == '-' && isOnScientificNotation {
+		if l.ch == 'x' && currentDigitType.IsEqual(token.DIGIT_TYPE_HEXADECIMAL) {
 			l.readChar()
 			continue
 		}
 
-		if isScientificNotation(l.ch) && !isOnScientificNotation {
-			isOnScientificNotation = true
+		if isHexDigit(l.ch) && currentDigitType.IsEqual(token.DIGIT_TYPE_HEXADECIMAL) {
 			l.readChar()
 			continue
 		}
+
+		if l.ch == '.' && isDigit(l.peekChar()) {
+			currentDigitType = token.DIGIT_TYPE_FLOAT
+			l.readChar()
+			continue
+		}
+
+		if l.ch == '-' && currentDigitType.IsEqual(token.DIGIT_TYPE_SCIENTIFIC_NOTATION) {
+			l.readChar()
+			continue
+		}
+
+		if isScientificNotation(l.ch) && !currentDigitType.IsEqual(token.DIGIT_TYPE_SCIENTIFIC_NOTATION) {
+			currentDigitType = token.DIGIT_TYPE_SCIENTIFIC_NOTATION
+			l.readChar()
+			continue
+		}
+
+		if isDigit(l.ch) {
+			l.readChar()
+			continue
+		}
+
 		break
 	}
-	return []byte(l.input[position:l.position])
+	return currentDigitType, []byte(l.input[position:l.position])
 }
 
 func (l *Lexer) skipSingleLineComment() {

@@ -27,6 +27,22 @@ func TestEvalDigitExpression(t *testing.T) {
 			1e-3,
 		},
 		{
+			`0xF`,
+			15,
+		},
+		{
+			`0xFA`,
+			250,
+		},
+		{
+			`0xAF`,
+			175,
+		},
+		{
+			`0x0`,
+			0,
+		},
+		{
 			`1 + 1`,
 			2,
 		},

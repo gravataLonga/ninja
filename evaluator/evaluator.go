@@ -14,6 +14,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// ExpressionStatement
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
+		// BlockStatement
+	case *ast.BlockStatement:
+		return evalBlockStatement(node, env)
 	case *ast.DeleteStatement:
 		return evalDelete(node.Left, Eval(node.Index, env), env)
 	case *ast.Import:
@@ -71,15 +74,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.FunctionLiteral:
 		params := node.Parameters
 		body := node.Body
-		return &object.FunctionLiteral{Parameters: params, Env: env, Body: body}
+		fn := &object.FunctionLiteral{Parameters: params, Env: env, Body: body}
+		if node.Name != nil {
+			env.Set(node.Name.Value, fn)
+		}
+		return fn
 
-	case *ast.Function:
-		params := node.Parameters
-		body := node.Body
-		env.Set(node.Name.Value, &object.Function{Parameters: params, Env: env, Body: body})
-		return &object.Function{Parameters: params, Env: env, Body: body}
-
-		// CallFunctionNode
+	// CallFunctionNode
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
 		if object.IsError(function) {
@@ -92,10 +93,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 
 		return applyFunction(function, args)
-
-		// BlockStatement
-	case *ast.BlockStatement:
-		return evalBlockStatement(node, env)
 
 		// ReturnStatement
 	case *ast.ReturnStatement:
@@ -180,7 +177,7 @@ func evalExpressions(
 	exps []ast.Expression,
 	env *object.Environment,
 ) []object.Object {
-	var result []object.Object = []object.Object{}
+	var result []object.Object
 
 	for _, e := range exps {
 		evaluated := Eval(e, env)

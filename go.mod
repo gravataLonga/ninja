@@ -1,6 +1,6 @@
 module github.com/gravataLonga/ninja
 
-go 1.17
+go 1.19
 
 require (
 	github.com/TheZoraiz/ascii-image-converter v1.12.0

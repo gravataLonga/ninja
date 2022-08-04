@@ -19,7 +19,7 @@ func (p *Parser) parseFunction() ast.Expression {
 
 	// Normal Function, e.g.: function add() {};
 
-	lit := &ast.Function{}
+	lit := &ast.FunctionLiteral{}
 	p.nextToken()
 	lit.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 

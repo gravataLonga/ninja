@@ -56,7 +56,7 @@ func TestFunctionParameterParsing(t *testing.T) {
 			checkParserErrors(t, p)
 
 			stmt := program.Statements[0].(*ast.ExpressionStatement)
-			function := stmt.Expression.(*ast.Function)
+			function := stmt.Expression.(*ast.FunctionLiteral)
 
 			if len(function.Parameters) != len(tt.expectedParams) {
 				t.Errorf("length parameters wrong. want %d, got=%d\n", len(tt.expectedParams), len(function.Parameters))
@@ -79,7 +79,7 @@ func TestFunctionParameterOptionalParsing(t *testing.T) {
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
-	if program.String() != "function(x, (y = 0), (z = hello), (k = true), (a = b)) " {
+	if program.String() != "function(x, (y = 0), (z = hello), (k = true), (a = b)) {}" {
 		t.Fatalf("program didn't produce expected string, got: %q", program.String())
 	}
 

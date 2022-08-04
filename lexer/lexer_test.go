@@ -279,6 +279,26 @@ func TestLexerReadNumber(t *testing.T) {
 			`1e-3`,
 			token.FLOAT,
 		},
+		{
+			`0x00F`,
+			`0x00F`,
+			token.INT,
+		},
+		{
+			`0x00f`,
+			`0x00f`,
+			token.INT,
+		},
+		{
+			`0xF`,
+			`0xF`,
+			token.INT,
+		},
+		{
+			`0x1234567890ABCDEF`,
+			`0x1234567890ABCDEF`,
+			token.INT,
+		},
 	}
 
 	for i, tt := range tests {

@@ -28,6 +28,9 @@ var tests = [
     {"expression": 8 << 2 , "total": 32, "name": "(8 << 2)"},
     {"expression": 8 >> 2 , "total": 2, "name": "(8 >> 2)"},
     {"expression": 1e3, "total": 1000, "name": "1e3"},
+    {"expression": 0x0, "total": 0, "name": "0x0"},
+    {"expression": 0x0 * 0xF, "total": 0, "name": "0x0 * 0xF"},
+    {"expression": 0xF, "total": 15, "name": "0xF"},
     {"expression": "\u006E\u0069\u006E\u006A\u0061", "total": "ninja", "name": "\\u006E\\u0069\\u006E\\u006A\\u0061"}
 ];
 

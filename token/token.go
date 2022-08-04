@@ -1,11 +1,11 @@
 package token
 
 import (
-	"bytes"
 	"fmt"
 )
 
 type TokenType int8
+type DigitType int8
 
 type Location struct {
 	Line   int
@@ -87,6 +87,13 @@ func (t TokenType) String() string {
 
 	return list[t]
 }
+
+const (
+	DIGIT_TYPE_DECIMAL DigitType = iota
+	DIGIT_TYPE_FLOAT
+	DIGIT_TYPE_SCIENTIFIC_NOTATION
+	DIGIT_TYPE_HEXADECIMAL
+)
 
 const (
 	ILLEGAL TokenType = iota //  "ILLEGAL"
@@ -182,18 +189,24 @@ func LookupIdentifier(ident []byte) TokenType {
 	return IDENT
 }
 
-// DigitType here is where we analyze what type of digit
-// for now we only support integer and float, but later we
-// need to support Hex and Octa. @todo
-func DigitType(digit []byte) TokenType {
-	hasDot := bytes.IndexByte(digit, '.') >= 0
-	hasENotation := bytes.IndexByte(digit, 'e') >= 0 || bytes.IndexByte(digit, 'E') >= 0
-	if hasDot || hasENotation {
-		return FLOAT
-	}
-	return INT
-}
-
 func (t Token) String() string {
 	return fmt.Sprintf("%s at [Line: %d, Offset: %d]", t.Type, t.Line, t.Offset)
+}
+
+func (d DigitType) IsEqual(digitType DigitType) bool {
+	return d == digitType
+}
+
+func (d DigitType) TokenType() TokenType {
+	switch d {
+	case DIGIT_TYPE_FLOAT:
+		return FLOAT
+	case DIGIT_TYPE_DECIMAL:
+		return INT
+	case DIGIT_TYPE_SCIENTIFIC_NOTATION:
+		return FLOAT
+	case DIGIT_TYPE_HEXADECIMAL:
+		return INT
+	}
+	return ILLEGAL
 }

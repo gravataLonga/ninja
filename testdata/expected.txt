@@ -15,6 +15,9 @@ OK: Operations (8 ^ 2)
 OK: Operations (8 << 2)
 OK: Operations (8 >> 2)
 OK: Operations 1e3
+OK: Operations 0x0
+OK: Operations 0x0 * 0xF
+OK: Operations 0xF
 OK: Operations \u006E\u0069\u006E\u006A\u0061
 
 

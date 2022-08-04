@@ -5,11 +5,11 @@ import (
 	_ "embed"
 	"fmt"
 	"github.com/TheZoraiz/ascii-image-converter/aic_package"
-	"io"
 	"github.com/gravataLonga/ninja/evaluator"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
+	"io"
 	"os"
 	"os/user"
 	"strings"
@@ -134,7 +134,10 @@ func createSpashScreen() string {
 
 	file, err := os.CreateTemp("", "repl_logo")
 	file.Write(logoImage)
-	defer file.Close()
+	defer func() {
+		file.Close()
+		os.Remove(file.Name())
+	}()
 
 	flags := aic_package.DefaultFlags()
 

@@ -147,6 +147,14 @@ puts(a);
   1e3;
   2e-3;
   
+  /**
+   * Hexadecimal Number  
+   */ 
+  
+  0x00F
+  0xf
+  0x10C
+  
  /**
   * Strings
   */
