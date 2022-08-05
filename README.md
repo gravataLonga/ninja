@@ -164,16 +164,28 @@ puts(a);
  "\n\r\t\b\f" // special caracters is also supported
    
  /**
-  * array
+  * Array
   */
     
  [1, "a", true, function() {}]
     
  /**
-  * Objects  
+  * Hash    
   */
      
- {"key":"value","arr":[],"other":{}}
+ {"key":"value","arr":[],"other":{}}  
+ 
+ /**
+  * Functions  
+  */
+  
+  function () {}()
+  var a = function () {}; a();
+  function a() { }; a();
+  function (a) { return function() { return a; }}(10)();  
+  function (a, b = 1) { return a + b; };  
+  
+  
     
 ```  
 
@@ -225,7 +237,7 @@ add(10, 30);
 ```
 
 ### Builtin Functions  
-There are severals builtin functions that you can use:  
+There are several builtin functions that you can use:  
 
 1. **puts** - print at console  
 2. **len** - get length of object  
@@ -271,7 +283,7 @@ puts(push(a, 5)); // print [1, 2, 3, 4, 5];
 
 ## Import  
 
-You can import another ninja files.  
+You can import another ninja files, it will act like `require file.php` in php language.  
 
 ```
 import "testing.ninja";  
@@ -467,7 +479,7 @@ var b = a ?: "world";
 
 `for (<initial>?;<condition>?;<iteration>?) { <statements> }`  
 
-> **None** initial, condition and iteration is optional, you can omit   
+> **Note** initial, condition and iteration is optional, you can omit   
 
 ```
 var i = 0;

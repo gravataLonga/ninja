@@ -7,40 +7,28 @@ import (
 
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
-
 	case *ast.Program:
 		return evalProgram(node.Statements, env)
-
-		// ExpressionStatement
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
-		// BlockStatement
 	case *ast.BlockStatement:
 		return evalBlockStatement(node, env)
 	case *ast.DeleteStatement:
 		return evalDelete(node.Left, Eval(node.Index, env), env)
 	case *ast.Import:
 		return evalImport(node, env)
-
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
-
-		// VarStatement
 	case *ast.VarStatement:
 		val := Eval(node.Value, env)
 		if object.IsError(val) {
 			return val
 		}
 		env.Set(node.Name.Value, val)
-
 	case *ast.AssignStatement:
 		return evalAssignStatement(node, env)
-
-		// PrefixExpression
 	case *ast.PrefixExpression:
 		return evalPrefixExpression(node, env)
-
-		// InfixExpression
 	case *ast.InfixExpression:
 		if node.Left == nil {
 			return object.NewErrorFormat("InfixExpression.Left is nil.")
