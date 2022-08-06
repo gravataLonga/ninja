@@ -162,7 +162,7 @@ func (i *Interpreter) VisitObjectCallExpr(v *ast.ObjectCall) (result object.Obje
 }
 
 func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
-	return nil
+	return postfixExpression(v, i.evaluate(v.Left))
 }
 
 func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
@@ -186,23 +186,7 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 }
 
 func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
-	left := i.evaluate(v.Left)
-	right := i.evaluate(v.Right)
-
-	switch v.Operator {
-	case "+":
-		vLeft, ok := left.(*object.Integer)
-		if !ok {
-		}
-
-		vRight, ok := right.(*object.Integer)
-		if !ok {
-		}
-
-		result := &object.Integer{Value: vLeft.Value + vRight.Value}
-		return result
-	}
-	return nil
+	return infixExpression(v, v.Operator, i.evaluate(v.Left), i.evaluate(v.Right))
 }
 
 func (i *Interpreter) evaluateExpressions(exprs []ast.Expression) []object.Object {

@@ -190,6 +190,14 @@ func TestPrefixOperator(t *testing.T) {
 			`!!{"a":1}`,
 			true,
 		},
+		{
+			`!"hello ninja warrior"`,
+			false,
+		},
+		{
+			`!!"hello ninja warrior"`,
+			true,
+		},
 	}
 
 	for i, tt := range tests {
@@ -221,10 +229,146 @@ func TestPostfixOperator(t *testing.T) {
 			`1++`,
 			2,
 		},
+		{
+			`0++`,
+			1,
+		},
+		{
+			`0.0++`,
+			1.0,
+		},
+		{
+			`1.0++`,
+			2.0,
+		},
+
+		{
+			`1--`,
+			0,
+		},
+		{
+			`0--`,
+			-1,
+		},
+		{
+			`0.0--`,
+			-1.0,
+		},
+		{
+			`1.0--`,
+			0.0,
+		},
 	}
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestPostfixOperator[%d]", i), func(t *testing.T) {
+
+			v := interpreter(t, tt.input)
+
+			if v == nil {
+				t.Fatalf("Interpreter return nil as result")
+			}
+
+			if _, ok := v.(*object.Error); ok {
+				t.Fatalf("Interpreter return error. %s", v.Inspect())
+			}
+
+			if !testLiteralObject(t, v, tt.expected) {
+				t.Fatalf("testLiteralObject got false, expected true.")
+			}
+		})
+	}
+}
+
+func TestInfixOperator(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			`1 + 1`,
+			2,
+		},
+		{
+			`1.0 + 1.0`,
+			2.0,
+		},
+		{
+			`1.0 + 1`,
+			2.0,
+		},
+		{
+			`1 + 1.0`,
+			2.0,
+		},
+		{
+			`1 - 1`,
+			0,
+		},
+		{
+			`1.0 - 1.0`,
+			0.0,
+		},
+		{
+			`1 - 1.0`,
+			0.0,
+		},
+		{
+			`1.0 - 1`,
+			0.0,
+		},
+		{
+			`2 * 2`,
+			4,
+		},
+		{
+			`2.0 * 2.0`,
+			4.0,
+		},
+		{
+			`2.0 * 2`,
+			4.0,
+		},
+		{
+			`2 * 2.0`,
+			4.0,
+		},
+		{
+			`2 / 2`,
+			1,
+		},
+		{
+			`2.0 / 2.0`,
+			1.0,
+		},
+		{
+			`2.0 / 2`,
+			1.0,
+		},
+		{
+			`2 / 2.0`,
+			1.0,
+		},
+		{
+			`4 % 2`,
+			0,
+		},
+		{
+			`4.0 % 2.0`,
+			0.0,
+		},
+		{
+			`4 % 2.0`,
+			0.0,
+		},
+		{
+			`4.0 % 2`,
+			0.0,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestInfixOperator[%d]", i), func(t *testing.T) {
 
 			v := interpreter(t, tt.input)
 
