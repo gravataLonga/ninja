@@ -162,25 +162,28 @@ func TestIllegalAssignmentsErrors(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestIllegalAssignmentsErrors[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
 
-		program := p.ParseProgram()
+			program := p.ParseProgram()
 
-		if program == nil {
-			t.Fatalf("ParseProgram() returned nil")
-		}
+			if program == nil {
+				t.Fatalf("ParseProgram() returned nil")
+			}
 
-		errors := p.Errors()
+			errors := p.Errors()
 
-		if len(errors) <= 0 {
-			t.Errorf("Program don't produce any error %s", tt.input)
-			continue
-		}
+			if len(errors) <= 0 {
+				t.Fatalf("Program don't produce any error %s", tt.input)
 
-		if tt.expectedError != errors[0] {
-			t.Errorf("TestIllegalAssignmentsErrors expected \"%s\" error. Got: \"%s\"", tt.expectedError, errors[0])
-		}
+			}
+
+			if tt.expectedError != errors[0] {
+				t.Fatalf("TestIllegalAssignmentsErrors expected \"%s\" error. Got: \"%s\"", tt.expectedError, errors[0])
+			}
+		})
+
 	}
 }

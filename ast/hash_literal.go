@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 	"strings"
 )
@@ -23,4 +24,8 @@ func (hl *HashLiteral) String() string {
 	out.WriteString(strings.Join(pairs, ", "))
 	out.WriteString("}")
 	return out.String()
+}
+
+func (hl *HashLiteral) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitHashExpr(hl)
 }

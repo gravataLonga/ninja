@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -25,4 +26,8 @@ func (ie *IfExpression) String() string {
 		out.WriteString(ie.Alternative.String())
 	}
 	return out.String()
+}
+
+func (ie *IfExpression) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitIfExpr(ie)
 }

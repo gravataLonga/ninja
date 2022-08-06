@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -23,4 +24,8 @@ func (oe *InfixExpression) String() string {
 	out.WriteString(oe.Right.String())
 	out.WriteString(")")
 	return out.String()
+}
+
+func (oe *InfixExpression) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitInfix(oe)
 }

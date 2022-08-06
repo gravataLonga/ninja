@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -13,4 +14,8 @@ func (il *FloatLiteral) expressionNode()      {}
 func (il *FloatLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *FloatLiteral) String() string {
 	return string(il.Token.Literal)
+}
+
+func (il *FloatLiteral) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitFloatExpr(il)
 }

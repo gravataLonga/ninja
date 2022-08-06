@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/gravataLonga/ninja/token"
+import (
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/token"
+)
 
 type ExpressionStatement struct {
 	Token      token.Token
@@ -14,4 +17,8 @@ func (es *ExpressionStatement) String() string {
 		return es.Expression.String()
 	}
 	return ""
+}
+
+func (es *ExpressionStatement) Accept(visitor StmtVisitor) (object object.Object) {
+	return visitor.VisitExprStmt(es)
 }

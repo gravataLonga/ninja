@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -21,4 +22,8 @@ func (ie *IndexExpression) String() string {
 	out.WriteString(ie.Index.String())
 	out.WriteString("])")
 	return out.String()
+}
+
+func (ie *IndexExpression) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitIndexExpr(ie)
 }

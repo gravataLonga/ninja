@@ -58,7 +58,7 @@ func (p *Parser) parseAssignStatement() *ast.AssignStatement {
 }
 
 func (p *Parser) parseInfixAssignExpression(left ast.Expression) ast.Expression {
-	stmt := &ast.AssignStatement{Token: p.curToken}
+	/*stmt := &ast.AssignStatement{Token: p.curToken}
 
 	p.nextToken()
 	stmt.Value = p.parseExpression(LOWEST)
@@ -72,7 +72,8 @@ func (p *Parser) parseInfixAssignExpression(left ast.Expression) ast.Expression 
 		stmt.Name = n
 		return stmt
 	}
+	*/
 
-	p.newError("illegal \"%s\" assignment to \"%s\"", stmt.Value.TokenLiteral(), left.TokenLiteral())
+	p.newError("illegal \"%s\" assignment to \"%s\"", left.String(), left.TokenLiteral())
 	return nil
 }

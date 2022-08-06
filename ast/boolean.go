@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/gravataLonga/ninja/token"
+import (
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/token"
+)
 
 type Boolean struct {
 	Token token.Token
@@ -10,3 +13,7 @@ type Boolean struct {
 func (il *Boolean) expressionNode()      {}
 func (il *Boolean) TokenLiteral() string { return il.Token.Literal }
 func (il *Boolean) String() string       { return il.Token.Literal }
+
+func (il *Boolean) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitBooleanExpr(il)
+}

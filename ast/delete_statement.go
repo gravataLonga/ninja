@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -22,4 +23,8 @@ func (de *DeleteStatement) String() string {
 	out.WriteString(de.Index.String())
 	out.WriteString("]")
 	return out.String()
+}
+
+func (de *DeleteStatement) Accept(visitor StmtVisitor) (object object.Object) {
+	return visitor.VisitDelete(de)
 }

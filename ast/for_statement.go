@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -43,4 +44,8 @@ func (fs *ForStatement) String() string {
 	out.WriteString("}")
 
 	return out.String()
+}
+
+func (fs *ForStatement) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitFor(fs)
 }

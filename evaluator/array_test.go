@@ -106,18 +106,21 @@ func TestArrayLiteralsAssign(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := testEval(tt.input, t)
-		result, ok := evaluated.(*object.Array)
-		if !ok {
-			t.Fatalf("Eval didn't return Array. got=%T (%+v)", evaluated, evaluated)
-		}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestArrayLiteralsAssign[%d]", i), func(t *testing.T) {
+			evaluated := testEval(tt.input, t)
+			result, ok := evaluated.(*object.Array)
+			if !ok {
+				t.Fatalf("Eval didn't return Array. got=%T (%+v)", evaluated, evaluated)
+			}
 
-		if len(result.Elements) != tt.expectedElements {
-			t.Fatalf("Array has wrong num of elements, expected %d. got=%d", tt.expectedElements, len(result.Elements))
-		}
+			if len(result.Elements) != tt.expectedElements {
+				t.Fatalf("Array has wrong num of elements, expected %d. got=%d", tt.expectedElements, len(result.Elements))
+			}
 
-		testIntegerObject(t, result.Elements[0], tt.expected)
+			testIntegerObject(t, result.Elements[0], tt.expected)
+		})
+
 	}
 
 }

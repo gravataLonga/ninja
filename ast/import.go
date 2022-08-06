@@ -3,6 +3,7 @@ package ast
 import (
 	"bytes"
 	"fmt"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -21,4 +22,8 @@ func (i *Import) String() string {
 	out.WriteString(fmt.Sprintf("\"%s\"", i.Filename))
 
 	return out.String()
+}
+
+func (i *Import) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitImportExpr(i)
 }

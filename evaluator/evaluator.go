@@ -60,13 +60,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 		// FunctionsLiteral
 	case *ast.FunctionLiteral:
-		params := node.Parameters
-		body := node.Body
-		fn := &object.FunctionLiteral{Parameters: params, Env: env, Body: body}
-		if node.Name != nil {
-			env.Set(node.Name.Value, fn)
-		}
-		return fn
+		// params := node.Parameters
+		// body := node.Body
+		// fn := &object.FunctionLiteral{Parameters: params, Env: env, Body: body}
+		// if node.Name != nil {
+		// 	env.Set(node.Name.Value, fn)
+		// }
+		return nil
 
 	// CallFunctionNode
 	case *ast.CallExpression:

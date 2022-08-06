@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -27,6 +28,10 @@ func (ls *VarStatement) String() string {
 	return out.String()
 }
 
+func (ls *VarStatement) Accept(visitor StmtVisitor) (object object.Object) {
+	return visitor.VisitVarStmt(ls)
+}
+
 type AssignStatement struct {
 	Token token.Token // the token.VAR token
 	Name  Expression  // it can be var a = a + 1; or a = a + 1; or a[0] = 1;
@@ -47,4 +52,8 @@ func (ls *AssignStatement) String() string {
 	out.WriteString(";")
 
 	return out.String()
+}
+
+func (ls *AssignStatement) Accept(visitor StmtVisitor) (object object.Object) {
+	return visitor.VisitAssignStmt(ls)
 }

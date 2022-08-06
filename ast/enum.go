@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 	"strings"
 )
@@ -33,6 +34,10 @@ func (e *EnumStatement) String() string {
 	return out.String()
 }
 
+func (e *EnumStatement) Accept(visitor StmtVisitor) (object object.Object) {
+	return visitor.VisitEnum(e)
+}
+
 type ScopeOperatorExpression struct {
 	Token              token.Token // "::"
 	AccessIdentifier   Expression
@@ -48,4 +53,8 @@ func (so *ScopeOperatorExpression) String() string {
 	out.WriteString(so.PropertyIdentifier.String())
 
 	return out.String()
+}
+
+func (so *ScopeOperatorExpression) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitScopeOperatorExpression(so)
 }
