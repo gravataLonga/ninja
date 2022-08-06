@@ -40,6 +40,30 @@ func infixExpression(v *ast.InfixExpression, operator string, left object.Object
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
+	case "**":
+		obj, err := infixPowExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "|":
+		obj, err := infixOrExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "&":
+		obj, err := infixAndExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "^":
+		obj, err := infixXorExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
 	}
 	return object.NewErrorFormat("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 }
@@ -154,5 +178,50 @@ func infixModExpression(left, right object.Object) (object.Object, error) {
 		}
 
 	}
-	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "*", right.Type()))
+	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "%", right.Type()))
+}
+
+func infixPowExpression(left, right object.Object) (object.Object, error) {
+	switch left.Type() {
+	case object.INTEGER_OBJ:
+		switch right.Type() {
+		case object.INTEGER_OBJ:
+			result := math.Pow(float64(left.(*object.Integer).Value), float64(right.(*object.Integer).Value))
+			return &object.Integer{Value: int64(result)}, nil
+		case object.FLOAT_OBJ:
+			return &object.Float{Value: math.Pow(float64(left.(*object.Integer).Value), right.(*object.Float).Value)}, nil
+		}
+	case object.FLOAT_OBJ:
+		switch right.Type() {
+		case object.FLOAT_OBJ:
+			return &object.Float{Value: math.Pow(left.(*object.Float).Value, right.(*object.Float).Value)}, nil
+		case object.INTEGER_OBJ:
+			return &object.Float{Value: math.Pow(left.(*object.Float).Value, float64(right.(*object.Integer).Value))}, nil
+		}
+	}
+	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "**", right.Type()))
+}
+
+func infixOrExpression(left, right object.Object) (object.Object, error) {
+	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "|", right.Type()))
+	}
+
+	return &object.Integer{Value: left.(*object.Integer).Value | right.(*object.Integer).Value}, nil
+}
+
+func infixAndExpression(left, right object.Object) (object.Object, error) {
+	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "&", right.Type()))
+	}
+
+	return &object.Integer{Value: left.(*object.Integer).Value & right.(*object.Integer).Value}, nil
+}
+
+func infixXorExpression(left, right object.Object) (object.Object, error) {
+	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "^", right.Type()))
+	}
+
+	return &object.Integer{Value: left.(*object.Integer).Value ^ right.(*object.Integer).Value}, nil
 }
