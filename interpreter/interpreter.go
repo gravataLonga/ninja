@@ -45,9 +45,9 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 
 func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 	for _, stmt := range v.Statements {
-		err := stmt.Accept(i)
-		if err != nil {
-			return err
+		result = stmt.Accept(i)
+		if result != nil {
+			return
 		}
 	}
 	return nil
@@ -81,10 +81,13 @@ func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object)
 }
 
 func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
+	i.env.Set(v.Name.Value, i.evaluate(v.Value))
 	return nil
 }
 
 func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
+	left := v.Name.Value
+	i.env.Set(left, i.evaluate(v.Value))
 	return nil
 }
 
@@ -141,7 +144,11 @@ func (i *Interpreter) VisitHashExpr(v *ast.HashLiteral) (result object.Object) {
 }
 
 func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
-	return nil
+	value, ok := i.env.Get(v.Value)
+	if !ok {
+		return object.NULL
+	}
+	return value
 }
 
 func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
@@ -189,11 +196,20 @@ func (i *Interpreter) VisitStringExpr(v *ast.StringLiteral) (result object.Objec
 }
 
 func (i *Interpreter) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (result object.Object) {
-	return nil
+	condition := i.evaluate(v.Condition)
+	if object.IsTruthy(condition) {
+		return i.evaluate(v.Consequence)
+	}
+
+	return i.evaluate(v.Alternative)
 }
 
 func (i *Interpreter) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result object.Object) {
-	return nil
+	left := i.evaluate(v.Left)
+	if object.IsTruthy(left) {
+		return left
+	}
+	return i.evaluate(v.Right)
 }
 
 func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {

@@ -34,8 +34,8 @@ func (ls *VarStatement) Accept(visitor StmtVisitor) (object object.Object) {
 
 type AssignStatement struct {
 	Token token.Token // the token.VAR token
-	Name  Expression  // it can be var a = a + 1; or a = a + 1; or a[0] = 1;
-	Value Expression  // Any valid expression
+	Name  *Identifier
+	Value Expression // Any valid expression
 }
 
 func (ls *AssignStatement) expressionNode()      {}
