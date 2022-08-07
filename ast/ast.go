@@ -51,14 +51,14 @@ type ExprVisitor interface {
 
 type StmtVisitor interface {
 	VisitProgram(v *Program) (result object.Object)
-	VisitBlock(v *BlockStatement) (object object.Object)
-	VisitBreak(v *BreakStatement) (object object.Object)
-	VisitDelete(v *DeleteStatement) (object object.Object)
-	VisitEnum(v *EnumStatement) (object object.Object)
-	VisitExprStmt(v *ExpressionStatement) (object object.Object)
-	VisitReturn(v *ReturnStatement) (object object.Object)
-	VisitVarStmt(v *VarStatement) (object object.Object)
-	VisitAssignStmt(v *AssignStatement) (object object.Object)
+	VisitBlock(v *BlockStatement) (result object.Object)
+	VisitBreak(v *BreakStatement) (result object.Object)
+	VisitDelete(v *DeleteStatement) (result object.Object)
+	VisitEnum(v *EnumStatement) (result object.Object)
+	VisitExprStmt(v *ExpressionStatement) (result object.Object)
+	VisitReturn(v *ReturnStatement) (result object.Object)
+	VisitVarStmt(v *VarStatement) (result object.Object)
+	VisitAssignStmt(v *AssignStatement) (result object.Object)
 }
 
 type Program struct {

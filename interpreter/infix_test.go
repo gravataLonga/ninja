@@ -523,6 +523,177 @@ func TestInfixLogicOperator(t *testing.T) {
 			`1.0 >= 0`,
 			true,
 		},
+
+		{
+			"1 && 1",
+			true,
+		},
+		{
+			"1.0 && 1",
+			true,
+		},
+		{
+			"1 && 1.0",
+			true,
+		},
+		{
+			"[] && 1.0",
+			true,
+		},
+		{
+			"1 && []",
+			true,
+		},
+		{
+			"{} && 1.0",
+			true,
+		},
+		{
+			"1 && {}",
+			true,
+		},
+		{
+			`1 && true`,
+			true,
+		},
+		{
+			`1 && false`,
+			false,
+		},
+		{
+			`false && 1`,
+			false,
+		},
+		{
+			`1.0 && true`,
+			true,
+		},
+		{
+			`1.0 && false`,
+			false,
+		},
+		{
+			`false && 1.0`,
+			false,
+		},
+		{
+			`[] && true`,
+			true,
+		},
+		{
+			`[] && false`,
+			false,
+		},
+		{
+			`false && []`,
+			false,
+		},
+		{
+			`{} && true`,
+			true,
+		},
+		{
+			`{} && false`,
+			false,
+		},
+		{
+			`false && {}`,
+			false,
+		},
+		{
+			`false && false`,
+			false,
+		},
+
+		{
+			"1 || 1",
+			true,
+		},
+		{
+			"1.0 || 1",
+			true,
+		},
+		{
+			"1 || 1.0",
+			true,
+		},
+		{
+			"[] || 1.0",
+			true,
+		},
+		{
+			"1 || []",
+			true,
+		},
+		{
+			"{} || 1.0",
+			true,
+		},
+		{
+			"1 || {}",
+			true,
+		},
+		{
+			`1 || true`,
+			true,
+		},
+		{
+			`1 || false`,
+			true,
+		},
+		{
+			`false || 1`,
+			true,
+		},
+		{
+			`1.0 || true`,
+			true,
+		},
+		{
+			`1.0 || false`,
+			true,
+		},
+		{
+			`false || 1.0`,
+			true,
+		},
+		{
+			`[] || true`,
+			true,
+		},
+		{
+			`[] || false`,
+			true,
+		},
+		{
+			`false || []`,
+			true,
+		},
+		{
+			`{} || true`,
+			true,
+		},
+		{
+			`{} || false`,
+			true,
+		},
+		{
+			`false || {}`,
+			true,
+		},
+		{
+			`false || false`,
+			false,
+		},
+
+		{
+			`1 << 1`,
+			2,
+		},
+		{
+			`2 >> 1`,
+			1,
+		},
 	}
 
 	for i, tt := range tests {

@@ -47,19 +47,31 @@ func infixExpression(v *ast.InfixExpression, operator string, left object.Object
 		}
 		return obj
 	case "|":
-		obj, err := infixOrExpression(left, right)
+		obj, err := infixOrBitExpression(left, right)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
 	case "&":
-		obj, err := infixAndExpression(left, right)
+		obj, err := infixAndBitExpression(left, right)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
 	case "^":
 		obj, err := infixXorExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "<<":
+		obj, err := infixShiftLeftExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case ">>":
+		obj, err := infixShiftRightExpression(left, right)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
@@ -96,6 +108,18 @@ func infixExpression(v *ast.InfixExpression, operator string, left object.Object
 		return obj
 	case ">=":
 		obj, err := infixGreaterOrEqualExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "&&":
+		obj, err := infixAndExpression(left, right)
+		if err != nil {
+			return object.NewErrorFormat("%s %s", err, v.Token)
+		}
+		return obj
+	case "||":
+		obj, err := infixOrExpression(left, right)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
@@ -241,7 +265,7 @@ func infixPowExpression(left, right object.Object) (object.Object, error) {
 	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "**", right.Type()))
 }
 
-func infixOrExpression(left, right object.Object) (object.Object, error) {
+func infixOrBitExpression(left, right object.Object) (object.Object, error) {
 	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
 		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "|", right.Type()))
 	}
@@ -249,7 +273,7 @@ func infixOrExpression(left, right object.Object) (object.Object, error) {
 	return &object.Integer{Value: left.(*object.Integer).Value | right.(*object.Integer).Value}, nil
 }
 
-func infixAndExpression(left, right object.Object) (object.Object, error) {
+func infixAndBitExpression(left, right object.Object) (object.Object, error) {
 	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
 		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "&", right.Type()))
 	}
@@ -545,4 +569,40 @@ func infixGreaterOrEqualExpression(left, right object.Object) (object.Object, er
 	}
 
 	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), ">", right.Type()))
+}
+
+func infixAndExpression(left, right object.Object) (object.Object, error) {
+	if object.IsTruthy(left) && object.IsTruthy(right) {
+		return object.TRUE, nil
+	}
+	return object.FALSE, nil
+}
+
+func infixOrExpression(left, right object.Object) (object.Object, error) {
+	if object.IsTruthy(left) || object.IsTruthy(right) {
+		return object.TRUE, nil
+	}
+	return object.FALSE, nil
+}
+
+func infixShiftLeftExpression(left, right object.Object) (object.Object, error) {
+	left, okLeft := left.(*object.Integer)
+	right, okRight := right.(*object.Integer)
+
+	if !okLeft || !okRight {
+		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "<<", right.Type()))
+	}
+
+	return &object.Integer{Value: left.(*object.Integer).Value << right.(*object.Integer).Value}, nil
+}
+
+func infixShiftRightExpression(left, right object.Object) (object.Object, error) {
+	left, okLeft := left.(*object.Integer)
+	right, okRight := right.(*object.Integer)
+
+	if !okLeft || !okRight {
+		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), ">>", right.Type()))
+	}
+
+	return &object.Integer{Value: left.(*object.Integer).Value >> right.(*object.Integer).Value}, nil
 }

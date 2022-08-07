@@ -67,6 +67,10 @@ func TestLiteral(t *testing.T) {
 			`{"a":1,"b":2,"c":3}`,
 			map[interface{}]interface{}{"a": 1, "b": 2, "c": 3},
 		},
+		{
+			`[1 + 1, 1.0 <= 2.0 , !false]`,
+			[]interface{}{2, true, true},
+		},
 	}
 
 	for i, tt := range tests {
@@ -89,119 +93,35 @@ func TestLiteral(t *testing.T) {
 	}
 }
 
-func TestPrefixOperator(t *testing.T) {
+func TestIfExpression(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
 	}{
 		{
-			`-1`,
-			-1,
+			`if (true) { 1 } else { 0 }`,
+			1,
 		},
 		{
-			`-1.0`,
-			-1.0,
-		},
-		{
-			`++1`,
-			2,
-		},
-		{
-			`--1`,
+			`if (false) { 1 } else { 0 }`,
 			0,
 		},
 		{
-			`++1.0`,
-			2.0,
+			`if (false) { 1 } elseif (true) { 2 } else { 3 }`,
+			2,
 		},
 		{
-			`--1.0`,
-			0.0,
+			`if (false) { 1 } elseif (false) { 2 } else { 3 }`,
+			3,
 		},
 		{
-			`!true`,
-			false,
-		},
-		{
-			`!false`,
-			true,
-		},
-		{
-			`!0`,
-			false,
-		},
-		{
-			`!1`,
-			false,
-		},
-		{
-			`!!0`,
-			true,
-		},
-		{
-			`!!1`,
-			true,
-		},
-		{
-			`!0.0`,
-			false,
-		},
-		{
-			`!1.0`,
-			false,
-		},
-		{
-			`!!0.0`,
-			true,
-		},
-		{
-			`!!1.0`,
-			true,
-		},
-		{
-			`![]`,
-			false,
-		},
-		{
-			`![1, 2]`,
-			false,
-		},
-		{
-			`!{}`,
-			false,
-		},
-		{
-			`!{"a":1}`,
-			false,
-		},
-		{
-			`!![]`,
-			true,
-		},
-		{
-			`!![1, 2]`,
-			true,
-		},
-		{
-			`!!{}`,
-			true,
-		},
-		{
-			`!!{"a":1}`,
-			true,
-		},
-		{
-			`!"hello ninja warrior"`,
-			false,
-		},
-		{
-			`!!"hello ninja warrior"`,
-			true,
+			`if (false) { 1 }`,
+			nil,
 		},
 	}
 
 	for i, tt := range tests {
-		t.Run(fmt.Sprintf("TestPrefixOperator[%d]", i), func(t *testing.T) {
+		t.Run(fmt.Sprintf("TestPostfixOperator[%d]", i), func(t *testing.T) {
 
 			v := interpreter(t, tt.input)
 
@@ -220,43 +140,56 @@ func TestPrefixOperator(t *testing.T) {
 	}
 }
 
-func TestPostfixOperator(t *testing.T) {
+func TestIndexExpression(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
 	}{
 		{
-			`1++`,
-			2,
-		},
-		{
-			`0++`,
-			1,
-		},
-		{
-			`0.0++`,
-			1.0,
-		},
-		{
-			`1.0++`,
-			2.0,
-		},
-
-		{
-			`1--`,
+			`[0, 2, 4][0]`,
 			0,
 		},
 		{
-			`0--`,
-			-1,
+			`[0, 2, 4][-1]`,
+			nil,
 		},
 		{
-			`0.0--`,
-			-1.0,
+			`[0, 2, 4][3]`,
+			nil,
 		},
 		{
-			`1.0--`,
-			0.0,
+			`[0, 2, 4][2]`,
+			4,
+		},
+		{
+			`[0, 2, 4][1+1]`,
+			4,
+		},
+
+		{
+			`{"a":1,"b":2,"c":3}["a"]`,
+			1,
+		},
+		{
+			`{"a":1,"b":2,"c":3}["d"]`,
+			nil,
+		},
+
+		{
+			`"hello ninja"[0]`,
+			"h",
+		},
+		{
+			`"hello ninja"[-1]`,
+			nil,
+		},
+		{
+			`"hello ninja"[50]`,
+			nil,
+		},
+		{
+			`"hello ninja"[10]`,
+			"a",
 		},
 	}
 
@@ -308,6 +241,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		}
 
 		return true
+	case nil:
+		if _, ok := result.(*object.Null); ok {
+
+			return true
+		}
+		t.Errorf("Expected NULL. Got: %s", result.Type())
+		return false
 	case float64:
 		v, ok := result.(*object.Float)
 		if !ok {

@@ -33,6 +33,10 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 	switch node := node.(type) {
 	case *ast.Program:
 		return node.Accept(i)
+	case *ast.BlockStatement:
+		return node.Accept(i)
+	case *ast.ExpressionStatement:
+		return node.Accept(i)
 	}
 	return nil
 }
@@ -49,35 +53,38 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (object object.Object) {
+func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
+	for _, stmt := range v.Statements {
+		result = i.execute(stmt)
+	}
+	return
+}
+
+func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (object object.Object) {
+func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (object object.Object) {
+func (i *Interpreter) VisitEnum(v *ast.EnumStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitEnum(v *ast.EnumStatement) (object object.Object) {
-	return nil
-}
-
-func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (object object.Object) {
+func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result object.Object) {
 	return i.evaluate(v.Expression)
 }
 
-func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (object object.Object) {
+func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (object object.Object) {
+func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (object object.Object) {
+func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
 	return nil
 }
 
@@ -138,7 +145,13 @@ func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 }
 
 func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
-	return nil
+	if object.IsTruthy(i.evaluate(v.Condition)) {
+		return i.execute(v.Consequence)
+	}
+	if v.Alternative != nil {
+		return i.execute(v.Alternative)
+	}
+	return object.NULL
 }
 
 func (i *Interpreter) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpression) (result object.Object) {
@@ -150,7 +163,9 @@ func (i *Interpreter) VisitImportExpr(v *ast.Import) (result object.Object) {
 }
 
 func (i *Interpreter) VisitIndexExpr(v *ast.IndexExpression) (result object.Object) {
-	return nil
+	left := i.evaluate(v.Left)
+	index := i.evaluate(v.Index)
+	return indexExpression(left, index)
 }
 
 func (i *Interpreter) VisitIntegerExpr(v *ast.IntegerLiteral) (result object.Object) {
