@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -27,7 +26,7 @@ func (to *TernaryOperatorExpression) String() string {
 	return out.String()
 }
 
-func (to *TernaryOperatorExpression) Accept(visitor ExprVisitor) (object object.Object) {
+func (to *TernaryOperatorExpression) Accept(visitor ExprVisitor) (object interface{}) {
 	return visitor.VisitTernaryOperator(to)
 }
 
@@ -49,6 +48,6 @@ func (eo *ElvisOperatorExpression) String() string {
 	return out.String()
 }
 
-func (eo *ElvisOperatorExpression) Accept(visitor ExprVisitor) (object object.Object) {
+func (eo *ElvisOperatorExpression) Accept(visitor ExprVisitor) (object interface{}) {
 	return visitor.VisitElvisOperator(eo)
 }

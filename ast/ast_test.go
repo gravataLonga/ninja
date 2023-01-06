@@ -30,7 +30,7 @@ func createFloatLiteral(value float64) Expression {
 
 func createBoolean(value bool) Expression {
 	literal := "true"
-	var tokenName token.TokenType = token.TRUE
+	var tokenName = token.TRUE
 	if !value {
 		literal = "false"
 		tokenName = token.FALSE

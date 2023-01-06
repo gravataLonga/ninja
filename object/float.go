@@ -16,7 +16,7 @@ type Float struct {
 }
 
 func (f *Float) Inspect() string  { return fmt.Sprintf("%f", f.Value) }
-func (f *Float) Type() ObjectType { return FLOAT_OBJ }
+func (f *Float) Type() ObjectType { return FloatObj }
 
 func (f *Float) HashKey() HashKey {
 
@@ -56,7 +56,7 @@ func (f *Float) Call(method string, args ...Object) Object {
 			return NewError(err.Error())
 		}
 
-		return &String{Value: FLOAT_OBJ}
+		return &String{Value: FloatObj}
 	case "string":
 		err := Check(
 			"float.string",

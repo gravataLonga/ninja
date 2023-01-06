@@ -1,7 +1,6 @@
 package ast
 
 import (
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -19,6 +18,6 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
-func (es *ExpressionStatement) Accept(visitor StmtVisitor) (object object.Object) {
+func (es *ExpressionStatement) Accept(visitor StmtVisitor) (object interface{}) {
 	return visitor.VisitExprStmt(es)
 }

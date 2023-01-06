@@ -130,24 +130,24 @@ func infixExpression(v *ast.InfixExpression, operator string, left object.Object
 
 func infixPlusExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Integer{Value: left.(*object.Integer).Value + right.(*object.Integer).Value}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			v := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: v + right.(*object.Float).Value}, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: left.(*object.Float).Value + right.(*object.Float).Value}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			v := float64(right.(*object.Integer).Value)
 			return &object.Float{Value: left.(*object.Float).Value + v}, nil
 		}
-	case object.STRING_OBJ:
-		if right.Type() == object.STRING_OBJ {
+	case object.StringObj:
+		if right.Type() == object.StringObj {
 			return &object.String{Value: left.(*object.String).Value + right.(*object.String).Value}, nil
 		}
 	}
@@ -156,19 +156,19 @@ func infixPlusExpression(left, right object.Object) (object.Object, error) {
 
 func infixMinusExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Integer{Value: left.(*object.Integer).Value - right.(*object.Integer).Value}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: left - right.(*object.Float).Value}, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: left.(*object.Float).Value - right.(*object.Float).Value}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			return &object.Float{Value: left.(*object.Float).Value - right}, nil
 		}
@@ -178,20 +178,20 @@ func infixMinusExpression(left, right object.Object) (object.Object, error) {
 
 func infixMulExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Integer{Value: left.(*object.Integer).Value * right.(*object.Integer).Value}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: left * right.(*object.Float).Value}, nil
 
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: left.(*object.Float).Value * right.(*object.Float).Value}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			return &object.Float{Value: left.(*object.Float).Value * right}, nil
 		}
@@ -201,19 +201,19 @@ func infixMulExpression(left, right object.Object) (object.Object, error) {
 
 func infixDivExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Integer{Value: left.(*object.Integer).Value / right.(*object.Integer).Value}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: left / right.(*object.Float).Value}, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: left.(*object.Float).Value / right.(*object.Float).Value}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			return &object.Float{Value: left.(*object.Float).Value / right}, nil
 		}
@@ -223,19 +223,19 @@ func infixDivExpression(left, right object.Object) (object.Object, error) {
 
 func infixModExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Integer{Value: left.(*object.Integer).Value % right.(*object.Integer).Value}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: math.Mod(left, right.(*object.Float).Value)}, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: math.Mod(left.(*object.Float).Value, right.(*object.Float).Value)}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			return &object.Float{Value: math.Mod(left.(*object.Float).Value, right)}, nil
 		}
@@ -246,19 +246,19 @@ func infixModExpression(left, right object.Object) (object.Object, error) {
 
 func infixPowExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			result := math.Pow(float64(left.(*object.Integer).Value), float64(right.(*object.Integer).Value))
 			return &object.Integer{Value: int64(result)}, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: math.Pow(float64(left.(*object.Integer).Value), right.(*object.Float).Value)}, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			return &object.Float{Value: math.Pow(left.(*object.Float).Value, right.(*object.Float).Value)}, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			return &object.Float{Value: math.Pow(left.(*object.Float).Value, float64(right.(*object.Integer).Value))}, nil
 		}
 	}
@@ -266,7 +266,7 @@ func infixPowExpression(left, right object.Object) (object.Object, error) {
 }
 
 func infixOrBitExpression(left, right object.Object) (object.Object, error) {
-	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+	if left.Type() != object.IntegerObj || right.Type() != object.IntegerObj {
 		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "|", right.Type()))
 	}
 
@@ -274,7 +274,7 @@ func infixOrBitExpression(left, right object.Object) (object.Object, error) {
 }
 
 func infixAndBitExpression(left, right object.Object) (object.Object, error) {
-	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+	if left.Type() != object.IntegerObj || right.Type() != object.IntegerObj {
 		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "&", right.Type()))
 	}
 
@@ -282,7 +282,7 @@ func infixAndBitExpression(left, right object.Object) (object.Object, error) {
 }
 
 func infixXorExpression(left, right object.Object) (object.Object, error) {
-	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+	if left.Type() != object.IntegerObj || right.Type() != object.IntegerObj {
 		return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "^", right.Type()))
 	}
 
@@ -291,14 +291,14 @@ func infixXorExpression(left, right object.Object) (object.Object, error) {
 
 func infixEqualExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value == right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left == right.(*object.Float).Value {
 				return object.TRUE, nil
@@ -307,14 +307,14 @@ func infixEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.FALSE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value == right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value == right {
 				return object.TRUE, nil
@@ -323,9 +323,9 @@ func infixEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.FALSE, nil
 		}
-	case object.STRING_OBJ:
+	case object.StringObj:
 		switch right.Type() {
-		case object.STRING_OBJ:
+		case object.StringObj:
 			if left.(*object.String).Value == right.(*object.String).Value {
 				return object.TRUE, nil
 			}
@@ -333,9 +333,9 @@ func infixEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.FALSE, nil
 		}
-	case object.BOOLEAN_OBJ:
+	case object.BooleanObj:
 		switch right.Type() {
-		case object.BOOLEAN_OBJ:
+		case object.BooleanObj:
 			if left.(*object.Boolean).Value == right.(*object.Boolean).Value {
 				return object.TRUE, nil
 			}
@@ -343,9 +343,9 @@ func infixEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.FALSE, nil
 		}
-	case object.ARRAY_OBJ:
+	case object.ArrayObj:
 		fallthrough
-	case object.HASH_OBJ:
+	case object.HashObj:
 		return object.FALSE, nil
 	}
 	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "==", right.Type()))
@@ -353,9 +353,9 @@ func infixEqualExpression(left, right object.Object) (object.Object, error) {
 
 func infixNotEqualExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
-	case object.STRING_OBJ:
+	case object.StringObj:
 		switch right.Type() {
-		case object.STRING_OBJ:
+		case object.StringObj:
 			if left.(*object.String).Value != right.(*object.String).Value {
 				return object.TRUE, nil
 			}
@@ -363,14 +363,14 @@ func infixNotEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.TRUE, nil
 		}
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value != right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left != right.(*object.Float).Value {
 				return object.TRUE, nil
@@ -379,14 +379,14 @@ func infixNotEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.TRUE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value != right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value != right {
 				return object.TRUE, nil
@@ -396,9 +396,9 @@ func infixNotEqualExpression(left, right object.Object) (object.Object, error) {
 			return object.TRUE, nil
 
 		}
-	case object.BOOLEAN_OBJ:
+	case object.BooleanObj:
 		switch right.Type() {
-		case object.BOOLEAN_OBJ:
+		case object.BooleanObj:
 			if left.(*object.Boolean).Value != right.(*object.Boolean).Value {
 				return object.TRUE, nil
 			}
@@ -406,9 +406,9 @@ func infixNotEqualExpression(left, right object.Object) (object.Object, error) {
 		default:
 			return object.TRUE, nil
 		}
-	case object.HASH_OBJ:
+	case object.HashObj:
 		fallthrough
-	case object.ARRAY_OBJ:
+	case object.ArrayObj:
 		return object.TRUE, nil
 
 	}
@@ -421,28 +421,28 @@ func infixLessExpression(left, right object.Object) (object.Object, error) {
 	}
 
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value < right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left < right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value < right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value < right {
 				return object.TRUE, nil
@@ -460,28 +460,28 @@ func infixGreaterExpression(left, right object.Object) (object.Object, error) {
 	}
 
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value > right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left > right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value > right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value > right {
 				return object.TRUE, nil
@@ -499,28 +499,28 @@ func infixLessOrEqualExpression(left, right object.Object) (object.Object, error
 	}
 
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value <= right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left <= right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value <= right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value <= right {
 				return object.TRUE, nil
@@ -538,28 +538,28 @@ func infixGreaterOrEqualExpression(left, right object.Object) (object.Object, er
 	}
 
 	switch left.Type() {
-	case object.INTEGER_OBJ:
+	case object.IntegerObj:
 		switch right.Type() {
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			if left.(*object.Integer).Value >= right.(*object.Integer).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			left := float64(left.(*object.Integer).Value)
 			if left >= right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
 		}
-	case object.FLOAT_OBJ:
+	case object.FloatObj:
 		switch right.Type() {
-		case object.FLOAT_OBJ:
+		case object.FloatObj:
 			if left.(*object.Float).Value >= right.(*object.Float).Value {
 				return object.TRUE, nil
 			}
 			return object.FALSE, nil
-		case object.INTEGER_OBJ:
+		case object.IntegerObj:
 			right := float64(right.(*object.Integer).Value)
 			if left.(*object.Float).Value >= right {
 				return object.TRUE, nil

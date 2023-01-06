@@ -9,7 +9,7 @@ func Len(args ...object.Object) object.Object {
 	err := object.Check(
 		"len", args,
 		object.ExactArgs(1),
-		object.OneOfType(object.ARRAY_OBJ, object.STRING_OBJ),
+		object.OneOfType(object.ArrayObj, object.StringObj),
 	)
 
 	if err != nil {

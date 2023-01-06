@@ -10,7 +10,7 @@ func Push(args ...object.Object) object.Object {
 	err := object.Check(
 		"push", args,
 		object.ExactArgs(2),
-		object.WithTypes(object.ARRAY_OBJ),
+		object.WithTypes(object.ArrayObj),
 	)
 
 	if err != nil {

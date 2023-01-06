@@ -23,7 +23,6 @@ func evalIdentifier(
 }
 
 func evalAssignStatement(node *ast.AssignStatement, env *object.Environment) object.Object {
-
 	switch node.Name.(type) {
 	case *ast.Identifier:
 		return evalAssignIdentifier(node, env)

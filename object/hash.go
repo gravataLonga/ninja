@@ -15,7 +15,7 @@ type Hash struct {
 	Pairs map[HashKey]HashPair
 }
 
-func (h *Hash) Type() ObjectType { return HASH_OBJ }
+func (h *Hash) Type() ObjectType { return HashObj }
 func (h *Hash) Inspect() string {
 	var out bytes.Buffer
 
@@ -45,7 +45,7 @@ func (s *Hash) Call(method string, args ...Object) Object {
 			return NewError(err.Error())
 		}
 
-		return &String{Value: HASH_OBJ}
+		return &String{Value: HashObj}
 	case "keys":
 		return hashKeys(s.Pairs, args...)
 	case "values":
@@ -105,7 +105,7 @@ func hashMerge(pairs map[HashKey]HashPair, args ...Object) Object {
 		"hash.merge",
 		args,
 		ExactArgs(1),
-		WithTypes(HASH_OBJ),
+		WithTypes(HashObj),
 	)
 
 	if err != nil {

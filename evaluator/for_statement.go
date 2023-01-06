@@ -21,11 +21,11 @@ func evalForStatement(
 
 		result = Eval(node.Body, env)
 		if result != nil {
-			if result.Type() == object.RETURN_VALUE_OBJ {
+			if result.Type() == object.ReturnValueObj {
 				return result
 			}
 
-			if result.Type() == object.BREAK_VALUE_OBJ {
+			if result.Type() == object.BreakValueObj {
 				return nil
 			}
 		}

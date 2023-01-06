@@ -1,7 +1,6 @@
 package ast
 
 import (
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -16,6 +15,6 @@ func (il *StringLiteral) String() string {
 	return il.TokenLiteral()
 }
 
-func (il *StringLiteral) Accept(visitor ExprVisitor) (object object.Object) {
+func (il *StringLiteral) Accept(visitor ExprVisitor) (object interface{}) {
 	return visitor.VisitStringExpr(il)
 }

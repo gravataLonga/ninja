@@ -10,7 +10,7 @@ func Last(args ...object.Object) object.Object {
 	err := object.Check(
 		"last", args,
 		object.ExactArgs(1),
-		object.WithTypes(object.ARRAY_OBJ),
+		object.WithTypes(object.ArrayObj),
 	)
 
 	if err != nil {

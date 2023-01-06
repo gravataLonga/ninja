@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"github.com/gravataLonga/ninja/object"
 )
 
 type Node interface {
@@ -17,48 +16,48 @@ type Node interface {
 type Statement interface {
 	Node
 	statementNode()
-	Accept(visitor StmtVisitor) (object object.Object)
+	Accept(visitor StmtVisitor) (object interface{})
 }
 
 type Expression interface {
 	Node
 	expressionNode()
-	Accept(visitor ExprVisitor) (object object.Object)
+	Accept(visitor ExprVisitor) (object interface{})
 }
 
 type ExprVisitor interface {
-	VisitArrayExpr(v *ArrayLiteral) (result object.Object)
-	VisitBooleanExpr(v *Boolean) (result object.Object)
-	VisitCallExpr(v *CallExpression) (result object.Object)
-	VisitFloatExpr(v *FloatLiteral) (result object.Object)
-	VisitFuncExpr(v *FunctionLiteral) (result object.Object)
-	VisitHashExpr(v *HashLiteral) (result object.Object)
-	VisitIdentExpr(v *Identifier) (result object.Object)
-	VisitIfExpr(v *IfExpression) (result object.Object)
-	VisitScopeOperatorExpression(v *ScopeOperatorExpression) (result object.Object)
-	VisitImportExpr(v *Import) (result object.Object)
-	VisitIndexExpr(v *IndexExpression) (result object.Object)
-	VisitIntegerExpr(v *IntegerLiteral) (result object.Object)
-	VisitObjectCallExpr(v *ObjectCall) (result object.Object)
-	VisitPostfixExpr(v *PostfixExpression) (result object.Object)
-	VisitPrefixExpr(v *PrefixExpression) (result object.Object)
-	VisitStringExpr(v *StringLiteral) (result object.Object)
-	VisitTernaryOperator(v *TernaryOperatorExpression) (result object.Object)
-	VisitElvisOperator(v *ElvisOperatorExpression) (result object.Object)
-	VisitFor(v *ForStatement) (result object.Object)
-	VisitInfix(v *InfixExpression) (result object.Object)
+	VisitArrayExpr(v *ArrayLiteral) (result interface{})
+	VisitBooleanExpr(v *Boolean) (result interface{})
+	VisitCallExpr(v *CallExpression) (result interface{})
+	VisitFloatExpr(v *FloatLiteral) (result interface{})
+	VisitFuncExpr(v *FunctionLiteral) (result interface{})
+	VisitHashExpr(v *HashLiteral) (result interface{})
+	VisitIdentExpr(v *Identifier) (result interface{})
+	VisitIfExpr(v *IfExpression) (result interface{})
+	VisitScopeOperatorExpression(v *ScopeOperatorExpression) (result interface{})
+	VisitImportExpr(v *Import) (result interface{})
+	VisitIndexExpr(v *IndexExpression) (result interface{})
+	VisitIntegerExpr(v *IntegerLiteral) (result interface{})
+	VisitObjectCallExpr(v *ObjectCall) (result interface{})
+	VisitPostfixExpr(v *PostfixExpression) (result interface{})
+	VisitPrefixExpr(v *PrefixExpression) (result interface{})
+	VisitStringExpr(v *StringLiteral) (result interface{})
+	VisitTernaryOperator(v *TernaryOperatorExpression) (result interface{})
+	VisitElvisOperator(v *ElvisOperatorExpression) (result interface{})
+	VisitFor(v *ForStatement) (result interface{})
+	VisitInfix(v *InfixExpression) (result interface{})
 }
 
 type StmtVisitor interface {
-	VisitProgram(v *Program) (result object.Object)
-	VisitBlock(v *BlockStatement) (result object.Object)
-	VisitBreak(v *BreakStatement) (result object.Object)
-	VisitDelete(v *DeleteStatement) (result object.Object)
-	VisitEnum(v *EnumStatement) (result object.Object)
-	VisitExprStmt(v *ExpressionStatement) (result object.Object)
-	VisitReturn(v *ReturnStatement) (result object.Object)
-	VisitVarStmt(v *VarStatement) (result object.Object)
-	VisitAssignStmt(v *AssignStatement) (result object.Object)
+	VisitProgram(v *Program) (result interface{})
+	VisitBlock(v *BlockStatement) (result interface{})
+	VisitBreak(v *BreakStatement) (result interface{})
+	VisitDelete(v *DeleteStatement) (result interface{})
+	VisitEnum(v *EnumStatement) (result interface{})
+	VisitExprStmt(v *ExpressionStatement) (result interface{})
+	VisitReturn(v *ReturnStatement) (result interface{})
+	VisitVarStmt(v *VarStatement) (result interface{})
+	VisitAssignStmt(v *AssignStatement) (result interface{})
 }
 
 type Program struct {
@@ -80,6 +79,6 @@ func (p *Program) String() string {
 	return out.String()
 }
 
-func (p *Program) Accept(visitor StmtVisitor) (object object.Object) {
+func (p *Program) Accept(visitor StmtVisitor) (object interface{}) {
 	return visitor.VisitProgram(p)
 }

@@ -10,7 +10,7 @@ func Exit(args ...object.Object) object.Object {
 	err := object.Check(
 		"exit", args,
 		object.ExactArgs(1),
-		object.WithTypes(object.INTEGER_OBJ),
+		object.WithTypes(object.IntegerObj),
 	)
 
 	if err != nil {

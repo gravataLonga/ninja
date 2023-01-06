@@ -161,7 +161,7 @@ func TestStringIndexExpressions(t *testing.T) {
 
 func TestStringMethodType(t *testing.T) {
 	evaluated := testEval(`"ola".type()`, t)
-	testObjectLiteral(t, evaluated, object.STRING_OBJ)
+	testObjectLiteral(t, evaluated, object.StringObj)
 }
 
 func TestStringMethodTypeWrongParameter(t *testing.T) {

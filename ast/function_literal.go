@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 	"strings"
 )
@@ -35,6 +34,6 @@ func (fl *FunctionLiteral) String() string {
 	return out.String()
 }
 
-func (fl *FunctionLiteral) Accept(visitor ExprVisitor) (object object.Object) {
+func (fl *FunctionLiteral) Accept(visitor ExprVisitor) (object interface{}) {
 	return visitor.VisitFuncExpr(fl)
 }

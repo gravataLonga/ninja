@@ -6,5 +6,5 @@ var (
 
 type Null struct{}
 
-func (n *Null) Type() ObjectType { return NULL_OBJ }
+func (n *Null) Type() ObjectType { return NullObj }
 func (n *Null) Inspect() string  { return "null" }

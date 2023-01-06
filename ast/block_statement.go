@@ -2,7 +2,6 @@ package ast
 
 import (
 	"bytes"
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -21,6 +20,6 @@ func (bs *BlockStatement) String() string {
 	return out.String()
 }
 
-func (al *BlockStatement) Accept(visitor StmtVisitor) (object object.Object) {
-	return visitor.VisitBlock(al)
+func (bs *BlockStatement) Accept(visitor StmtVisitor) (object interface{}) {
+	return visitor.VisitBlock(bs)
 }

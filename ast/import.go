@@ -3,7 +3,6 @@ package ast
 import (
 	"bytes"
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
 
@@ -24,6 +23,6 @@ func (i *Import) String() string {
 	return out.String()
 }
 
-func (i *Import) Accept(visitor ExprVisitor) (object object.Object) {
+func (i *Import) Accept(visitor ExprVisitor) (object interface{}) {
 	return visitor.VisitImportExpr(i)
 }

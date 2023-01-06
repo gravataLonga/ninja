@@ -10,7 +10,7 @@ func First(args ...object.Object) object.Object {
 	err := object.Check(
 		"first", args,
 		object.ExactArgs(1),
-		object.WithTypes(object.ARRAY_OBJ),
+		object.WithTypes(object.ArrayObj),
 	)
 
 	if err != nil {
