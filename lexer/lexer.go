@@ -206,7 +206,7 @@ func (l *Lexer) readIdentifier() []byte {
 	return []byte(l.input[position:l.position])
 }
 
-// readDigit read integer and floats
+// readDigit read integer, float, hex digits and scientific notations.
 func (l *Lexer) readDigit() (token.DigitType, []byte) {
 	position := l.position
 	currentDigitType := token.DIGIT_TYPE_DECIMAL
