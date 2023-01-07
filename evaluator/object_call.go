@@ -16,13 +16,13 @@ func evalObjectCallExpression(node *ast.ObjectCall, env *object.Environment) obj
 
 	method, ok := callExpression.Function.(*ast.Identifier)
 	if !ok {
-		return object.NewErrorFormat("object.call.function isnt a identifier. Got: %s", callExpression.Function)
+		return object.NewErrorFormat("object.call.function isn't a identifier. Got: %s", callExpression.Function)
 	}
 
 	callable, ok := obj.(object.CallableMethod)
 
 	if !ok {
-		return object.NewErrorFormat("object.call.function isnt callable. Got: %T", obj)
+		return object.NewErrorFormat("object.call.function isn't callable. Got: %T", obj)
 	}
 
 	args := evalExpressions(callExpression.Arguments, env)
