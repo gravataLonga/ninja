@@ -134,7 +134,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalHashLiteral(node, env)
 	case *ast.ForStatement:
 		return evalForStatement(node, env)
-	case *ast.ObjectCall:
+	case *ast.Dot:
 		return evalObjectCallExpression(node, env)
 	case *ast.EnumStatement:
 		return evalEnumStatement(node, env)

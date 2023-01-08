@@ -8,5 +8,5 @@ func Hello(args ...Object) Object {
 
 func main() {
 	panic("this is a plugin")
-	// Build a plugin: go build -buildmode=plugin hello.go
+	// Build a plugin:go build -buildmode=plugin -o fixtures/hello.so fixtures/hello.go
 }
