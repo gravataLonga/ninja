@@ -1,9 +1,9 @@
 package main
 
-import "github.com/gravataLonga/ninja/object"
+import . "github.com/gravataLonga/ninja/object"
 
-func Hello(args ...object.Object) object.Object {
-	return &object.String{Value: "Hello World!"}
+func Hello(args ...Object) Object {
+	return &String{Value: "Hello World!"}
 }
 
 func main() {

@@ -139,13 +139,13 @@ func TestPlugin(t *testing.T) {
 }
 
 func TestPluginCallSymbols(t *testing.T) {
-	input := `var h = plugin("hello"); h.hello();`
+	input := `var h = plugin("../fixtures/hello"); h.hello();`
 
 	evaluated := testEval(input, t)
 
 	str, ok := evaluated.(*object.String)
 	if !ok {
-		t.Fatalf("TestPluginCallSymbols expected string got %s", evaluated.Type())
+		t.Fatalf("TestPlugin expected plugin got %s (%s)", evaluated.Type(), evaluated.Inspect())
 	}
 
 	if str.Value != "Hello World!" {

@@ -26,10 +26,10 @@ func (p *Plugin) Inspect() string  { return p.name }
 func (p *Plugin) Call(method string, args ...Object) Object {
 	caser := cases.Title(language.Und, cases.NoLower)
 
-	sym, err := p.plugin.Lookup(caser.String(p.name))
+	sym, err := p.plugin.Lookup(caser.String(method))
 	if err != nil {
 		return NewErrorFormat("method %s not exists on plugin %s object. Got: %s", method, p.name, err.Error())
 	}
 
-	return NewBuiltin(sym.(BuiltinFunction))
+	return sym.(func(...Object) Object)(args...)
 }
