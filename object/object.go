@@ -53,6 +53,7 @@ const (
 	STRING_OBJ       = "STRING"
 	ARRAY_OBJ        = "ARRAY"
 	HASH_OBJ         = "HASH"
+	PLUGIN_OBJ       = "PLUGIN"
 )
 
 func IsError(o Object) bool {

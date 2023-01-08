@@ -121,3 +121,34 @@ func TestArgs(t *testing.T) {
 		t.Errorf("state of env isn't equal")
 	}
 }
+
+func TestPlugin(t *testing.T) {
+	input := `plugin("../fixtures/hello")`
+
+	evaluated := testEval(input, t)
+
+	_, ok := evaluated.(*object.Plugin)
+	if !ok {
+		t.Fatalf("TestPlugin expected plugin got %s (%s)", evaluated.Type(), evaluated.Inspect())
+	}
+
+	_, ok = evaluated.(object.CallableMethod)
+	if !ok {
+		t.Fatalf("TestPlugin expected implement CallableMethod")
+	}
+}
+
+func TestPluginCallSymbols(t *testing.T) {
+	input := `var h = plugin("hello"); h.hello();`
+
+	evaluated := testEval(input, t)
+
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("TestPluginCallSymbols expected string got %s", evaluated.Type())
+	}
+
+	if str.Value != "Hello World!" {
+		t.Fatalf("TestPluginCallSymbols expected \"Hello World!\" got %s", str.Value)
+	}
+}
