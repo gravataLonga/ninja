@@ -19,6 +19,10 @@ func evalIdentifier(
 		return builtin
 	}
 
+	if globalVariable, ok := object.GlobalEnvironment.Get(node.Value); ok {
+		return globalVariable
+	}
+
 	return object.NewErrorFormat("identifier not found: %s %s", node.Value, node.Token)
 }
 

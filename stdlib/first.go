@@ -4,6 +4,10 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("first", object.NewBuiltin(First))
+}
+
 // First get item from array object
 func First(args ...object.Object) object.Object {
 

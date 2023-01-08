@@ -4,6 +4,10 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("rest", object.NewBuiltin(Rest))
+}
+
 // Rest we get last items from array without first item
 func Rest(args ...object.Object) object.Object {
 

@@ -4,6 +4,10 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("len", object.NewBuiltin(Len))
+}
+
 // Len will get length of object
 func Len(args ...object.Object) object.Object {
 	err := object.Check(

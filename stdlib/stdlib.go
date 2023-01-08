@@ -2,15 +2,7 @@ package stdlib
 
 import "github.com/gravataLonga/ninja/object"
 
-var Builtins = map[string]*object.Builtin{
-	"len":   object.NewBuiltin(Len),
-	"first": object.NewBuiltin(First),
-	"last":  object.NewBuiltin(Last),
-	"push":  object.NewBuiltin(Push),
-	"rest":  object.NewBuiltin(Rest),
-	"puts":  object.NewBuiltin(Puts),
-	"time":  object.NewBuiltin(Time),
-	"rand":  object.NewBuiltin(Rand),
-	"args":  object.NewBuiltin(Args),
-	"exit":  object.NewBuiltin(Exit),
-}
+// Builtins register functions at global state.
+// this is same as registering a function in Global Namespace
+// E.g.: object.GlobalEnvironment.Set("rest", object.NewBuiltin(Rest))
+var Builtins = map[string]*object.Builtin{}

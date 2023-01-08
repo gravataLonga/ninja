@@ -84,7 +84,6 @@ func execCode(input string, writer io.Writer) {
 		printSemanticErrorsErrors(s.Errors(), writer)
 		return
 	}*/
-
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {
 		fmt.Fprintf(writer, evaluated.Inspect())
