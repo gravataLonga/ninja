@@ -580,6 +580,38 @@ var true false function return if
 else for import delete break enum case
 ```  
 
+## Extending Ninja Programming Language  
+
+You can extending ninja by creating a custom plugins, create an file for example:  
+
+```
+package main
+
+import . "github.com/gravataLonga/ninja/object"
+
+func Hello(args ...Object) Object {
+	return &String{Value: "Hello World!"}
+}
+
+func main() {
+	panic("this is a plugin")
+}
+
+```  
+
+Then, compile as plugin:   
+
+```
+go build -buildmode=plugin -o hello.so hello.go  
+```  
+
+After this you can import and called it in your ninja programs, like so:
+
+```
+var plugin = plugin("hello.so");
+puts(plugin.hello());  // it will print "Hello World!"  
+```  
+
 ## Lexical Scooping  
 
 [Inspiration](https://craftinginterpreters.com/resolving-and-binding.html)  
