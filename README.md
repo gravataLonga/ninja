@@ -608,7 +608,7 @@ go build -buildmode=plugin -o hello.so hello.go
 After this you can import and called it in your ninja programs, like so:
 
 ```
-var plugin = plugin("hello.so");
+var plugin = plugin("hello"); // don't need ".so" extension  
 puts(plugin.hello());  // it will print "Hello World!"  
 ```  
 
