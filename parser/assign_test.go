@@ -55,28 +55,32 @@ func TestAssignStatements(t *testing.T) {
 		{"x = true;", "x", true},
 		{"x = false;", "x", false},
 		{"x = 13.3;", "x", 13.3},
+		{"x[0] = 10;", "x", 10},
 	}
 
-	for _, tt := range tests {
-		l := lexer.New(strings.NewReader(tt.input))
-		p := New(l)
-		program := p.ParseProgram()
-		checkParserErrors(t, p)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestAssignStatements[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
 
-		if len(program.Statements) != 1 {
-			t.Fatalf("program.Statements does not contain 1 statements. got=%d",
-				len(program.Statements))
-		}
+			if len(program.Statements) != 1 {
+				t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+					len(program.Statements))
+			}
 
-		stmt := program.Statements[0]
-		if !testAssingStatement(t, stmt, tt.expectedIdentifier) {
-			return
-		}
+			stmt := program.Statements[0]
+			if !testAssingStatement(t, stmt, tt.expectedIdentifier) {
+				return
+			}
 
-		val := stmt.(*ast.AssignStatement).Value
-		if !testLiteralExpression(t, val, tt.expectedValue) {
-			return
-		}
+			val := stmt.(*ast.AssignStatement).Value
+			if !testLiteralExpression(t, val, tt.expectedValue) {
+				return
+			}
+		})
+
 	}
 }
 
@@ -115,8 +119,8 @@ i = i = 1;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(p.errors) != 5 {
-		t.Fatalf("Expected 5 errors, got: %d", len(p.errors))
+	if len(p.errors) != 6 {
+		t.Fatalf("Expected 6 errors, got: %d", len(p.errors))
 	}
 
 	tests := []struct {

@@ -11,6 +11,9 @@ func (p *Parser) parseStatement() ast.Statement {
 		if p.peekTokenIs(token.ASSIGN) {
 			return p.parseAssignStatement()
 		}
+		if p.peekTokenIs(token.LBRACKET) {
+			return p.parseInfixAssignExpression()
+		}
 		return p.parseExpressionStatement()
 	case token.DELETE:
 		return p.parseDeleteStatement()

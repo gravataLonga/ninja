@@ -38,7 +38,6 @@ type AssignStatement struct {
 	Value Expression // Any valid expression
 }
 
-func (ls *AssignStatement) expressionNode()      {}
 func (ls *AssignStatement) statementNode()       {}
 func (ls *AssignStatement) TokenLiteral() string { return ls.Token.Literal }
 func (ls *AssignStatement) String() string {

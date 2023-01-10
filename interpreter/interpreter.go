@@ -131,18 +131,37 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		return object.NewErrorFormat("Not implement yet VisitDotExpr")
 	}
 
+	maxArguments := len(v.Arguments)
+
 	fn, _ := obj.(*object.FunctionLiteral)
+	envLocal := object.NewEnclosedEnvironment(i.env)
 
 	for index, parameter := range fn.Parameters.([]ast.Expression) {
 		ident, ok := parameter.(*ast.Identifier)
-		if !ok {
-			return object.NewErrorFormat("Parameter isn't a identifier")
+		if ok {
+			envLocal.Set(ident.String(), i.evaluate(v.Arguments[index]))
+			continue
 		}
 
-		i.env.Set(ident.String(), i.evaluate(v.Arguments[index]))
+		infix, ok := parameter.(*ast.InfixExpression)
+		ident, _ = infix.Left.(*ast.Identifier)
+
+		var value object.Object
+		if maxArguments > index {
+			argument := v.Arguments[index]
+			value = i.evaluate(argument)
+		} else {
+			value = i.evaluate(infix.Right)
+		}
+
+		envLocal.Set(ident.String(), value)
 	}
 
-	return i.VisitBlock(fn.Body.(*ast.BlockStatement))
+	env := i.env
+	i.env = envLocal
+	reslt := i.VisitBlock(fn.Body.(*ast.BlockStatement))
+	i.env = env
+	return reslt
 }
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {

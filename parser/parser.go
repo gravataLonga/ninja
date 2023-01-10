@@ -95,7 +95,7 @@ func New(l *lexer.Lexer) *Parser {
 
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.infixParsePrecedence = make(map[token.TokenType]int)
-	p.registerInfix(token.ASSIGN, p.parseInfixAssignExpression, ASSIGN)
+	// p.registerInfix(token.ASSIGN, p.parseInfixAssignExpression, ASSIGN)
 	p.registerInfix(token.PLUS, p.parseInfixExpression, SUM)
 	p.registerInfix(token.MINUS, p.parseInfixExpression, SUM)
 	p.registerInfix(token.SLASH, p.parseInfixExpression, PRODUCT)

@@ -4,8 +4,20 @@ import (
 	"fmt"
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
+	"os"
 	"testing"
 )
+
+func TestFunctionLiteral(t *testing.T) {
+	p := createParser(t, `function add() { 1 }`)
+	i := New(os.Stdout)
+	i.Interpreter(p)
+
+	_, ok := i.env.Get("add")
+	if !ok {
+		t.Fatalf("Expected add identifier on env")
+	}
+}
 
 func TestFunctionLiteralObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
@@ -190,7 +202,6 @@ func TestCallFunction(t *testing.T) {
 	}
 }
 
-/*
 func TestFunctionApplication(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -206,8 +217,10 @@ func TestFunctionApplication(t *testing.T) {
 		{"function(x) { x; }(5)", 5},
 	}
 
-	for _, tt := range tests {
-		testIntegerObject(t, testEval(tt.input, t), tt.expected)
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("Test[%d]", i), func(t *testing.T) {
+			testIntegerObject(t, interpreter(t, tt.input), tt.expected)
+		})
 	}
 }
 
@@ -223,7 +236,7 @@ func TestCallWrongParameters(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestCallWrongParameters[%d]", i), func(t *testing.T) {
-			evaluated := testEval(tt.input, t)
+			evaluated := interpreter(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -237,4 +250,3 @@ func TestCallWrongParameters(t *testing.T) {
 
 	}
 }
-*/
