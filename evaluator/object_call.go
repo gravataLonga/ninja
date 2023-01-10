@@ -5,24 +5,24 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
-func evalObjectCallExpression(node *ast.ObjectCall, env *object.Environment) object.Object {
+func evalObjectCallExpression(node *ast.Dot, env *object.Environment) object.Object {
 	// @todo check if is object.Object and if isnt error.
 	obj := Eval(node.Object, env)
 
-	callExpression, ok := node.Call.(*ast.CallExpression)
+	callExpression, ok := node.Right.(*ast.CallExpression)
 	if !ok {
 		return object.NewErrorFormat("object.call is not call expression. Got: %s", callExpression)
 	}
 
 	method, ok := callExpression.Function.(*ast.Identifier)
 	if !ok {
-		return object.NewErrorFormat("object.call.function isnt a identifier. Got: %s", callExpression.Function)
+		return object.NewErrorFormat("object.call.function isn't a identifier. Got: %s", callExpression.Function)
 	}
 
 	callable, ok := obj.(object.CallableMethod)
 
 	if !ok {
-		return object.NewErrorFormat("object.call.function isnt callable. Got: %T", obj)
+		return object.NewErrorFormat("object.call.function isn't callable. Got: %T", obj)
 	}
 
 	args := evalExpressions(callExpression.Arguments, env)

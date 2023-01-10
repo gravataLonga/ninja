@@ -12,7 +12,7 @@ type FunctionLiteral struct {
 	Env        *Environment
 }
 
-func (f *FunctionLiteral) Type() ObjectType { return FunctionObj }
+func (f *FunctionLiteral) Type() ObjectType { return FUNCTION_OBJ }
 func (f *FunctionLiteral) Inspect() string {
 	var out bytes.Buffer
 	params := make([]string, len(f.Parameters))

@@ -9,13 +9,13 @@ import (
 
 func postfixExpression(v *ast.PostfixExpression, obj object.Object) object.Object {
 	switch obj.Type() {
-	case object.IntegerObj:
+	case object.INTEGER_OBJ:
 		obj, err := postfixIntegerExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.FloatObj:
+	case object.FLOAT_OBJ:
 		obj, err := postfixFloatExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)

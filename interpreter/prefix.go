@@ -9,37 +9,37 @@ import (
 
 func prefixExpression(v *ast.PrefixExpression, obj object.Object) object.Object {
 	switch obj.Type() {
-	case object.StringObj:
+	case object.STRING_OBJ:
 		obj, err := prefixStringExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.IntegerObj:
+	case object.INTEGER_OBJ:
 		obj, err := prefixIntegerExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.FloatObj:
+	case object.FLOAT_OBJ:
 		obj, err := prefixFloatExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.BooleanObj:
+	case object.BOOLEAN_OBJ:
 		obj, err := prefixBooleanExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.ArrayObj:
+	case object.ARRAY_OBJ:
 		obj, err := prefixArrayExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)
 		}
 		return obj
-	case object.HashObj:
+	case object.HASH_OBJ:
 		obj, err := prefixHashExpression(v.Operator, obj)
 		if err != nil {
 			return object.NewErrorFormat("%s %s", err, v.Token)

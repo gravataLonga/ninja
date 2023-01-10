@@ -24,7 +24,7 @@ const PROMPT = ">>> "
 
 const NINJA_LICENSE = "Ninja Language - MIT LICENSE - Version: %s\n"
 
-type repl struct {
+type Repl struct {
 	out     io.Writer
 	in      io.Reader
 	scan    *bufio.Scanner
@@ -39,18 +39,18 @@ var colorName = map[string]*color.Color{
 	"error":   color.New(color.FgRed),
 }
 
-func NewRepel(out io.Writer, in io.Reader) *repl {
+func NewRepel(out io.Writer, in io.Reader) *Repl {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
 
-	return &repl{out: out, in: in, scan: scanner, env: env}
+	return &Repl{out: out, in: in, scan: scanner, env: env}
 }
 
-func (r *repl) Version(vs string) {
+func (r *Repl) Version(vs string) {
 	r.version = strings.Replace(vs, "\n", "", 0)
 }
 
-func (r *repl) Output(levelOutput string, format string, a ...interface{}) {
+func (r *Repl) Output(levelOutput string, format string, a ...interface{}) {
 	c, ok := colorName[levelOutput]
 	if !ok {
 		c = colorName["normal"]
@@ -59,7 +59,7 @@ func (r *repl) Output(levelOutput string, format string, a ...interface{}) {
 	c.Fprintf(r.out, format, a...)
 }
 
-func (r *repl) Start() {
+func (r *Repl) Start() {
 	user2, err := user.Current()
 	if err != nil {
 		panic(err)
@@ -104,17 +104,17 @@ func (r *repl) Start() {
 	}
 }
 
-func (r *repl) printSplashLicense() {
+func (r *Repl) printSplashLicense() {
 	r.Output("brand", NINJA_LICENSE, r.version)
 }
 
-func (r *repl) printSplashScreen() {
+func (r *Repl) printSplashScreen() {
 	fmt.Fprint(r.out, "\n\n")
 	fmt.Fprint(r.out, createSpashScreen())
 	fmt.Fprint(r.out, "\n\n")
 }
 
-func (r *repl) printParserErrors(errors []string) {
+func (r *Repl) printParserErrors(errors []string) {
 	r.Output("error", "We got some parser errors.\n")
 	r.Output("error", "\tparser errors:\n")
 	for _, msg := range errors {
@@ -122,7 +122,7 @@ func (r *repl) printParserErrors(errors []string) {
 	}
 }
 
-func (r *repl) printSemanticErrors(errors []string) {
+func (r *Repl) printSemanticErrors(errors []string) {
 	r.Output("error", "We got some semantic errors.\n")
 	r.Output("error", "\tsemantic errors:\n")
 	for _, msg := range errors {

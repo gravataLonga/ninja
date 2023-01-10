@@ -1,9 +1,13 @@
 package stdlib
 
 import (
-	"math/rand"
 	"github.com/gravataLonga/ninja/object"
+	"math/rand"
 )
+
+func init() {
+	object.GlobalEnvironment.Set("rand", object.NewBuiltin(Rand))
+}
 
 // Rand generate a random number from 0 ... 1 float
 func Rand(args ...object.Object) object.Object {

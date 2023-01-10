@@ -13,7 +13,7 @@ type Boolean struct {
 	Value bool
 }
 
-func (b *Boolean) Type() ObjectType { return BooleanObj }
+func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
 
 func (b *Boolean) HashKey() HashKey {
@@ -39,7 +39,7 @@ func (s *Boolean) Call(method string, args ...Object) Object {
 			return NewError(err.Error())
 		}
 
-		return &String{Value: BooleanObj}
+		return &String{Value: BOOLEAN_OBJ}
 	}
 	return NewErrorFormat("method %s not exists on string object.", method)
 }

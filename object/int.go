@@ -10,7 +10,7 @@ type Integer struct {
 }
 
 func (i *Integer) Inspect() string  { return fmt.Sprintf("%d", i.Value) }
-func (i *Integer) Type() ObjectType { return IntegerObj }
+func (i *Integer) Type() ObjectType { return INTEGER_OBJ }
 
 func (i *Integer) HashKey() HashKey {
 	return HashKey{Type: i.Type(), Value: uint64(i.Value)}
@@ -42,7 +42,7 @@ func (s *Integer) Call(method string, args ...Object) Object {
 		if err != nil {
 			return NewError(err.Error())
 		}
-		return &String{Value: IntegerObj}
+		return &String{Value: INTEGER_OBJ}
 	case "string":
 		err := Check(
 			"int.string",

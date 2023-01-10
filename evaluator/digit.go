@@ -35,12 +35,12 @@ func evalFloatOrIntegerInfixExpression(
 }
 
 func evalMinusPrefixOperatorExpression(node *ast.PrefixExpression, right object.Object) object.Object {
-	if right.Type() == object.IntegerObj {
+	if right.Type() == object.INTEGER_OBJ {
 		value := right.(*object.Integer).Value
 		return &object.Integer{Value: -value}
 	}
 
-	if right.Type() == object.FloatObj {
+	if right.Type() == object.FLOAT_OBJ {
 		value := right.(*object.Float).Value
 		return &object.Float{Value: -value}
 	}
@@ -49,12 +49,12 @@ func evalMinusPrefixOperatorExpression(node *ast.PrefixExpression, right object.
 }
 
 func evalIncrementExpression(right object.Object) object.Object {
-	if right.Type() == object.IntegerObj {
+	if right.Type() == object.INTEGER_OBJ {
 		value := right.(*object.Integer).Value
 		return &object.Integer{Value: value + 1}
 	}
 
-	if right.Type() == object.FloatObj {
+	if right.Type() == object.FLOAT_OBJ {
 		value := right.(*object.Float).Value
 		return &object.Float{Value: value + 1.0}
 	}
@@ -63,12 +63,12 @@ func evalIncrementExpression(right object.Object) object.Object {
 }
 
 func evalDecrementExpression(right object.Object) object.Object {
-	if right.Type() == object.IntegerObj {
+	if right.Type() == object.INTEGER_OBJ {
 		value := right.(*object.Integer).Value
 		return &object.Integer{Value: value - 1}
 	}
 
-	if right.Type() == object.FloatObj {
+	if right.Type() == object.FLOAT_OBJ {
 		value := right.(*object.Float).Value
 		return &object.Float{Value: value - 1.0}
 	}

@@ -10,7 +10,7 @@ type Array struct {
 	Elements []Object
 }
 
-func (ao *Array) Type() ObjectType { return ArrayObj }
+func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
 func (ao *Array) Inspect() string {
 	var out bytes.Buffer
 	elements := make([]string, len(ao.Elements))
@@ -52,7 +52,7 @@ func (s *Array) Call(method string, args ...Object) Object {
 			return NewError(err.Error())
 		}
 
-		return &String{Value: ArrayObj}
+		return &String{Value: ARRAY_OBJ}
 	case "length":
 		err := Check(
 			"array.length", args,
@@ -86,7 +86,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 	err := Check(
 		"array.join", args,
 		ExactArgs(1),
-		WithTypes(StringObj),
+		WithTypes(STRING_OBJ),
 	)
 
 	if err != nil {
@@ -109,7 +109,7 @@ func arrayJoin(elements []Object, args ...Object) Object {
 			v, _ := el.(*Float)
 			elementsString = append(elementsString, strconv.FormatFloat(v.Value, 'f', -1, 64))
 		case *Null:
-			elementsString = append(elementsString, NullObj)
+			elementsString = append(elementsString, NULL_OBJ)
 		case *Boolean:
 			v, _ := el.(*Boolean)
 			if v.Value {
@@ -196,7 +196,7 @@ func arraySlice(elements []Object, args ...Object) Object {
 	err := Check(
 		"array.push", args,
 		RangeOfArgs(1, 2),
-		WithTypes(IntegerObj, IntegerObj),
+		WithTypes(INTEGER_OBJ, INTEGER_OBJ),
 	)
 
 	if err != nil {

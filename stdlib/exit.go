@@ -3,6 +3,9 @@ package stdlib
 import "github.com/gravataLonga/ninja/object"
 
 // ExitFunction
+func init() {
+	object.GlobalEnvironment.Set("exit", object.NewBuiltin(Exit))
+}
 
 // Exit execute exit function. Terminate following program
 func Exit(args ...object.Object) object.Object {
@@ -10,7 +13,7 @@ func Exit(args ...object.Object) object.Object {
 	err := object.Check(
 		"exit", args,
 		object.ExactArgs(1),
-		object.WithTypes(object.IntegerObj),
+		object.WithTypes(object.INTEGER_OBJ),
 	)
 
 	if err != nil {

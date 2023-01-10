@@ -4,13 +4,17 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("push", object.NewBuiltin(Push))
+}
+
 // Push will push item to array
 func Push(args ...object.Object) object.Object {
 
 	err := object.Check(
 		"push", args,
 		object.ExactArgs(2),
-		object.WithTypes(object.ArrayObj),
+		object.WithTypes(object.ARRAY_OBJ),
 	)
 
 	if err != nil {

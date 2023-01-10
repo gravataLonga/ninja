@@ -6,7 +6,7 @@ type Builtin struct {
 	Fn BuiltinFunction
 }
 
-func (b *Builtin) Type() ObjectType { return BuiltinObj }
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string  { return "builtin" }
 
 func NewBuiltin(function BuiltinFunction) *Builtin {

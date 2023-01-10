@@ -1,19 +1,29 @@
 package object
 
+type Environment struct {
+	isGlobal bool
+	store    map[string]Object
+	outer    *Environment
+}
+
+var GlobalEnvironment = NewGlobalEnvironment()
+
 func NewEnclosedEnvironment(outer *Environment) *Environment {
 	env := NewEnvironment()
+	env.isGlobal = false
 	env.outer = outer
+	return env
+}
+
+func NewGlobalEnvironment() *Environment {
+	env := NewEnvironment()
+	env.isGlobal = true
 	return env
 }
 
 func NewEnvironment() *Environment {
 	s := make(map[string]Object)
-	return &Environment{store: s, outer: nil}
-}
-
-type Environment struct {
-	store map[string]Object
-	outer *Environment
+	return &Environment{isGlobal: false, store: s, outer: nil}
 }
 
 func (e *Environment) Get(name string) (Object, bool) {

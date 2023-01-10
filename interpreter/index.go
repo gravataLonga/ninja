@@ -8,19 +8,19 @@ import (
 
 func indexExpression(left, index object.Object) object.Object {
 	switch left.Type() {
-	case object.ArrayObj:
+	case object.ARRAY_OBJ:
 		obj, err := indexArrayExpression(left.(*object.Array), index)
 		if err != nil {
 			return object.NewErrorFormat(err.Error())
 		}
 		return obj
-	case object.HashObj:
+	case object.HASH_OBJ:
 		obj, err := indexHashExpression(left.(*object.Hash), index)
 		if err != nil {
 			return object.NewErrorFormat(err.Error())
 		}
 		return obj
-	case object.StringObj:
+	case object.STRING_OBJ:
 		obj, err := indexStringExpression(left.(*object.String), index)
 		if err != nil {
 			return object.NewErrorFormat(err.Error())

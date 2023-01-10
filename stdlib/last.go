@@ -4,13 +4,17 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("last", object.NewBuiltin(Last))
+}
+
 // Last get item from array
 func Last(args ...object.Object) object.Object {
 
 	err := object.Check(
 		"last", args,
 		object.ExactArgs(1),
-		object.WithTypes(object.ArrayObj),
+		object.WithTypes(object.ARRAY_OBJ),
 	)
 
 	if err != nil {

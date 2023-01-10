@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("time", object.NewBuiltin(Time))
+}
+
 // Time we get time in seconds
 func Time(args ...object.Object) object.Object {
 	err := object.Check(

@@ -44,23 +44,24 @@ type Closure interface {
 }
 
 const (
-	NullObj        = "NULL"
-	ErrorObj       = "ERROR"
-	ReturnValueObj = "RETURN_VALUE"
-	BreakValueObj  = "BREAK_VALUE"
-	EnumObj        = "ENUM"
-	FunctionObj    = "FUNCTION"
-	BuiltinObj     = "BUILTIN"
-	IntegerObj     = "INTEGER"
-	FloatObj       = "FLOAT"
-	BooleanObj     = "BOOLEAN"
-	StringObj      = "STRING"
-	ArrayObj       = "ARRAY"
-	HashObj        = "HASH"
+	NULL_OBJ         = "NULL"
+	ERROR_OBJ        = "ERROR"
+	RETURN_VALUE_OBJ = "RETURN_VALUE"
+	BREAK_VALUE_OBJ  = "BREAK_VALUE"
+	ENUM_OBJ         = "ENUM"
+	FUNCTION_OBJ     = "FUNCTION"
+	BUILTIN_OBJ      = "BUILTIN"
+	INTEGER_OBJ      = "INTEGER"
+	FLOAT_OBJ        = "FLOAT"
+	BOOLEAN_OBJ      = "BOOLEAN"
+	STRING_OBJ       = "STRING"
+	ARRAY_OBJ        = "ARRAY"
+	HASH_OBJ         = "HASH"
+	PLUGIN_OBJ       = "PLUGIN"
 )
 
 func IsError(o Object) bool {
-	return o != nil && o.Type() == ErrorObj
+	return o != nil && o.Type() == ERROR_OBJ
 }
 
 func IsTruthy(o Object) bool {
@@ -69,9 +70,9 @@ func IsTruthy(o Object) bool {
 	}
 
 	switch o.Type() {
-	case NullObj:
+	case NULL_OBJ:
 		return false
-	case BooleanObj:
+	case BOOLEAN_OBJ:
 		v, ok := o.(*Boolean)
 		if !ok {
 			return false
@@ -83,19 +84,19 @@ func IsTruthy(o Object) bool {
 }
 
 func IsNumber(o Object) bool {
-	return o != nil && (o.Type() == IntegerObj || o.Type() == FloatObj)
+	return o != nil && (o.Type() == INTEGER_OBJ || o.Type() == FLOAT_OBJ)
 }
 
 func IsArray(o Object) bool {
-	return o != nil && o.Type() == ArrayObj
+	return o != nil && o.Type() == ARRAY_OBJ
 }
 
 func IsHash(o Object) bool {
-	return o != nil && o.Type() == HashObj
+	return o != nil && o.Type() == HASH_OBJ
 }
 
 func IsString(o Object) bool {
-	return o != nil && o.Type() == StringObj
+	return o != nil && o.Type() == STRING_OBJ
 }
 
 func InspectObject(args ...Object) string {

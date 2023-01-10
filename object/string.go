@@ -12,7 +12,7 @@ type String struct {
 	hashKeyCached uint64
 }
 
-func (s *String) Type() ObjectType { return StringObj }
+func (s *String) Type() ObjectType { return STRING_OBJ }
 func (s *String) Inspect() string  { return s.Value }
 
 func (s *String) HashKey() HashKey {
@@ -51,7 +51,7 @@ func (s *String) Call(method string, args ...Object) Object {
 			return NewError(err.Error())
 		}
 
-		return &String{Value: StringObj}
+		return &String{Value: STRING_OBJ}
 	case "length":
 		err := Check(
 			"string.length",
@@ -92,7 +92,7 @@ func stringSplit(str string, args ...Object) Object {
 		"string.split",
 		args,
 		ExactArgs(1),
-		WithTypes(StringObj),
+		WithTypes(STRING_OBJ),
 	)
 
 	if err != nil {
@@ -121,7 +121,7 @@ func stringReplace(str string, args ...Object) Object {
 		"string.replace",
 		args,
 		ExactArgs(2),
-		WithTypes(StringObj, StringObj),
+		WithTypes(STRING_OBJ, STRING_OBJ),
 	)
 
 	if err != nil {
@@ -141,7 +141,7 @@ func stringContains(str string, args ...Object) Object {
 		"string.contain",
 		args,
 		ExactArgs(1),
-		WithTypes(StringObj),
+		WithTypes(STRING_OBJ),
 	)
 
 	if err != nil {
@@ -161,7 +161,7 @@ func stringIndex(str string, args ...Object) Object {
 		"string.index",
 		args,
 		ExactArgs(1),
-		WithTypes(StringObj),
+		WithTypes(STRING_OBJ),
 	)
 
 	if err != nil {

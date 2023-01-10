@@ -117,7 +117,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.SHIFT_LEFT, p.parseInfixExpression, SHIFT_BITWISE)
 	p.registerInfix(token.LPAREN, p.parseCallExpression, CALL)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression, INDEX)
-	p.registerInfix(token.DOT, p.parseObjectCallExpression, CALL)
+	p.registerInfix(token.DOT, p.parseDotExpression, CALL)
 	p.registerInfix(token.DOUBLE_COLON, p.parseEnumAccessorExpression, CALL)
 	p.registerInfix(token.QUESTION_MARK, p.parseTernaryOperator, TERNARY)
 	p.registerInfix(token.ELVIS_OPERATOR, p.parseElvisOperator, TERNARY)

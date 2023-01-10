@@ -5,20 +5,20 @@ import (
 	"github.com/gravataLonga/ninja/token"
 )
 
-type ObjectCall struct {
+type Dot struct {
 	Token  token.Token
 	Object Expression
-	Call   Expression
+	Right  Expression
 }
 
-func (oc *ObjectCall) expressionNode()      {}
-func (oc *ObjectCall) TokenLiteral() string { return oc.Token.Literal }
-func (oc *ObjectCall) String() string {
+func (oc *Dot) expressionNode()      {}
+func (oc *Dot) TokenLiteral() string { return oc.Token.Literal }
+func (oc *Dot) String() string {
 	var out bytes.Buffer
 	out.WriteString("(")
 	out.WriteString(oc.Object.String())
 	out.WriteString(".")
-	out.WriteString(oc.Call.String())
+	out.WriteString(oc.Right.String())
 	out.WriteString(")")
 
 	return out.String()

@@ -4,6 +4,10 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func init() {
+	object.GlobalEnvironment.Set("args", object.NewBuiltin(Args))
+}
+
 // Args will get everthing from argument when executed from cli
 func Args(args ...object.Object) object.Object {
 	err := object.Check(

@@ -345,13 +345,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 	switch expected := expected.(type) {
 	case int:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.IntegerObj)
+			t.Errorf("Expected %s, got: nil", object.INTEGER_OBJ)
 			return false
 		}
 
 		v, ok := result.(*object.Integer)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.IntegerObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.INTEGER_OBJ, result.Type())
 			return false
 		}
 
@@ -369,13 +369,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		return false
 	case float64:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.FloatObj)
+			t.Errorf("Expected %s, got: nil", object.FLOAT_OBJ)
 			return false
 		}
 
 		v, ok := result.(*object.Float)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.FloatObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.FLOAT_OBJ, result.Type())
 			return false
 		}
 
@@ -387,13 +387,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		return true
 	case string:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.StringObj)
+			t.Errorf("Expected %s, got: nil", object.STRING_OBJ)
 			return false
 		}
 
 		v, ok := result.(*object.String)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.StringObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.STRING_OBJ, result.Type())
 			return false
 		}
 
@@ -404,13 +404,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		return true
 	case bool:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.BooleanObj)
+			t.Errorf("Expected %s, got: nil", object.BOOLEAN_OBJ)
 			return false
 		}
 
 		v, ok := result.(*object.Boolean)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.BooleanObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.BOOLEAN_OBJ, result.Type())
 			return false
 		}
 
@@ -421,13 +421,13 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		return true
 	case []interface{}:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.ArrayObj)
+			t.Errorf("Expected %s, got: nil", object.ARRAY_OBJ)
 			return false
 		}
 
 		v, ok := result.(*object.Array)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.ArrayObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.ARRAY_OBJ, result.Type())
 			return false
 		}
 
@@ -444,14 +444,14 @@ func testLiteralObject(t *testing.T, result object.Object, expected interface{})
 		return true
 	case map[interface{}]interface{}:
 		if result == nil {
-			t.Errorf("Expected %s, got: nil", object.HashObj)
+			t.Errorf("Expected %s, got: nil", object.HASH_OBJ)
 			return false
 		}
 
 		// @todo need more checks
 		_, ok := result.(*object.Hash)
 		if !ok {
-			t.Errorf("Expected %s. Got: %s", object.HashObj, result.Type())
+			t.Errorf("Expected %s. Got: %s", object.HASH_OBJ, result.Type())
 			return false
 		}
 

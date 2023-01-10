@@ -17,7 +17,7 @@ func evalBlockStatement(
 		}
 
 		rt := result.Type()
-		if rt == object.ReturnValueObj || rt == object.ErrorObj || rt == object.BreakValueObj {
+		if rt == object.RETURN_VALUE_OBJ || rt == object.ERROR_OBJ || rt == object.BREAK_VALUE_OBJ {
 			return result
 		}
 	}

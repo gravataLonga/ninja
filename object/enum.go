@@ -6,7 +6,7 @@ type Enum struct {
 	Branches map[string]Object
 }
 
-func (en *Enum) Type() ObjectType { return EnumObj }
+func (en *Enum) Type() ObjectType { return ENUM_OBJ }
 func (en *Enum) Inspect() string {
 	out := strings.Builder{}
 	out.WriteString("{")

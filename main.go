@@ -10,7 +10,6 @@ import (
 	"github.com/gravataLonga/ninja/repl"
 	flag "github.com/spf13/pflag"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -47,7 +46,7 @@ func main() {
 		return
 	}
 
-	file, err := ioutil.ReadFile(os.Args[1])
+	file, err := os.ReadFile(os.Args[1])
 	if err != nil {
 		_, err := fmt.Fprintf(os.Stderr, "%v", err)
 		if err != nil {
@@ -85,7 +84,6 @@ func execCode(input string, writer io.Writer) {
 		printSemanticErrorsErrors(s.Errors(), writer)
 		return
 	}*/
-
 	evaluated := evaluator.Eval(program, env)
 	if evaluated != nil {
 		fmt.Fprintf(writer, evaluated.Inspect())

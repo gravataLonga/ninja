@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestObjectCallIntegerExpression(t *testing.T) {
+func TestDotCallIntegerExpression(t *testing.T) {
 	input := "1.type()"
 
 	l := lexer.New(strings.NewReader(input))
@@ -16,16 +16,16 @@ func TestObjectCallIntegerExpression(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+	dotCall, ok := stmt.Expression.(*ast.Dot)
 
 	if !ok {
-		t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+		t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 	}
 
-	callExp, ok := objectCall.Call.(*ast.CallExpression)
+	callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 	if !ok {
-		t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+		t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 	}
 
 	if len(callExp.Arguments) > 0 {
@@ -33,10 +33,10 @@ func TestObjectCallIntegerExpression(t *testing.T) {
 	}
 
 	testIdentifier(t, callExp.Function, "type")
-	testIntegerLiteral(t, objectCall.Object, 1)
+	testIntegerLiteral(t, dotCall.Object, 1)
 }
 
-func TestObjectCallBooleanExpression(t *testing.T) {
+func TestDotCallBooleanExpression(t *testing.T) {
 	input := "true.type()"
 
 	l := lexer.New(strings.NewReader(input))
@@ -45,16 +45,16 @@ func TestObjectCallBooleanExpression(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+	dotCall, ok := stmt.Expression.(*ast.Dot)
 
 	if !ok {
-		t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+		t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 	}
 
-	callExp, ok := objectCall.Call.(*ast.CallExpression)
+	callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 	if !ok {
-		t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+		t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 	}
 
 	if len(callExp.Arguments) > 0 {
@@ -62,10 +62,10 @@ func TestObjectCallBooleanExpression(t *testing.T) {
 	}
 
 	testIdentifier(t, callExp.Function, "type")
-	testBooleanLiteral(t, objectCall.Object, true)
+	testBooleanLiteral(t, dotCall.Object, true)
 }
 
-func TestObjectCallStringExpression(t *testing.T) {
+func TestDotCallStringExpression(t *testing.T) {
 	input := "\"hello\".type()"
 
 	l := lexer.New(strings.NewReader(input))
@@ -74,16 +74,16 @@ func TestObjectCallStringExpression(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+	dotCall, ok := stmt.Expression.(*ast.Dot)
 
 	if !ok {
-		t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+		t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 	}
 
-	callExp, ok := objectCall.Call.(*ast.CallExpression)
+	callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 	if !ok {
-		t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+		t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 	}
 
 	if len(callExp.Arguments) > 0 {
@@ -91,10 +91,10 @@ func TestObjectCallStringExpression(t *testing.T) {
 	}
 
 	testIdentifier(t, callExp.Function, "type")
-	testStringLiteral(t, objectCall.Object, "hello")
+	testStringLiteral(t, dotCall.Object, "hello")
 }
 
-func TestObjectCallArrayExpression(t *testing.T) {
+func TestDotCallArrayExpression(t *testing.T) {
 	input := "[].type()"
 
 	l := lexer.New(strings.NewReader(input))
@@ -103,16 +103,16 @@ func TestObjectCallArrayExpression(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+	dotCall, ok := stmt.Expression.(*ast.Dot)
 
 	if !ok {
-		t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+		t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 	}
 
-	callExp, ok := objectCall.Call.(*ast.CallExpression)
+	callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 	if !ok {
-		t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+		t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 	}
 
 	if len(callExp.Arguments) > 0 {
@@ -120,10 +120,10 @@ func TestObjectCallArrayExpression(t *testing.T) {
 	}
 
 	testIdentifier(t, callExp.Function, "type")
-	testArrayLiteral(t, objectCall.Object, "[]")
+	testArrayLiteral(t, dotCall.Object, "[]")
 }
 
-func TestObjectCallHashExpression(t *testing.T) {
+func TestDotCallHashExpression(t *testing.T) {
 	input := "{}.type()"
 
 	l := lexer.New(strings.NewReader(input))
@@ -132,16 +132,16 @@ func TestObjectCallHashExpression(t *testing.T) {
 	checkParserErrors(t, p)
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-	objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+	dotCall, ok := stmt.Expression.(*ast.Dot)
 
 	if !ok {
-		t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+		t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 	}
 
-	callExp, ok := objectCall.Call.(*ast.CallExpression)
+	callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 	if !ok {
-		t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+		t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 	}
 
 	if len(callExp.Arguments) > 0 {
@@ -149,10 +149,10 @@ func TestObjectCallHashExpression(t *testing.T) {
 	}
 
 	testIdentifier(t, callExp.Function, "type")
-	testHashLiteral(t, objectCall.Object, "{}")
+	testHashLiteral(t, dotCall.Object, "{}")
 }
 
-func TestObjectCallExpression_Multiple(t *testing.T) {
+func TestDotCallExpression_Multiple(t *testing.T) {
 	tests := []struct {
 		input              string
 		expectedIdentifier interface{}
@@ -197,18 +197,18 @@ func TestObjectCallExpression_Multiple(t *testing.T) {
 		checkParserErrors(t, p)
 
 		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-		objectCall, ok := stmt.Expression.(*ast.ObjectCall)
+		dotCall, ok := stmt.Expression.(*ast.Dot)
 
 		if !ok {
-			t.Fatalf("exp not *ast.ObjectCall. got=%T", stmt.Expression)
+			t.Fatalf("exp not *ast.Dot. got=%T", stmt.Expression)
 		}
 
-		testLiteralExpression(t, objectCall.Object, tt.expectedIdentifier)
+		testLiteralExpression(t, dotCall.Object, tt.expectedIdentifier)
 
-		callExp, ok := objectCall.Call.(*ast.CallExpression)
+		callExp, ok := dotCall.Right.(*ast.CallExpression)
 
 		if !ok {
-			t.Fatalf("objectCall.Call is not CallExpression. got=%T", objectCall.Call)
+			t.Fatalf("dotCall.Right is not CallExpression. got=%T", dotCall.Right)
 		}
 
 		for i, arg := range tt.expectedArgs {

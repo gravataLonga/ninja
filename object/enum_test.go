@@ -33,7 +33,7 @@ func TestEnum_Inspect(t *testing.T) {
 func TestEnum_Type(t *testing.T) {
 	enum := &Enum{Branches: map[string]Object{}}
 
-	if enum.Type() != EnumObj {
-		t.Errorf("enum.type() expected to be %s. Got: %s", EnumObj, enum.Type())
+	if enum.Type() != ENUM_OBJ {
+		t.Errorf("enum.type() expected to be %s. Got: %s", ENUM_OBJ, enum.Type())
 	}
 }
