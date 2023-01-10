@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type TernaryOperatorExpression struct {
@@ -26,8 +28,8 @@ func (to *TernaryOperatorExpression) String() string {
 	return out.String()
 }
 
-func (to *TernaryOperatorExpression) Accept(visitor ExprVisitor) (object interface{}) {
-	return visitor.VisitTernaryOperator(to)
+func (to *TernaryOperatorExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+	return object
 }
 
 type ElvisOperatorExpression struct {
@@ -48,6 +50,6 @@ func (eo *ElvisOperatorExpression) String() string {
 	return out.String()
 }
 
-func (eo *ElvisOperatorExpression) Accept(visitor ExprVisitor) (object interface{}) {
-	return visitor.VisitElvisOperator(eo)
+func (eo *ElvisOperatorExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+	return object
 }

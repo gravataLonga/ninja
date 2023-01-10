@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type PostfixExpression struct {
@@ -23,6 +25,6 @@ func (pe *PostfixExpression) String() string {
 	return out.String()
 }
 
-func (pe *PostfixExpression) Accept(visitor ExprVisitor) (object interface{}) {
-	return visitor.VisitPostfixExpr(pe)
+func (pe *PostfixExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+	return object
 }

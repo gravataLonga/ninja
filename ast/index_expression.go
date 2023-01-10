@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type IndexExpression struct {
@@ -23,6 +25,6 @@ func (ie *IndexExpression) String() string {
 	return out.String()
 }
 
-func (ie *IndexExpression) Accept(visitor ExprVisitor) (object interface{}) {
+func (ie *IndexExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
 	return visitor.VisitIndexExpr(ie)
 }

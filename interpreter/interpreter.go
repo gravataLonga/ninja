@@ -61,7 +61,7 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 
 // Statements
 
-func (i *Interpreter) VisitProgram(v *ast.Program) (result interface{}) {
+func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = stmt.Accept(i)
 		if result != nil {
@@ -71,39 +71,39 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result interface{}) {
 	return nil
 }
 
-func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result interface{}) {
+func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
 	}
 	return
 }
 
-func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (result interface{}) {
+func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result interface{}) {
+func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitEnum(v *ast.EnumStatement) (result interface{}) {
+func (i *Interpreter) VisitEnum(v *ast.EnumStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result interface{}) {
+func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result object.Object) {
 	return i.evaluate(v.Expression)
 }
 
-func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result interface{}) {
+func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result interface{}) {
+func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
 	i.env.Set(v.Name.Value, i.evaluate(v.Value))
 	return nil
 }
 
-func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result interface{}) {
+func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
 	ident, ok := v.Name.(*ast.Identifier)
 	if !ok {
 		return nil
@@ -116,7 +116,7 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result interface{
 
 // Expresions
 
-func (i *Interpreter) VisitArrayExpr(v *ast.ArrayLiteral) (result interface{}) {
+func (i *Interpreter) VisitArrayExpr(v *ast.ArrayLiteral) (result object.Object) {
 	elements := i.evaluateExpressions(v.Elements)
 	if len(elements) == 1 && object.IsError(elements[0]) {
 		return elements[0]
@@ -124,31 +124,23 @@ func (i *Interpreter) VisitArrayExpr(v *ast.ArrayLiteral) (result interface{}) {
 	return &object.Array{Elements: elements}
 }
 
-func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result interface{}) {
+func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 	return &object.Boolean{Value: v.Value}
 }
 
-func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result interface{}) {
-	function := i.evaluate(v.Function)
-
-	if object.IsError(function) {
-		return function
-	}
-
-	args := i.evaluateExpressions(v.Arguments)
-
-	if len(args) == 1 && object.IsError(args[0]) {
-		return args[0]
-	}
-
-	return applyFunction(function, args)
+func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
+	return &object.String{Value: "h"}
 }
 
-func (i *Interpreter) VisitFloatExpr(v *ast.FloatLiteral) (result interface{}) {
+func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
+	return &object.String{Value: "h"}
+}
+
+func (i *Interpreter) VisitFloatExpr(v *ast.FloatLiteral) (result object.Object) {
 	return &object.Float{Value: v.Value}
 }
 
-func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result interface{}) {
+func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
 	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body}
 	if v.Name != nil {
 		i.env.Set(v.Name.Value, fn)
@@ -156,7 +148,7 @@ func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result interface{})
 	return fn
 }
 
-func (i *Interpreter) VisitHashExpr(v *ast.HashLiteral) (result interface{}) {
+func (i *Interpreter) VisitHashExpr(v *ast.HashLiteral) (result object.Object) {
 	pairs := make(map[object.HashKey]object.HashPair)
 
 	for keyNode, valueNode := range v.Pairs {
@@ -182,7 +174,7 @@ func (i *Interpreter) VisitHashExpr(v *ast.HashLiteral) (result interface{}) {
 	return &object.Hash{Pairs: pairs}
 }
 
-func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result interface{}) {
+func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 	value, ok := i.env.Get(v.Value)
 	if !ok {
 		return object.NULL
@@ -190,7 +182,7 @@ func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result interface{}) {
 	return value
 }
 
-func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result interface{}) {
+func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
 	if object.IsTruthy(i.evaluate(v.Condition)) {
 		return i.execute(v.Consequence)
 	}
@@ -200,41 +192,37 @@ func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result interface{}) {
 	return object.NULL
 }
 
-func (i *Interpreter) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpression) (result interface{}) {
+func (i *Interpreter) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpression) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitImportExpr(v *ast.Import) (result interface{}) {
+func (i *Interpreter) VisitImportExpr(v *ast.Import) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitIndexExpr(v *ast.IndexExpression) (result interface{}) {
+func (i *Interpreter) VisitIndexExpr(v *ast.IndexExpression) (result object.Object) {
 	left := i.evaluate(v.Left)
 	index := i.evaluate(v.Index)
 	return indexExpression(left, index)
 }
 
-func (i *Interpreter) VisitIntegerExpr(v *ast.IntegerLiteral) (result interface{}) {
+func (i *Interpreter) VisitIntegerExpr(v *ast.IntegerLiteral) (result object.Object) {
 	return &object.Integer{Value: v.Value}
 }
 
-func (i *Interpreter) VisitObjectCallExpr(v *ast.ObjectCall) (result interface{}) {
-	return nil
-}
-
-func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result interface{}) {
+func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
 	return postfixExpression(v, i.evaluate(v.Left))
 }
 
-func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result interface{}) {
+func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
 	return prefixExpression(v, i.evaluate(v.Right))
 }
 
-func (i *Interpreter) VisitStringExpr(v *ast.StringLiteral) (result interface{}) {
+func (i *Interpreter) VisitStringExpr(v *ast.StringLiteral) (result object.Object) {
 	return &object.String{Value: v.Value}
 }
 
-func (i *Interpreter) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (result interface{}) {
+func (i *Interpreter) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (result object.Object) {
 	condition := i.evaluate(v.Condition)
 	if object.IsTruthy(condition) {
 		return i.evaluate(v.Consequence)
@@ -243,7 +231,7 @@ func (i *Interpreter) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (re
 	return i.evaluate(v.Alternative)
 }
 
-func (i *Interpreter) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result interface{}) {
+func (i *Interpreter) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result object.Object) {
 	left := i.evaluate(v.Left)
 	if object.IsTruthy(left) {
 		return left
@@ -251,11 +239,11 @@ func (i *Interpreter) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result
 	return i.evaluate(v.Right)
 }
 
-func (i *Interpreter) VisitFor(v *ast.ForStatement) (result interface{}) {
+func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 	return nil
 }
 
-func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result interface{}) {
+func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
 	return infixExpression(v, v.Operator, i.evaluate(v.Left), i.evaluate(v.Right))
 }
 

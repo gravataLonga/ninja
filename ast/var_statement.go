@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type VarStatement struct {
@@ -27,7 +29,7 @@ func (ls *VarStatement) String() string {
 	return out.String()
 }
 
-func (ls *VarStatement) Accept(visitor StmtVisitor) (object interface{}) {
+func (ls *VarStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
 	return visitor.VisitVarStmt(ls)
 }
 
@@ -53,6 +55,6 @@ func (ls *AssignStatement) String() string {
 	return out.String()
 }
 
-func (ls *AssignStatement) Accept(visitor StmtVisitor) (object interface{}) {
+func (ls *AssignStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
 	return visitor.VisitAssignStmt(ls)
 }

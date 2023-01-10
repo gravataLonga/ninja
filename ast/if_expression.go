@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type IfExpression struct {
@@ -27,6 +29,6 @@ func (ie *IfExpression) String() string {
 	return out.String()
 }
 
-func (ie *IfExpression) Accept(visitor ExprVisitor) (object interface{}) {
+func (ie *IfExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
 	return visitor.VisitIfExpr(ie)
 }

@@ -3,7 +3,9 @@ package ast
 import (
 	"bytes"
 	"fmt"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type Import struct {
@@ -23,6 +25,6 @@ func (i *Import) String() string {
 	return out.String()
 }
 
-func (i *Import) Accept(visitor ExprVisitor) (object interface{}) {
+func (i *Import) Accept(visitor visitor.ExprVisitor) (object object.Object) {
 	return visitor.VisitImportExpr(i)
 }

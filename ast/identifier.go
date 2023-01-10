@@ -1,7 +1,9 @@
 package ast
 
 import (
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type Identifier struct {
@@ -16,6 +18,6 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
-func (i *Identifier) Accept(visitor ExprVisitor) (object interface{}) {
+func (i *Identifier) Accept(visitor visitor.ExprVisitor) (object object.Object) {
 	return visitor.VisitIdentExpr(i)
 }

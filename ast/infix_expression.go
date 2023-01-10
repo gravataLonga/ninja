@@ -2,7 +2,9 @@ package ast
 
 import (
 	"bytes"
+	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
+	"github.com/gravataLonga/ninja/visitor"
 )
 
 type InfixExpression struct {
@@ -25,6 +27,6 @@ func (oe *InfixExpression) String() string {
 	return out.String()
 }
 
-func (oe *InfixExpression) Accept(visitor ExprVisitor) (object interface{}) {
-	return visitor.VisitInfix(oe)
+func (oe *InfixExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+	return object
 }

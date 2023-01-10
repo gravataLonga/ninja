@@ -1,20 +1,14 @@
 package object
 
-import (
-	"bytes"
-	"github.com/gravataLonga/ninja/ast"
-	"strings"
-)
-
 type FunctionLiteral struct {
-	Parameters []ast.Expression
-	Body       *ast.BlockStatement
+	Parameters []interface{}
+	Body       interface{}
 	Env        *Environment
 }
 
 func (f *FunctionLiteral) Type() ObjectType { return FUNCTION_OBJ }
 func (f *FunctionLiteral) Inspect() string {
-	var out bytes.Buffer
+	/*var out bytes.Buffer
 	params := make([]string, len(f.Parameters))
 	for i, p := range f.Parameters {
 		params[i] = p.String()
@@ -24,6 +18,6 @@ func (f *FunctionLiteral) Inspect() string {
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(") {\n")
 	out.WriteString(f.Body.String())
-	out.WriteString("\n}")
-	return out.String()
+	out.WriteString("\n}")*/
+	return "function() {disclosure};" // out.String()
 }

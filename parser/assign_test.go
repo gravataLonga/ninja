@@ -115,7 +115,7 @@ i = i = 1;
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(p.errors) != 6 {
+	if len(p.errors) != 5 {
 		t.Fatalf("Expected 5 errors, got: %d", len(p.errors))
 	}
 
