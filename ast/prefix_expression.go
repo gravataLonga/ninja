@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type PrefixExpression struct {
@@ -25,6 +24,6 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
-func (pe *PrefixExpression) Accept(visitor visitor.ExprVisitor) (object object.Object) {
-	return object
+func (pe *PrefixExpression) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitPrefixExpr(pe)
 }

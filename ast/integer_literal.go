@@ -3,7 +3,6 @@ package ast
 import (
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type IntegerLiteral struct {
@@ -17,6 +16,6 @@ func (il *IntegerLiteral) String() string {
 	return il.TokenLiteral()
 }
 
-func (il *IntegerLiteral) Accept(visitor visitor.ExprVisitor) (object object.Object) {
-	return object
+func (il *IntegerLiteral) Accept(visitor ExprVisitor) (object object.Object) {
+	return visitor.VisitIntegerExpr(il)
 }

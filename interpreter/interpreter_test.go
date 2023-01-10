@@ -305,7 +305,6 @@ func TestElvisOperatorExpression(t *testing.T) {
 }
 
 func TestFunctionLiteral(t *testing.T) {
-
 	p := createParser(t, `function add() { 1 }`)
 	i := New(os.Stdout)
 	i.Interpreter(p)

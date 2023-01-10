@@ -24,11 +24,7 @@ func New(w io.Writer) *Interpreter {
 }
 
 func (i *Interpreter) evaluate(node ast.Expression) object.Object {
-	result := node.Accept(i)
-	if _, ok := result.(object.Object); !ok {
-		return nil
-	}
-	return result.(object.Object)
+	return node.Accept(i)
 }
 
 func (i *Interpreter) Interpreter(node ast.Node) object.Object {
@@ -39,22 +35,16 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 	switch node := node.(type) {
 	case *ast.Program:
 		result := node.Accept(i)
-		if result == nil {
-			return nil
-		}
-		return result.(object.Object)
+		return result
 	case *ast.BlockStatement:
-		result := node.Accept(i).(object.Object)
-		if result == nil {
-			return nil
-		}
-		return result.(object.Object)
+		result := node.Accept(i)
+		return result
 	case *ast.ExpressionStatement:
-		result := node.Accept(i).(object.Object)
-		if result == nil {
-			return nil
-		}
-		return result.(object.Object)
+		result := node.Accept(i)
+		return result
+	case *ast.ReturnStatement:
+		result := node.Accept(i)
+		return result
 	}
 	return nil
 }
@@ -64,11 +54,17 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = stmt.Accept(i)
-		if result != nil {
-			return
+
+		switch result := result.(type) {
+		case *object.ReturnValue:
+			return result.Value
+		case *object.Break:
+			return object.NewErrorFormat("'break' not in the 'loop' context")
+		case *object.Error:
+			return result
 		}
 	}
-	return nil
+	return result
 }
 
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
@@ -95,7 +91,7 @@ func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result object.O
 }
 
 func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
-	return nil
+	return i.evaluate(v.ReturnValue)
 }
 
 func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
@@ -129,11 +125,28 @@ func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 }
 
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
-	return &object.String{Value: "h"}
+	obj := i.evaluate(v.Function)
+
+	if obj.Type() != object.FUNCTION_OBJ {
+		return object.NewErrorFormat("Not implement yet VisitDotExpr")
+	}
+
+	fn, _ := obj.(*object.FunctionLiteral)
+
+	for index, parameter := range fn.Parameters.([]ast.Expression) {
+		ident, ok := parameter.(*ast.Identifier)
+		if !ok {
+			return object.NewErrorFormat("Parameter isn't a identifier")
+		}
+
+		i.env.Set(ident.String(), i.evaluate(v.Arguments[index]))
+	}
+
+	return i.VisitBlock(fn.Body.(*ast.BlockStatement))
 }
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
-	return &object.String{Value: "h"}
+	return object.NewErrorFormat("Not implement yet VisitDotExpr")
 }
 
 func (i *Interpreter) VisitFloatExpr(v *ast.FloatLiteral) (result object.Object) {
@@ -265,11 +278,11 @@ func (i *Interpreter) applyFunction(fn object.Object, args []object.Object) obje
 
 	switch fn := fn.(type) {
 	case *object.FunctionLiteral:
-		if err := argumentsIsValid(args, fn.Parameters); err != nil {
-			return object.NewErrorFormat(err.Error()+" at %s", fn.Body.Token)
+		if err := argumentsIsValid(args, fn.Parameters.([]ast.Expression)); err != nil {
+			return object.NewErrorFormat(err.Error()+" at %s", fn.Body.(ast.BlockStatement).Token)
 		}
 		// extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
-		_ = i.execute(fn.Body)
+		_ = i.execute(fn.Body.(*ast.BlockStatement))
 		return nil
 		// return unwrapReturnValue(evaluated)
 	case *object.Builtin:
@@ -279,6 +292,7 @@ func (i *Interpreter) applyFunction(fn object.Object, args []object.Object) obje
 	}
 }
 
+/*
 func extendFunctionEnv(
 	fnEnv *object.Environment,
 	fnArguments []ast.Expression,
@@ -314,6 +328,7 @@ func extendFunctionEnv(
 
 	return env
 }
+*/
 
 // argumentsIsValid check if parameters passed to function is expected by arguments
 func argumentsIsValid(parameters []object.Object, arguments []ast.Expression) error {

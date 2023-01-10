@@ -1,7 +1,7 @@
 package object
 
 type FunctionLiteral struct {
-	Parameters []interface{}
+	Parameters interface{}
 	Body       interface{}
 	Env        *Environment
 }

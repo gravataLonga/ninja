@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type ReturnStatement struct {
@@ -24,6 +23,6 @@ func (rs *ReturnStatement) String() string {
 	return out.String()
 }
 
-func (rs *ReturnStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (rs *ReturnStatement) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitReturn(rs)
 }

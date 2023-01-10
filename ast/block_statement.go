@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type BlockStatement struct {
@@ -22,6 +21,6 @@ func (bs *BlockStatement) String() string {
 	return out.String()
 }
 
-func (bs *BlockStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (bs *BlockStatement) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitBlock(bs)
 }

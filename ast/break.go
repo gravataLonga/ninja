@@ -3,7 +3,6 @@ package ast
 import (
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type BreakStatement struct {
@@ -16,6 +15,6 @@ func (rs *BreakStatement) String() string {
 	return rs.TokenLiteral()
 }
 
-func (rs *BreakStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (rs *BreakStatement) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitBreak(rs)
 }

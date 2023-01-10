@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type DeleteStatement struct {
@@ -26,6 +25,6 @@ func (de *DeleteStatement) String() string {
 	return out.String()
 }
 
-func (de *DeleteStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (de *DeleteStatement) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitDelete(de)
 }

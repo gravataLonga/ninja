@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type Dot struct {
@@ -26,6 +25,6 @@ func (oc *Dot) String() string {
 	return out.String()
 }
 
-func (oc *Dot) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+func (oc *Dot) Accept(visitor ExprVisitor) (object object.Object) {
 	return visitor.VisitDotExpr(oc)
 }

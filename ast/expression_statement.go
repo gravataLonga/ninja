@@ -3,7 +3,6 @@ package ast
 import (
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type ExpressionStatement struct {
@@ -20,6 +19,6 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
-func (es *ExpressionStatement) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (es *ExpressionStatement) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitExprStmt(es)
 }

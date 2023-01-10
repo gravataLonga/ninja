@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type ForStatement struct {
@@ -47,6 +46,6 @@ func (fs *ForStatement) String() string {
 	return out.String()
 }
 
-func (fs *ForStatement) Accept(visitor visitor.ExprVisitor) (object object.Object) {
+func (fs *ForStatement) Accept(visitor ExprVisitor) (object object.Object) {
 	return visitor.VisitFor(fs)
 }

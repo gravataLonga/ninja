@@ -3,7 +3,6 @@ package ast
 import (
 	"bytes"
 	"github.com/gravataLonga/ninja/object"
-	"github.com/gravataLonga/ninja/visitor"
 )
 
 type Node interface {
@@ -18,13 +17,13 @@ type Node interface {
 type Statement interface {
 	Node
 	statementNode()
-	Accept(visitor visitor.StmtVisitor) (object object.Object)
+	Accept(visitor StmtVisitor) (object object.Object)
 }
 
 type Expression interface {
 	Node
 	expressionNode()
-	Accept(visitor visitor.ExprVisitor) (object object.Object)
+	Accept(visitor ExprVisitor) (object object.Object)
 }
 
 type Program struct {
@@ -46,6 +45,6 @@ func (p *Program) String() string {
 	return out.String()
 }
 
-func (p *Program) Accept(visitor visitor.StmtVisitor) (object object.Object) {
+func (p *Program) Accept(visitor StmtVisitor) (object object.Object) {
 	return visitor.VisitProgram(p)
 }

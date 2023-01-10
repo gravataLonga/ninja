@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
 	"testing"
 )
@@ -15,19 +16,28 @@ func TestFunctionLiteralObject(t *testing.T) {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
 	}
 
-	if len(fn.Parameters) != 1 {
-		t.Fatalf("function has wrong parameters. Parameters=%+v",
-			fn.Parameters)
+	parameters, ok := fn.Parameters.([]ast.Expression)
+	if !ok {
+		t.Fatalf("object.parameters is not []ast.Expression. got=%T (%+v)", fn.Parameters, fn.Parameters)
 	}
 
-	if fn.Parameters[0].String() != "x" {
-		t.Fatalf("parameter is not 'x'. got=%q", fn.Parameters[0])
+	body, ok := fn.Body.(*ast.BlockStatement)
+	if !ok {
+		t.Fatalf("object.body is not ast.BlockStatement. got=%T (%+v)", fn.Body, fn.Body)
+	}
+
+	if len(parameters) != 1 {
+		t.Fatalf("function has wrong parameters. Parameters=%+v", parameters)
+	}
+
+	if parameters[0].String() != "x" {
+		t.Fatalf("parameter is not 'x'. got=%q", parameters[0])
 	}
 
 	expectedBody := "(x + 2)"
 
-	if fn.Body.String() != expectedBody {
-		t.Fatalf("body is not %q. got=%q", expectedBody, fn.Body.String())
+	if body.String() != expectedBody {
+		t.Fatalf("body is not %q. got=%q", expectedBody, body.String())
 	}
 }
 
@@ -40,19 +50,29 @@ func TestFunctionObject(t *testing.T) {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
 	}
 
-	if len(fn.Parameters) != 1 {
+	parameters, ok := fn.Parameters.([]ast.Expression)
+	if !ok {
+		t.Fatalf("object.parameters is not []ast.Expression. got=%T (%+v)", fn.Parameters, fn.Parameters)
+	}
+
+	body, ok := fn.Body.(*ast.BlockStatement)
+	if !ok {
+		t.Fatalf("object.body is not ast.BlockStatement. got=%T (%+v)", fn.Body, fn.Body)
+	}
+
+	if len(parameters) != 1 {
 		t.Fatalf("function has wrong parameters. Parameters=%+v",
 			fn.Parameters)
 	}
 
-	if fn.Parameters[0].String() != "x" {
-		t.Fatalf("parameter is not 'x'. got=%q", fn.Parameters[0])
+	if parameters[0].String() != "x" {
+		t.Fatalf("parameter is not 'x'. got=%q", parameters[0])
 	}
 
 	expectedBody := "(x + 2)"
 
-	if fn.Body.String() != expectedBody {
-		t.Fatalf("body is not %q. got=%q", expectedBody, fn.Body.String())
+	if body.String() != expectedBody {
+		t.Fatalf("body is not %q. got=%q", expectedBody, body.String())
 	}
 }
 
