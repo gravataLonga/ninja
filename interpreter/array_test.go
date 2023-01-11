@@ -72,14 +72,16 @@ func TestArrayIndexExpressions(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		evaluated := interpreter(t, tt.input)
-		integer, ok := tt.expected.(int)
-		if ok {
-			testIntegerObject(t, evaluated, int64(integer))
-		} else {
-			testNullObject(t, evaluated)
-		}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestArrayIndexExpressions[%d]", i), func(t *testing.T) {
+			evaluated := interpreter(t, tt.input)
+			integer, ok := tt.expected.(int)
+			if ok {
+				testIntegerObject(t, evaluated, int64(integer))
+			} else {
+				testNullObject(t, evaluated)
+			}
+		})
 	}
 }
 
@@ -140,7 +142,7 @@ func TestEvalArrayExpression(t *testing.T) {
 		{"[\"hello\", 1, 2.2, true, function() {return \"fn\";}][3]", true},
 		{"[\"hello\", 1, 2.2, true, function() {return \"fn\";}][4]()", "fn"},
 		{"[] == []", false},
-		{"[] != []", false},
+		{"[] != []", true}, // @todo this was false.
 		{"[] && []", true},
 		{"[] || []", true},
 		{"[] && false", false},

@@ -45,7 +45,7 @@ Abc_123;
 		}
 
 		if ident.Value != tt.identifier {
-			t.Errorf("ident.Value not %s. got=%s", tt.identifier, ident.Value)
+			t.Errorf("ident.Right not %s. got=%s", tt.identifier, ident.Value)
 		}
 
 		if ident.TokenLiteral() != tt.identifier {

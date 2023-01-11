@@ -50,7 +50,7 @@ func prefixExpression(v *ast.PrefixExpression, obj object.Object) object.Object 
 }
 
 func prefixStringExpression(operator string, obj object.Object) (object.Object, error) {
-	//value := obj.(*object.String).Value
+	//value := obj.(*object.String).Right
 	switch operator {
 	case "!":
 		return &object.Boolean{Value: !object.IsTruthy(obj)}, nil
@@ -93,7 +93,7 @@ func prefixFloatExpression(operator string, obj object.Object) (object.Object, e
 }
 
 func prefixBooleanExpression(operator string, obj object.Object) (object.Object, error) {
-	// value := obj.(*object.Boolean).Value
+	// value := obj.(*object.Boolean).Right
 	switch operator {
 	case "!":
 		return &object.Boolean{Value: !object.IsTruthy(obj)}, nil
@@ -102,7 +102,7 @@ func prefixBooleanExpression(operator string, obj object.Object) (object.Object,
 }
 
 func prefixArrayExpression(operator string, obj object.Object) (object.Object, error) {
-	// value := obj.(*object.Boolean).Value
+	// value := obj.(*object.Boolean).Right
 	switch operator {
 	case "!":
 		return &object.Boolean{Value: !object.IsTruthy(obj)}, nil
@@ -111,7 +111,7 @@ func prefixArrayExpression(operator string, obj object.Object) (object.Object, e
 }
 
 func prefixHashExpression(operator string, obj object.Object) (object.Object, error) {
-	// value := obj.(*object.Boolean).Value
+	// value := obj.(*object.Boolean).Right
 	switch operator {
 	case "!":
 		return &object.Boolean{Value: !object.IsTruthy(obj)}, nil

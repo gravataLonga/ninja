@@ -39,7 +39,7 @@ func TestBooleanExpression(t *testing.T) {
 		}
 
 		if boolean.Value != tt.expectedBoolean {
-			t.Errorf("boolean.Value not %t. got=%t", tt.expectedBoolean, boolean.Value)
+			t.Errorf("boolean.Right not %t. got=%t", tt.expectedBoolean, boolean.Value)
 		}
 	}
 }

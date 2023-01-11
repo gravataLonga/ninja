@@ -38,7 +38,7 @@ func TestStringExpression(t *testing.T) {
 		}
 
 		if str.Value != tt.expectedString {
-			t.Errorf("boolean.Value not %s. got=%s", tt.expectedString, str.Value)
+			t.Errorf("boolean.Right not %s. got=%s", tt.expectedString, str.Value)
 		}
 	}
 }
@@ -80,7 +80,7 @@ func TestStringIndexExpression(t *testing.T) {
 		}
 
 		if str.Value != tt.expectedString {
-			t.Errorf("boolean.Value not %s. got=%s", tt.expectedString, str.Value)
+			t.Errorf("boolean.Right not %s. got=%s", tt.expectedString, str.Value)
 		}
 
 		ix, ok := index.Index.(*ast.IntegerLiteral)

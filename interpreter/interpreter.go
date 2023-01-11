@@ -100,13 +100,13 @@ func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
 }
 
 func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
-	ident, ok := v.Name.(*ast.Identifier)
+	ident, ok := v.Left.(*ast.Identifier)
 	if !ok {
 		return nil
 	}
 
 	left := ident.Value
-	i.env.Set(left, i.evaluate(v.Value))
+	i.env.Set(left, i.evaluate(v.Right))
 	return nil
 }
 
@@ -330,12 +330,12 @@ func extendFunctionEnv(
 		case *ast.Identifier:
 			ident, _ := argument.(*ast.Identifier)
 			value = parameters[argumentIndex]
-			identifier = ident.Value
+			identifier = ident.Right
 			break
 		case *ast.InfixExpression:
 			infix, _ := argument.(*ast.InfixExpression)
 			ident, _ := infix.Left.(*ast.Identifier)
-			identifier = ident.Value
+			identifier = ident.Right
 			value = Eval(infix.Right, env)
 			if maxLen > argumentIndex {
 				value = parameters[argumentIndex]

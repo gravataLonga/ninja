@@ -17,7 +17,7 @@ type FunctionLiteral struct {
 /*
 	Parameters []Expression
 	Body       *BlockStatement
-	Name       *Identifier
+	Left       *Identifier
 */
 
 func (fl *FunctionLiteral) expressionNode()      {}

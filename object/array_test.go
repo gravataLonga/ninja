@@ -35,7 +35,7 @@ func TestArray_CloneDeep(t *testing.T) {
 	}
 
 	arrDeep, _ := arr.Elements[0].(*Array)
-	// this will work but, if we change directly value on Elements[0].Value = 2 isn't working
+	// this will work but, if we change directly value on Elements[0].Right = 2 isn't working
 	arrDeep.Elements[0] = &Integer{Value: 2}
 
 	if arr.Inspect() == arr1.Inspect() {

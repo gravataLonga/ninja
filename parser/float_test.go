@@ -51,7 +51,7 @@ func TestFloatLiteralExpression(t *testing.T) {
 		}
 
 		if literal.Value != tt.identifier {
-			t.Errorf("literal.Value isnt same %.100f. got=%.100f", tt.identifier, literal.Value)
+			t.Errorf("literal.Right isnt same %.100f. got=%.100f", tt.identifier, literal.Value)
 		}
 
 		if literal.TokenLiteral() != tt.tokenLiteral {

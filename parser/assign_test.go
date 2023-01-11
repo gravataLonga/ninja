@@ -55,7 +55,7 @@ func TestAssignStatements(t *testing.T) {
 		{"x = true;", "x", true},
 		{"x = false;", "x", false},
 		{"x = 13.3;", "x", 13.3},
-		{"x[0] = 10;", "x", 10},
+		// {"x[0] = 10;", "x", 10},
 	}
 
 	for i, tt := range tests {
@@ -75,9 +75,59 @@ func TestAssignStatements(t *testing.T) {
 				return
 			}
 
-			val := stmt.(*ast.AssignStatement).Value
+			val := stmt.(*ast.AssignStatement).Right
 			if !testLiteralExpression(t, val, tt.expectedValue) {
 				return
+			}
+		})
+
+	}
+}
+
+func TestAssignIndexStatements(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      string
+	}{
+		{"x[0] = 1;", "(x[0])", "1"},
+		{"x[\"key\"] = 1;", "(x[key])", "1"},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestAssignIndexStatements[%d]", i), func(t *testing.T) {
+			l := lexer.New(strings.NewReader(tt.input))
+			p := New(l)
+			program := p.ParseProgram()
+			checkParserErrors(t, p)
+
+			if len(program.Statements) != 1 {
+				t.Fatalf("program.Statements does not contain 1 statements. got=%d",
+					len(program.Statements))
+			}
+
+			stmt := program.Statements[0]
+			assign, ok := stmt.(*ast.AssignStatement)
+			if !ok {
+				t.Fatalf("program.Statements[0] does not equal to AssignStatement. got=%T", stmt)
+			}
+
+			exprStmt, ok := assign.Left.(*ast.ExpressionStatement)
+			if !ok {
+				t.Fatalf("program.Statements[0].Left does not equal to ExpressionStatement. got=%T", assign.Left)
+			}
+
+			indexStmt, ok := exprStmt.Expression.(*ast.IndexExpression)
+			if !ok {
+				t.Fatalf("program.Statements[0].Left.Expression does not equal to IndexExpression. got=%T", exprStmt.Expression)
+			}
+
+			if indexStmt.String() != tt.expectedIdentifier {
+				t.Fatalf("indexExpr must be %s. Got: %s", tt.expectedIdentifier, indexStmt.String())
+			}
+
+			if assign.Right.String() != tt.expectedValue {
+				t.Fatalf("assign.Right must be %s. Got: %s", tt.expectedValue, assign.Right.String())
 			}
 		})
 

@@ -11,10 +11,18 @@ func (p *Parser) parseStatement() ast.Statement {
 		if p.peekTokenIs(token.ASSIGN) {
 			return p.parseAssignStatement()
 		}
-		if p.peekTokenIs(token.LBRACKET) {
-			return p.parseInfixAssignExpression()
+		expr := p.parseExpressionStatement()
+		if !p.peekTokenIs(token.ASSIGN) {
+			return expr
 		}
-		return p.parseExpressionStatement()
+
+		p.nextToken()
+		p.nextToken()
+		assign := &ast.AssignStatement{Token: p.curToken, Left: expr, Right: p.parseExpression(LOWEST)}
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
+		return assign
 	case token.DELETE:
 		return p.parseDeleteStatement()
 	case token.VAR:

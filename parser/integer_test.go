@@ -47,7 +47,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 		}
 
 		if literal.Value != tt.identifier {
-			t.Errorf("literal.Value not %d. got=%d", tt.identifier, literal.Value)
+			t.Errorf("literal.Right not %d. got=%d", tt.identifier, literal.Value)
 		}
 
 		if literal.TokenLiteral() != strconv.FormatInt(tt.identifier, 10) {
