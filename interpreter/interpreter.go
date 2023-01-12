@@ -1,8 +1,6 @@
 package interpreter
 
 import (
-	"errors"
-	"fmt"
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
 	"io"
@@ -217,6 +215,39 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 }
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
+	obj := i.evaluate(v.Object)
+	call, ok := v.Right.(*ast.CallExpression)
+	if !ok {
+		return object.NewErrorFormat("we expect to be a call on right of dot operation. Got: %t", v.Right)
+	}
+
+	objCallable, ok := obj.(object.CallableMethod)
+	if !ok {
+		return object.NewErrorFormat("object must implement callable.")
+	}
+
+	method, ok := call.Function.(*ast.Identifier)
+	if !ok {
+		return object.NewErrorFormat("method name isn't a identifier")
+	}
+
+	return objCallable.Call(method.Value)
+
+	/*
+		function := Eval(node.Function, env)
+		if object.IsError(function) {
+			return function
+		}
+
+		args := evalExpressions(node.Arguments, env)
+		if len(args) == 1 && object.IsError(args[0]) {
+			return args[0]
+		}
+
+		return applyFunction(function, args)
+
+		return object.NewErrorFormat("Not implement yet VisitDotExpr")
+	*/
 	return object.NewErrorFormat("Not implement yet VisitDotExpr")
 }
 
@@ -343,90 +374,4 @@ func (i *Interpreter) evaluateExpressions(exprs []ast.Expression) []object.Objec
 	}
 
 	return result
-}
-
-func (i *Interpreter) applyFunction(fn object.Object, args []object.Object) object.Object {
-
-	switch fn := fn.(type) {
-	case *object.FunctionLiteral:
-		if err := argumentsIsValid(args, fn.Parameters.([]ast.Expression)); err != nil {
-			return object.NewErrorFormat(err.Error()+" at %s", fn.Body.(ast.BlockStatement).Token)
-		}
-		// extendedEnv := extendFunctionEnv(fn.Env, fn.Parameters, args)
-		_ = i.execute(fn.Body.(*ast.BlockStatement))
-		return nil
-		// return unwrapReturnValue(evaluated)
-	case *object.Builtin:
-		return fn.Fn(args...)
-	default:
-		return object.NewErrorFormat("not a function: %s", fn.Type())
-	}
-}
-
-/*
-func extendFunctionEnv(
-	fnEnv *object.Environment,
-	fnArguments []ast.Expression,
-	parameters []object.Object,
-) *object.Environment {
-
-	maxLen := len(parameters)
-
-	env := object.NewEnclosedEnvironment(fnEnv)
-
-	for argumentIndex, argument := range fnArguments {
-		var value object.Object
-		var identifier string
-
-		switch argument.(type) {
-		case *ast.Identifier:
-			ident, _ := argument.(*ast.Identifier)
-			value = parameters[argumentIndex]
-			identifier = ident.Right
-			break
-		case *ast.InfixExpression:
-			infix, _ := argument.(*ast.InfixExpression)
-			ident, _ := infix.Left.(*ast.Identifier)
-			identifier = ident.Right
-			value = Eval(infix.Right, env)
-			if maxLen > argumentIndex {
-				value = parameters[argumentIndex]
-			}
-		}
-
-		env.Set(identifier, value)
-	}
-
-	return env
-}
-*/
-
-// argumentsIsValid check if parameters passed to function is expected by arguments
-func argumentsIsValid(parameters []object.Object, arguments []ast.Expression) error {
-	if len(parameters) == len(arguments) {
-		return nil
-	}
-
-	if len(parameters) > len(arguments) {
-		return errors.New(fmt.Sprintf("Function expected %d arguments, got %d", len(arguments), len(parameters)))
-	}
-
-	// all arguments are infix expression, which mean, they have a default value
-	total := 0
-	for _, arg := range arguments {
-		if _, ok := arg.(*ast.InfixExpression); ok {
-			total++
-		}
-	}
-	// all arguments have default value
-	if total == len(arguments) {
-		return nil
-	}
-
-	// a, b = 1
-	if total+len(parameters) == len(arguments) {
-		return nil
-	}
-
-	return errors.New(fmt.Sprintf("Function expected %d arguments, got %d", len(arguments), len(parameters)))
 }
