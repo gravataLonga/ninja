@@ -101,12 +101,64 @@ func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
 
 func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
 	ident, ok := v.Left.(*ast.Identifier)
+	if ok {
+		left := ident.Value
+		i.env.Set(left, i.evaluate(v.Right))
+		return nil
+	}
+
+	expr, ok := v.Left.(*ast.ExpressionStatement)
+	if !ok {
+		return nil
+	}
+
+	idx, ok := expr.Expression.(*ast.IndexExpression)
+	if !ok {
+		return nil
+	}
+
+	ident, ok = idx.Left.(*ast.Identifier)
 	if !ok {
 		return nil
 	}
 
 	left := ident.Value
-	i.env.Set(left, i.evaluate(v.Right))
+
+	obj, ok := i.env.Get(left)
+	if !ok {
+		return nil
+	}
+
+	if obj.Type() == object.ARRAY_OBJ {
+		arr, _ := obj.(*object.Array)
+		index := i.evaluate(idx.Index)
+		indexIntegerObject, ok := index.(*object.Integer)
+		if !ok {
+			return nil
+		}
+
+		indexInteger := int(indexIntegerObject.Value)
+		lenElements := len(arr.Elements)
+
+		if indexInteger <= -1 {
+			return object.NewErrorFormat("index out of range, got %d not positive index", indexInteger)
+		}
+
+		if lenElements < indexInteger {
+			return object.NewErrorFormat("index out of range, got %d but array has only %d elements", indexInteger, lenElements)
+		}
+
+		if indexInteger > lenElements-1 {
+			lenElements = lenElements + 1
+		}
+
+		elements := make([]object.Object, lenElements)
+		copy(elements, arr.Elements)
+		elements[indexInteger] = i.evaluate(v.Right)
+		arr.Elements = elements
+		i.env.Set(left, arr)
+	}
+
 	return nil
 }
 
