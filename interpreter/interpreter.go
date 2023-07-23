@@ -231,7 +231,9 @@ func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
 		return object.NewErrorFormat("method name isn't a identifier")
 	}
 
-	return objCallable.Call(method.Value)
+	args := i.evaluateExpressions(call.Arguments)
+
+	return objCallable.Call(method.Value, args...)
 
 	/*
 		function := Eval(node.Function, env)
