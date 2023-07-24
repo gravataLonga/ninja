@@ -104,7 +104,7 @@ func TestErrorBooleanHandling(t *testing.T) {
 		},
 		{
 			"true + false + true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 21]",
+			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 6]",
 		},
 		{
 			"5; true + false; 5",
@@ -123,27 +123,27 @@ if (10 > 1) {
   return 1;
 }
 `,
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 4, Offset: 17]",
 		},
 		{
 			"[true, false][0] + true",
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 18]",
 		},
 		{
 			"{0: true, 1: false}[0] + true",
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 24]",
 		},
 		{
 			"[] + true",
-			"type mismatch: ARRAY + BOOLEAN",
+			"unknown operator: ARRAY + BOOLEAN + at [Line: 1, Offset: 4]",
 		},
 		{
 			"{} + true",
-			"type mismatch: HASH + BOOLEAN",
+			"unknown operator: HASH + BOOLEAN + at [Line: 1, Offset: 4]",
 		},
 		{
 			"function () {} + true",
-			"type mismatch: FUNCTION + BOOLEAN",
+			"unknown operator: FUNCTION + BOOLEAN + at [Line: 1, Offset: 16]",
 		},
 	}
 

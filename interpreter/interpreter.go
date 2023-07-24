@@ -68,6 +68,9 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
+		if object.IsError(result) {
+			return
+		}
 	}
 	return
 }
@@ -171,7 +174,10 @@ func (i *Interpreter) VisitArrayExpr(v *ast.ArrayLiteral) (result object.Object)
 }
 
 func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
-	return &object.Boolean{Value: v.Value}
+	if v.Value {
+		return object.TRUE
+	}
+	return object.FALSE
 }
 
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
@@ -361,7 +367,18 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 }
 
 func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
-	return infixExpression(v, v.Operator, i.evaluate(v.Left), i.evaluate(v.Right))
+	left := i.evaluate(v.Left)
+	right := i.evaluate(v.Right)
+
+	if object.IsError(left) {
+		return left
+	}
+
+	if object.IsError(right) {
+		return right
+	}
+
+	return infixExpression(v, v.Operator, left, right)
 }
 
 func (i *Interpreter) evaluateExpressions(exprs []ast.Expression) []object.Object {

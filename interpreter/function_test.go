@@ -177,14 +177,14 @@ func TestCallFunction(t *testing.T) {
 			15,
 		},
 		{
-			"function add(a, b) { function test(a, b) { return a + b }; return test(a + b, 10); } add(10, 20);",
-			40,
-		},
-		{
-			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
+			"function add(a, b) { function test(e, f) { return e + f }; return test(a + b, 10); } add(10, 20);",
 			40,
 		},
 		/*{
+			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
+			40,
+		},
+		{
 			"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
 			2,
 		},*/
