@@ -5,6 +5,8 @@ import (
 	_ "embed"
 	"fmt"
 	"github.com/TheZoraiz/ascii-image-converter/aic_package"
+	"github.com/gravataLonga/ninja/interpreter"
+
 	// "github.com/gravataLonga/ninja/evaluator"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
@@ -89,7 +91,9 @@ func (r *Repl) Start() {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program, r.env)
+		i := interpreter.New(os.Stdout, r.env)
+
+		evaluated := i.Interpreter(program)
 
 		if _, ok := evaluated.(*object.Error); ok {
 			r.Output("error", evaluated.Inspect())

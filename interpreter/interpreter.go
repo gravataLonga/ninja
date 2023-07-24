@@ -13,9 +13,9 @@ type Interpreter struct {
 	output  io.Writer
 }
 
-func New(w io.Writer) *Interpreter {
+func New(w io.Writer, env *object.Environment) *Interpreter {
 	return &Interpreter{
-		env:     object.NewEnvironment(),
+		env:     env,
 		globals: object.NewEnvironment(),
 		locals:  make(map[ast.Expression]int),
 	}
@@ -183,16 +183,33 @@ func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
 	obj := i.evaluate(v.Function)
 
-	if obj.Type() != object.FUNCTION_OBJ {
-		return object.NewErrorFormat("Not implement yet VisitDotExpr")
+	if object.IsError(obj) {
+		return obj
 	}
 
-	maxArguments := len(v.Arguments)
+	if obj.Type() != object.FUNCTION_OBJ {
+		return object.NewErrorFormat("Not implement yet VisitCallExpr")
+	}
 
 	fn, _ := obj.(*object.FunctionLiteral)
+	parameters := fn.Parameters.([]ast.Expression)
+
+	// obj, _ = obj.(object.FunctionLiteral)
+
+	mParameter := len(v.Arguments)
+	mArgument := len(parameters)
+
+	if mParameter < mArgument {
+		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
+	}
+
+	if mArgument == 0 && mParameter > 0 {
+		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
+	}
+
 	envLocal := object.NewEnclosedEnvironment(i.env)
 
-	for index, parameter := range fn.Parameters.([]ast.Expression) {
+	for index, parameter := range parameters {
 		ident, ok := parameter.(*ast.Identifier)
 		if ok {
 			envLocal.Set(ident.String(), i.evaluate(v.Arguments[index]))
@@ -203,7 +220,7 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		ident, _ = infix.Left.(*ast.Identifier)
 
 		var value object.Object
-		if maxArguments > index {
+		if mParameter > index {
 			argument := v.Arguments[index]
 			value = i.evaluate(argument)
 		} else {
@@ -300,7 +317,8 @@ func (i *Interpreter) VisitHashExpr(v *ast.HashLiteral) (result object.Object) {
 func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 	value, ok := i.env.Get(v.Value)
 	if !ok {
-		return object.NULL
+		return object.NewErrorFormat("identifier not found: %s %s", v.Value, v.Token)
+		// return object.NULL
 	}
 	return value
 }

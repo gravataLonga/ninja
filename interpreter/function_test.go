@@ -10,7 +10,7 @@ import (
 
 func TestFunctionLiteral(t *testing.T) {
 	p := createParser(t, `function add() { 1 }`)
-	i := New(os.Stdout)
+	i := New(os.Stdout, object.NewEnvironment())
 	i.Interpreter(p)
 
 	_, ok := i.env.Get("add")
@@ -229,8 +229,8 @@ func TestCallWrongParameters(t *testing.T) {
 		input                string
 		expectedErrorMessage string
 	}{
-		{"function (x) {}();", "Function expected 1 arguments, got 0 at { at [Line: 1, Offset: 14]"},
-		{"function () {}(0);", "Function expected 0 arguments, got 1 at { at [Line: 1, Offset: 13]"},
+		{"function (x) {}();", "Function expected 1 arguments, got 0 at ( at [Line: 1, Offset: 16]"},
+		{"function () {}(0);", "Function expected 0 arguments, got 1 at ( at [Line: 1, Offset: 15]"},
 		{"function () { return add(); }();", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},
 	}
 

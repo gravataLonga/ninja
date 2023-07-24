@@ -326,7 +326,7 @@ func interpreter(t *testing.T, input string) object.Object {
 		t.Fatalf("Parsing program got some errors: %v", p.Errors()[0])
 	}
 
-	i := New(os.Stdout)
+	i := New(os.Stdout, object.NewEnvironment())
 	return i.Interpreter(program)
 }
 
