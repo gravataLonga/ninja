@@ -80,7 +80,51 @@ func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (result object.Object) {
 }
 
 func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
+	ident, ok := v.Left.(*ast.Identifier)
+	if !ok {
+		return object.NewErrorFormat("DeleteStatement.left must be a identifier. Got: %T", v.Left)
+	}
+
+	value, ok := i.env.Get(ident.Value)
+	if !ok {
+		return object.NewErrorFormat("DeleteStatement.left %s identifier not found.", ident.Value)
+	}
+
+	index := i.evaluate(v.Index)
+
+	switch value.(type) {
+	case *object.Array:
+		arr, _ := value.(*object.Array)
+		if !object.IsInteger(index) {
+			return object.NewErrorFormat("DeleteStatement.index must be a Integer. Got: %T", index)
+		}
+		index, _ := index.(*object.Integer)
+		arr.Elements = removeIndexFromArray(arr.Elements, index.Value)
+		i.env.Set(ident.Value, arr)
+	case *object.Hash:
+		hash, _ := value.(*object.Hash)
+		hashable, ok := index.(object.Hashable)
+		if !ok {
+			return object.NewErrorFormat("DeleteStatement.index must be a Hashable. Got: %T", index)
+		}
+		delete(hash.Pairs, hashable.HashKey())
+
+		i.env.Set(ident.Value, hash)
+	default:
+		return object.NewErrorFormat("DeleteStatement.left only work with array or hash object. Got: %T", value)
+	}
+
 	return nil
+}
+
+// removeIndexFromArray is slow operations, we need better way?
+func removeIndexFromArray(slice []object.Object, s int64) []object.Object {
+
+	copy(slice[s:], slice[s+1:])      // Shift a[i+1:] left one index.
+	slice[len(slice)-1] = object.NULL // Erase last element (write zero value).
+	slice = slice[:len(slice)-1]      // Truncate slice.
+
+	return slice
 }
 
 func (i *Interpreter) VisitEnum(v *ast.EnumStatement) (result object.Object) {
@@ -191,6 +235,9 @@ func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 	return object.FALSE
 }
 
+// VisitCallExpr
+// @todo need refactoring this function
+// @todo arguments must be it's on AST structure.
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
 	obj := i.evaluate(v.Function)
 
