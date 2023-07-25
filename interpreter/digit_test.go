@@ -125,6 +125,30 @@ func TestEvalDigitExpression(t *testing.T) {
 			`4.0 % 2`,
 			0.0,
 		},
+		{
+			`0++`,
+			1,
+		},
+		{
+			`++0`,
+			1,
+		},
+		{
+			`var a = 1; a++; a;`,
+			2,
+		},
+		{
+			`var a = 1; ++a; a;`,
+			2,
+		},
+		{
+			`var a = 1; a++;`,
+			1,
+		},
+		{
+			`var a = 1; ++a;`,
+			2,
+		},
 	}
 
 	for i, tt := range tests {

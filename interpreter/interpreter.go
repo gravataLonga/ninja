@@ -449,11 +449,37 @@ func (i *Interpreter) VisitIntegerExpr(v *ast.IntegerLiteral) (result object.Obj
 }
 
 func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
-	return postfixExpression(v, i.evaluate(v.Left))
+	left := i.evaluate(v.Left)
+	if object.IsError(left) {
+		return left
+	}
+
+	result = postfixExpression(v, left)
+	astIdent, ok := v.Left.(*ast.Identifier)
+	if !ok {
+		return
+	}
+
+	ident := astIdent.Token
+	i.env.Set(ident.Literal, result)
+	return left
 }
 
 func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
-	return prefixExpression(v, i.evaluate(v.Right))
+	right := i.evaluate(v.Right)
+	if object.IsError(right) {
+		return right
+	}
+
+	result = prefixExpression(v, right)
+	astIdent, ok := v.Right.(*ast.Identifier)
+	if !ok {
+		return
+	}
+
+	ident := astIdent.Token
+	i.env.Set(ident.Literal, result)
+	return
 }
 
 func (i *Interpreter) VisitStringExpr(v *ast.StringLiteral) (result object.Object) {
