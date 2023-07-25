@@ -204,7 +204,9 @@ func infixDivExpression(left, right object.Object) (object.Object, error) {
 	case object.INTEGER_OBJ:
 		switch right.Type() {
 		case object.INTEGER_OBJ:
-			return &object.Integer{Value: left.(*object.Integer).Value / right.(*object.Integer).Value}, nil
+			left := float64(left.(*object.Integer).Value)
+			right := float64(right.(*object.Integer).Value)
+			return &object.Float{Value: left / right}, nil
 		case object.FLOAT_OBJ:
 			left := float64(left.(*object.Integer).Value)
 			return &object.Float{Value: left / right.(*object.Float).Value}, nil
