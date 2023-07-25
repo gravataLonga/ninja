@@ -7,10 +7,11 @@ import (
 )
 
 type Interpreter struct {
-	env     *object.Environment
-	globals *object.Environment
-	locals  map[ast.Expression]int
-	output  io.Writer
+	env       *object.Environment
+	globals   *object.Environment
+	innerLoop int
+	locals    map[ast.Expression]int
+	output    io.Writer
 }
 
 func New(w io.Writer, env *object.Environment) *Interpreter {
@@ -31,6 +32,7 @@ func (i *Interpreter) Interpreter(node ast.Node) object.Object {
 
 func (i *Interpreter) execute(node ast.Node) object.Object {
 	switch node := node.(type) {
+
 	case *ast.Program:
 		result := node.Accept(i)
 		return result
@@ -41,6 +43,15 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 		result := node.Accept(i)
 		return result
 	case *ast.ReturnStatement:
+		result := node.Accept(i)
+		return result
+	case *ast.BreakStatement:
+		result := node.Accept(i)
+		return result
+	case *ast.VarStatement:
+		result := node.Accept(i)
+		return result
+	case *ast.AssignStatement:
 		result := node.Accept(i)
 		return result
 	}
@@ -68,6 +79,10 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
+		// @todo test this better
+		if i.innerLoop > 0 && result != nil && result.Type() == object.BREAK_VALUE_OBJ {
+			return
+		}
 		if object.IsError(result) {
 			return
 		}
@@ -76,7 +91,7 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 }
 
 func (i *Interpreter) VisitBreak(v *ast.BreakStatement) (result object.Object) {
-	return nil
+	return &object.Break{Value: object.NULL}
 }
 
 func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
@@ -147,7 +162,11 @@ func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result object.O
 }
 
 func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
-	return i.evaluate(v.ReturnValue)
+	if v.ReturnValue == nil {
+		return &object.ReturnValue{Value: object.NULL}
+	}
+
+	return &object.ReturnValue{Value: i.evaluate(v.ReturnValue)}
 }
 
 func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
@@ -213,6 +232,17 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		elements[indexInteger] = i.evaluate(v.Right)
 		arr.Elements = elements
 		i.env.Set(left, arr)
+	}
+
+	if obj.Type() == object.HASH_OBJ {
+		hashObject, _ := obj.(*object.Hash)
+
+		objIndex := i.evaluate(idx.Index)
+		h, ok := objIndex.(object.Hashable)
+		if !ok {
+			return object.NewErrorFormat("expected index to be hashable")
+		}
+		hashObject.Pairs[h.HashKey()] = object.HashPair{Key: objIndex, Value: i.evaluate(v.Right)}
 	}
 
 	return nil
@@ -396,7 +426,9 @@ func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 }
 
 func (i *Interpreter) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
-	if object.IsTruthy(i.evaluate(v.Condition)) {
+	// Probably problem is here:
+	condition := i.evaluate(v.Condition)
+	if object.IsTruthy(condition) {
 		return i.execute(v.Consequence)
 	}
 	if v.Alternative != nil {
@@ -504,7 +536,42 @@ func (i *Interpreter) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result
 }
 
 func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
-	return nil
+	if v.InitialCondition != nil {
+		i.execute(v.InitialCondition)
+	}
+
+	// @todo test this better
+	i.innerLoop++
+	condition := i.interpreterConditionForLoop(v.Condition)
+	for object.IsTruthy(condition) {
+
+		result = i.execute(v.Body)
+		if result != nil {
+			if result.Type() == object.RETURN_VALUE_OBJ {
+				return result
+			}
+
+			if result.Type() == object.BREAK_VALUE_OBJ {
+				return nil
+			}
+		}
+		if v.Iteration != nil {
+			i.execute(v.Iteration)
+		}
+		condition = i.interpreterConditionForLoop(v.Condition)
+	}
+	// @todo test this better
+	i.innerLoop--
+
+	return result
+}
+
+// interpreterConditionForLoop @todo check better way.
+func (i *Interpreter) interpreterConditionForLoop(v ast.Expression) object.Object {
+	if v == nil {
+		return object.TRUE
+	}
+	return i.evaluate(v)
 }
 
 func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
