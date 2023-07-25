@@ -3,6 +3,8 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"github.com/gravataLonga/ninja/interpreter"
+
 	// "github.com/gravataLonga/ninja/evaluator"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
@@ -84,9 +86,10 @@ func execCode(input string, writer io.Writer) {
 		printSemanticErrorsErrors(s.Errors(), writer)
 		return
 	}*/
-	evaluated := evaluator.Eval(program, env)
-	if evaluated != nil {
-		fmt.Fprintf(writer, evaluated.Inspect())
+	i := interpreter.New(os.Stdout, env)
+	result := i.Interpreter(program)
+	if result != nil {
+		fmt.Fprintf(writer, result.Inspect())
 	}
 }
 

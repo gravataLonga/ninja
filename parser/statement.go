@@ -8,9 +8,11 @@ import (
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.IDENT:
+		// var a = "ola";
 		if p.peekTokenIs(token.ASSIGN) {
 			return p.parseAssignStatement()
 		}
+
 		expr := p.parseExpressionStatement()
 		if !p.peekTokenIs(token.ASSIGN) {
 			return expr

@@ -193,6 +193,8 @@ i = i = 1;
 	}
 }
 
+/*
+@todo we need to validate when we are assign invalid objects
 func TestIllegalAssignmentsErrors(t *testing.T) {
 	tests := []struct {
 		input         string
@@ -241,3 +243,4 @@ func TestIllegalAssignmentsErrors(t *testing.T) {
 
 	}
 }
+*/

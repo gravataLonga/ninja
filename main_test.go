@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"github.com/gravataLonga/ninja/evaluator"
+	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -48,7 +48,8 @@ func BenchmarkExecCode(b *testing.B) {
 				if len(p.Errors()) > 0 {
 					continue
 				}
-				evaluator.Eval(program, env)
+				i := interpreter.New(os.Stdout, env)
+				i.Interpreter(program)
 			}
 		})
 	}

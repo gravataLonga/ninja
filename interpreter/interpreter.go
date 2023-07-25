@@ -198,13 +198,27 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 
 	mParameter := len(v.Arguments)
 	mArgument := len(parameters)
+	var defaultArguments []ast.Expression
+
+	for _, p := range parameters {
+		if _, ok := p.(*ast.Identifier); ok {
+			defaultArguments = append(defaultArguments, p)
+		}
+	}
+	mArgumentsDefault := len(defaultArguments)
 
 	if mParameter < mArgument {
-		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
+		if mParameter < mArgumentsDefault {
+			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
+		}
+
+		if mArgumentsDefault == 0 && mParameter > 0 {
+			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgumentsDefault, mParameter, v.Token)
+		}
 	}
 
 	if mArgument == 0 && mParameter > 0 {
-		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
+		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgumentsDefault, mParameter, v.Token)
 	}
 
 	envLocal := object.NewEnclosedEnvironment(i.env)
