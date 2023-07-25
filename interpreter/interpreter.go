@@ -166,7 +166,12 @@ func (i *Interpreter) VisitReturn(v *ast.ReturnStatement) (result object.Object)
 		return &object.ReturnValue{Value: object.NULL}
 	}
 
-	return &object.ReturnValue{Value: i.evaluate(v.ReturnValue)}
+	result = i.evaluate(v.ReturnValue)
+	if object.IsError(result) {
+		return
+	}
+
+	return &object.ReturnValue{Value: result}
 }
 
 func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
@@ -334,9 +339,12 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 
 	env := i.env
 	i.env = envLocal
-	reslt := i.VisitBlock(fn.Body.(*ast.BlockStatement))
+	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
 	i.env = env
-	return reslt
+	if result.Type() == object.RETURN_VALUE_OBJ {
+		return result.(*object.ReturnValue).Value
+	}
+	return
 }
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
