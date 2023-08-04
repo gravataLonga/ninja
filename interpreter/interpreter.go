@@ -73,16 +73,25 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 			return result
 		}
 	}
-	return result
+	return
 }
 
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
+		if result == nil {
+			continue
+		}
+
+		if result.Type() == object.RETURN_VALUE_OBJ {
+			return result.(*object.ReturnValue).Value
+		}
+
 		// @todo test this better
-		if i.innerLoop > 0 && result != nil && result.Type() == object.BREAK_VALUE_OBJ {
+		if i.innerLoop > 0 && result.Type() == object.BREAK_VALUE_OBJ {
 			return
 		}
+
 		if object.IsError(result) {
 			return
 		}
