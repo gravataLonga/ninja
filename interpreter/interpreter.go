@@ -19,10 +19,10 @@ type Interpreter struct {
 }
 
 func New(w io.Writer, env *object.Environment) *Interpreter {
+
 	return &Interpreter{
-		env:     env,
-		globals: object.NewEnvironment(),
-		locals:  make(map[ast.Expression]int),
+		env:    env,
+		locals: make(map[ast.Expression]int),
 	}
 }
 
