@@ -5,6 +5,7 @@ import (
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
+	"github.com/gravataLonga/ninja/stdlib"
 	"io"
 	"os"
 	"strings"
@@ -19,6 +20,16 @@ type Interpreter struct {
 }
 
 func New(w io.Writer, env *object.Environment) *Interpreter {
+	env.Set("len", object.NewBuiltin(stdlib.Len))
+	env.Set("first", object.NewBuiltin(stdlib.First))
+	env.Set("puts", object.NewBuiltin(stdlib.Puts))
+	env.Set("last", object.NewBuiltin(stdlib.Last))
+	env.Set("rest", object.NewBuiltin(stdlib.Rest))
+	env.Set("push", object.NewBuiltin(stdlib.Push))
+	env.Set("time", object.NewBuiltin(stdlib.Time))
+	env.Set("rand", object.NewBuiltin(stdlib.Rand))
+	env.Set("args", object.NewBuiltin(stdlib.Args))
+	env.Set("plugin", object.NewBuiltin(stdlib.Plugin))
 
 	return &Interpreter{
 		env:    env,
@@ -290,7 +301,6 @@ func (i *Interpreter) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 }
 
 // VisitCallExpr
-// @todo need refactoring this function
 // @todo arguments must be it's on AST structure.
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
 	obj := i.evaluate(v.Function)
@@ -299,10 +309,27 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		return obj
 	}
 
-	if obj.Type() != object.FUNCTION_OBJ {
+	switch obj.Type() {
+	case object.FUNCTION_OBJ:
+		return i.applyFunction(obj, v)
+	case object.BUILTIN_OBJ:
+		var args []object.Object
+
+		for _, e := range v.Arguments {
+			evaluated := i.evaluate(e)
+			if object.IsError(evaluated) {
+				// return []object.Object{evaluated}
+			}
+			args = append(args, evaluated)
+		}
+
+		return obj.(*object.Builtin).Fn(args...)
+	default:
 		return object.NewErrorFormat("Not implement yet VisitCallExpr")
 	}
+}
 
+func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (result object.Object) {
 	fn, _ := obj.(*object.FunctionLiteral)
 	parameters := fn.Parameters.([]ast.Expression)
 

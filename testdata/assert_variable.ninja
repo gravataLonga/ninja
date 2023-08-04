@@ -20,7 +20,7 @@ var tests = [
     {"expression": 2 / 2 * 1 - 20, "total": -19, "name": "(2 / 2 * 1 - 20)"},
     {"expression": 4 % 2, "total": 0, "name": "(4 % 2)"},
     {"expression": 100 / 8, "total": 12.5, "name": "(100 / 8)"},
-    {"expression": 100 ** 2, "total": 10000, "name": "(100 ** 0)"},
+    {"expression": 100 ** 2, "total": 10000, "name": "(100 ** 2)"},
     {"expression": 5 ** 2 ** 2 , "total": 10000, "name": "(5 ** (2 ** 2))"},
     {"expression": 8 & 2 , "total": 0, "name": "(8 & 2)"},
     {"expression": 8 | 2 , "total": 10, "name": "(8 | 2)"},
