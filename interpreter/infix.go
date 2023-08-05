@@ -8,6 +8,21 @@ import (
 	"math"
 )
 
+func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
+	left := i.evaluate(v.Left)
+	right := i.evaluate(v.Right)
+
+	if object.IsError(left) {
+		return left
+	}
+
+	if object.IsError(right) {
+		return right
+	}
+
+	return infixExpression(v, v.Operator, left, right)
+}
+
 func infixExpression(v *ast.InfixExpression, operator string, left object.Object, right object.Object) object.Object {
 	switch operator {
 	case "+":

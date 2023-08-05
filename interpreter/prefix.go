@@ -7,6 +7,23 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
+	right := i.evaluate(v.Right)
+	if object.IsError(right) {
+		return right
+	}
+
+	result = prefixExpression(v, right)
+	astIdent, ok := v.Right.(*ast.Identifier)
+	if !ok {
+		return
+	}
+
+	ident := astIdent.Token
+	i.env.Set(ident.Literal, result)
+	return
+}
+
 func prefixExpression(v *ast.PrefixExpression, obj object.Object) object.Object {
 	switch obj.Type() {
 	case object.STRING_OBJ:

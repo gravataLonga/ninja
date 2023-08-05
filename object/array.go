@@ -25,18 +25,17 @@ func (ao *Array) Inspect() string {
 
 func (s *Array) Clone() Object {
 	arr := Array{}
-	eles := make([]Object, len(s.Elements))
+	elems := make([]Object, len(s.Elements))
 	for i, e := range s.Elements {
 		cloneable, ok := e.(Cloneable)
 		if ok {
-			newE := cloneable.Clone()
-			eles[i] = newE
+			elems[i] = cloneable.Clone()
 		} else {
-			eles[i] = e
+			elems[i] = e
 		}
 
 	}
-	arr.Elements = eles
+	arr.Elements = elems
 	return &arr
 }
 

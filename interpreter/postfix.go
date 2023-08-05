@@ -7,6 +7,23 @@ import (
 	"github.com/gravataLonga/ninja/object"
 )
 
+func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
+	left := i.evaluate(v.Left)
+	if object.IsError(left) {
+		return left
+	}
+
+	result = postfixExpression(v, left)
+	astIdent, ok := v.Left.(*ast.Identifier)
+	if !ok {
+		return
+	}
+
+	ident := astIdent.Token
+	i.env.Set(ident.Literal, result)
+	return left
+}
+
 func postfixExpression(v *ast.PostfixExpression, obj object.Object) object.Object {
 	switch obj.Type() {
 	case object.INTEGER_OBJ:
