@@ -6,7 +6,11 @@ import (
 )
 
 func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
-	i.env.Set(v.Name.Value, i.evaluate(v.Value))
+	result = i.evaluate(v.Value)
+	if object.IsError(result) {
+		return
+	}
+	i.env.Set(v.Name.Value, result)
 	return nil
 }
 

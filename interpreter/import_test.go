@@ -40,7 +40,7 @@ func TestErrorImportHandling(t *testing.T) {
 		},
 		{
 			`import "../fixtures/stub-with-error-in-function.nj"`,
-			"../fixtures/stub-with-error-in-function.nj: Function expected 2 arguments, got 3 at { at [Line: 16, Offset: 38]",
+			"../fixtures/stub-with-error-in-function.nj: Function expected 2 parameters, got 3 at ( at [Line: 25, Offset: 27]",
 		},
 	}
 

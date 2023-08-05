@@ -31,6 +31,7 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		for _, e := range v.Arguments {
 			evaluated := i.evaluate(e)
 			if object.IsError(evaluated) {
+				return evaluated
 				// return []object.Object{evaluated}
 			}
 			args = append(args, evaluated)
@@ -114,6 +115,10 @@ func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []ast.
 		}
 	}
 
+	if totalArguments > totalParameters {
+		return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+	}
+
 	if totalParametersDefault > 0 {
 		if totalParametersDefault != totalParameters-totalParametersRequireBeforeDefault {
 			return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
@@ -152,21 +157,4 @@ func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
 	args := i.evaluateExpressions(call.Arguments)
 
 	return objCallable.Call(method.Value, args...)
-
-	/*
-		function := Eval(node.Function, env)
-		if object.IsError(function) {
-			return function
-		}
-
-		args := evalExpressions(node.Arguments, env)
-		if len(args) == 1 && object.IsError(args[0]) {
-			return args[0]
-		}
-
-		return applyFunction(function, args)
-
-		return object.NewErrorFormat("Not implement yet VisitDotExpr")
-	*/
-	return object.NewErrorFormat("Not implement yet VisitDotExpr")
 }

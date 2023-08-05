@@ -118,13 +118,14 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 			}
 		}
 
+		if object.IsError(result) {
+			return
+		}
+
 		if object.IsReturn(result) {
 			return result.(*object.ReturnValue).Value
 		}
 
-		if object.IsError(result) {
-			return
-		}
 	}
 	return
 }
