@@ -194,6 +194,14 @@ func TestErrorArrayHandling(t *testing.T) {
 			`var a = []; a[-1] = 2;`,
 			`index out of range, got -1 not positive index`,
 		},
+		{
+			`[1, 2 + "ola", 3]`,
+			`unknown operator: INTEGER + STRING + at [Line: 1, Offset: 7]`,
+		},
+		{
+			`var a = [1, 2 + "ola", 3]; a`,
+			`unknown operator: INTEGER + STRING + at [Line: 1, Offset: 15]`,
+		},
 	}
 
 	for i, tt := range tests {

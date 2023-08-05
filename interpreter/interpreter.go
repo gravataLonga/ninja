@@ -38,6 +38,18 @@ func New(w io.Writer, env *object.Environment) *Interpreter {
 	}
 }
 
+func (i *Interpreter) EnterLoop() {
+	i.innerLoop++
+}
+
+func (i *Interpreter) ExitLoop() {
+	i.innerLoop--
+}
+
+func (i *Interpreter) InLoop() bool {
+	return i.innerLoop > 0
+}
+
 func (i *Interpreter) evaluate(node ast.Expression) object.Object {
 	return node.Accept(i)
 }
@@ -100,8 +112,8 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 		}
 
 		// @todo test it better
-		if i.innerLoop > 0 {
-			if result.Type() == object.RETURN_VALUE_OBJ {
+		if i.InLoop() {
+			if object.IsReturn(result) {
 				return
 			}
 
@@ -110,7 +122,7 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 			}
 		}
 
-		if result.Type() == object.RETURN_VALUE_OBJ {
+		if object.IsReturn(result) {
 			return result.(*object.ReturnValue).Value
 		}
 
@@ -240,7 +252,7 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		return nil
 	}
 
-	if obj.Type() == object.ARRAY_OBJ {
+	if object.IsArray(obj) {
 		arr, _ := obj.(*object.Array)
 		index := i.evaluate(idx.Index)
 		indexIntegerObject, ok := index.(*object.Integer)
@@ -270,7 +282,7 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		i.env.Set(left, arr)
 	}
 
-	if obj.Type() == object.HASH_OBJ {
+	if object.IsHash(obj) {
 		hashObject, _ := obj.(*object.Hash)
 
 		objIndex := i.evaluate(idx.Index)
@@ -334,31 +346,11 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 	fn, _ := obj.(*object.FunctionLiteral)
 	parameters := fn.Parameters.([]ast.Expression)
 
-	// obj, _ = obj.(object.FunctionLiteral)
-
 	mParameter := len(v.Arguments)
-	mArgument := len(parameters)
-	var defaultArguments []ast.Expression
+	err := i.validateArguments(v, parameters)
 
-	for _, p := range parameters {
-		if _, ok := p.(*ast.Identifier); ok {
-			defaultArguments = append(defaultArguments, p)
-		}
-	}
-	mArgumentsDefault := len(defaultArguments)
-
-	if mParameter < mArgument {
-		if mParameter < mArgumentsDefault {
-			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgument, mParameter, v.Token)
-		}
-
-		if mArgumentsDefault == 0 && mParameter > 0 {
-			return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgumentsDefault, mParameter, v.Token)
-		}
-	}
-
-	if mArgument == 0 && mParameter > 0 {
-		return object.NewErrorFormat("Function expected %d arguments, got %d at %s", mArgumentsDefault, mParameter, v.Token)
+	if object.IsError(err) {
+		return err
 	}
 
 	envLocal := object.NewEnclosedEnvironment(i.env)
@@ -389,14 +381,55 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
 	i.env = env
 
-	if result == nil {
-		return nil
-	}
-
-	if result.Type() == object.RETURN_VALUE_OBJ {
+	if object.IsReturn(result) {
 		return result.(*object.ReturnValue).Value
 	}
 	return
+}
+
+func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []ast.Expression) object.Object {
+	// cases:
+	// 1. fn () {}(1);
+	// 2. fn (x) {}();
+	// 3. fn (x) {}(1, 2);
+	// 4. fn (x, y = 1) {}();
+	// 5. fn (x, y = 1) {}(1,2,3);
+
+	/*
+		A parameter is a variable in a function definition. It is a placeholder and hence does not have a concrete value.
+		An argument is a value passed during function invocation.
+	*/
+
+	totalParameters := len(parameters)
+	totalParametersDefault := 0
+	totalParametersRequireBeforeDefault := 0
+	totalArguments := len(v.Arguments)
+
+	for _, p := range parameters {
+		if _, ok := p.(*ast.InfixExpression); ok {
+			totalParametersDefault++
+		}
+		if _, ok := p.(*ast.Identifier); ok {
+			totalParametersRequireBeforeDefault++
+		}
+	}
+
+	if totalParametersDefault > 0 {
+		if totalParametersDefault != totalParameters-totalParametersRequireBeforeDefault {
+			return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+		}
+		if totalParametersDefault+totalParametersRequireBeforeDefault != totalParameters {
+			return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParametersDefault+totalParametersRequireBeforeDefault, totalArguments, v.Token)
+		}
+
+		return nil
+	}
+
+	if totalArguments != totalParameters {
+		return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+	}
+
+	return nil
 }
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
@@ -649,24 +682,24 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 	}
 
 	// @todo test this better
-	i.innerLoop++
+	i.EnterLoop()
 	condition := i.interpreterConditionForLoop(v.Condition)
 	for object.IsTruthy(condition) {
 
 		result = i.execute(v.Body)
 		if result != nil {
-			if result.Type() == object.RETURN_VALUE_OBJ {
-				i.innerLoop--
+			if object.IsReturn(result) {
+				i.ExitLoop()
 				return
 			}
 
 			if result.Type() == object.BREAK_VALUE_OBJ {
-				i.innerLoop--
+				i.ExitLoop()
 				return nil
 			}
 
 			if object.IsError(result) {
-				i.innerLoop--
+				i.ExitLoop()
 				return
 			}
 		}
@@ -676,7 +709,7 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 		condition = i.interpreterConditionForLoop(v.Condition)
 	}
 	// @todo test this better
-	i.innerLoop--
+	i.ExitLoop()
 
 	return result
 }

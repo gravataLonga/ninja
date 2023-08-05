@@ -147,7 +147,7 @@ func infixPlusExpression(left, right object.Object) (object.Object, error) {
 			return &object.Float{Value: left.(*object.Float).Value + v}, nil
 		}
 	case object.STRING_OBJ:
-		if right.Type() == object.STRING_OBJ {
+		if object.IsString(right) {
 			return &object.String{Value: left.(*object.String).Value + right.(*object.String).Value}, nil
 		}
 	}
