@@ -33,6 +33,7 @@ func New(w io.Writer, env *object.Environment) *Interpreter {
 
 	return &Interpreter{
 		env:    env,
+		output: w,
 		locals: make(map[ast.Expression]int),
 	}
 }
@@ -387,6 +388,11 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 	i.env = envLocal
 	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
 	i.env = env
+
+	if result == nil {
+		return nil
+	}
+
 	if result.Type() == object.RETURN_VALUE_OBJ {
 		return result.(*object.ReturnValue).Value
 	}
@@ -651,12 +657,17 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 		if result != nil {
 			if result.Type() == object.RETURN_VALUE_OBJ {
 				i.innerLoop--
-				return result
+				return
 			}
 
 			if result.Type() == object.BREAK_VALUE_OBJ {
 				i.innerLoop--
 				return nil
+			}
+
+			if object.IsError(result) {
+				i.innerLoop--
+				return
 			}
 		}
 		if v.Iteration != nil {

@@ -19,6 +19,16 @@ func TestFunctionLiteral(t *testing.T) {
 	}
 }
 
+func TestFunctionReturnVoid(t *testing.T) {
+	p := createParser(t, `function void() { }; void();`)
+	i := New(os.Stdout, object.NewEnvironment())
+	result := i.Interpreter(p)
+
+	if result != nil {
+		t.Fatalf("result isn't nil. got=%T", result)
+	}
+}
+
 func TestFunctionLiteralObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
@@ -232,6 +242,7 @@ func TestCallWrongParameters(t *testing.T) {
 		{"function (x) {}();", "Function expected 1 arguments, got 0 at ( at [Line: 1, Offset: 16]"},
 		{"function () {}(0);", "Function expected 0 arguments, got 1 at ( at [Line: 1, Offset: 15]"},
 		{"function () { return add(); }();", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},
+		{"function (x, y) { }(1, 2, 3);", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},
 	}
 
 	for i, tt := range tests {

@@ -82,7 +82,6 @@ func (s *Array) Call(method string, args ...Object) Object {
 }
 
 func arrayJoin(elements []Object, args ...Object) Object {
-
 	err := Check(
 		"array.join", args,
 		ExactArgs(1),

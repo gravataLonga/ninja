@@ -47,6 +47,28 @@ func TestForStatement(t *testing.T) {
 	}
 }
 
+func TestLoopStopWhenFoundError(t *testing.T) {
+	input := `for(var i = 0; i <= 2; i = i + 1) { i; if (i == 1) { 1 + "ola"; } }`
+	expected := "unknown operator: INTEGER + STRING + at [Line: 1, Offset: 56]"
+
+	evaluated := interpreter(t, input)
+
+	if evaluated == nil {
+		t.Fatalf("evaluated is empty")
+	}
+
+	err, ok := evaluated.(*object.Error)
+
+	if !ok {
+		t.Fatalf("expected error. Got: %s", evaluated.Inspect())
+	}
+
+	if err.Message != expected {
+		t.Fatalf("expected error message to be %s, got: %s", expected, err.Message)
+	}
+
+}
+
 func TestBreakOutsideForLoop(t *testing.T) {
 	input := `break`
 	expected := "'break' not in the 'loop' context"
