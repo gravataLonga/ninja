@@ -2,7 +2,7 @@ package object
 
 import "testing"
 
-func TestEnvironment_Get(t *testing.T) {
+func TestEnvironmentGet(t *testing.T) {
 	env := NewEnvironment()
 	str := &String{Value: "Hello"}
 	env.Set("name", str)
@@ -22,7 +22,7 @@ func TestEnvironment_Get(t *testing.T) {
 	}
 }
 
-func TestNewEnclosedEnvironment_GetOuter(t *testing.T) {
+func TestNewEnclosedEnvironmentGetOuter(t *testing.T) {
 	env := NewEnvironment()
 	env.Set("name", &String{Value: "Hello"})
 	innerEnv := NewEnclosedEnvironment(env)
@@ -42,7 +42,7 @@ func TestNewEnclosedEnvironment_GetOuter(t *testing.T) {
 	}
 }
 
-func TestNewEnclosedEnvironment_GetInner(t *testing.T) {
+func TestNewEnclosedEnvironmentGetInner(t *testing.T) {
 	env := NewEnvironment()
 	env.Set("name", &String{Value: "Hello"})
 	innerEnv := NewEnclosedEnvironment(env)

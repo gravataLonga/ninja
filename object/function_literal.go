@@ -19,5 +19,5 @@ func (f *FunctionLiteral) Inspect() string {
 	out.WriteString(") {\n")
 	out.WriteString(f.Body.String())
 	out.WriteString("\n}")*/
-	return "function() {disclosure};" // out.String()
+	return "<fn>" // out.String()
 }

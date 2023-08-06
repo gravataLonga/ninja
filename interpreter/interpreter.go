@@ -103,8 +103,13 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
+
 		if result == nil {
 			continue
+		}
+
+		if object.IsError(result) {
+			return
 		}
 
 		// @todo test it better
@@ -118,12 +123,8 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 			}
 		}
 
-		if object.IsError(result) {
-			return
-		}
-
 		if object.IsReturn(result) {
-			return result.(*object.ReturnValue).Value
+			return
 		}
 
 	}

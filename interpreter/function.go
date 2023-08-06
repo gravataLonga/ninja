@@ -6,7 +6,7 @@ import (
 )
 
 func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
-	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body}
+	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body, Env: object.NewEnclosedEnvironment(i.env)}
 	if v.Name != nil {
 		i.env.Set(v.Name.Value, fn)
 	}
@@ -47,19 +47,27 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 	fn, _ := obj.(*object.FunctionLiteral)
 	parameters := fn.Parameters.([]ast.Expression)
 
-	mParameter := len(v.Arguments)
 	err := i.validateArguments(v, parameters)
 
 	if object.IsError(err) {
 		return err
 	}
 
-	envLocal := object.NewEnclosedEnvironment(i.env)
+	env := i.env
+	i.env = i.extendedEnvironment(fn.Env, v, parameters)
+	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
+	i.env = env
+
+	return i.unwrapReturnValue(result)
+}
+
+func (i *Interpreter) extendedEnvironment(env *object.Environment, v *ast.CallExpression, parameters []ast.Expression) *object.Environment {
+	mParameter := len(v.Arguments)
 
 	for index, parameter := range parameters {
 		ident, ok := parameter.(*ast.Identifier)
 		if ok {
-			envLocal.Set(ident.String(), i.evaluate(v.Arguments[index]))
+			env.Set(ident.String(), i.evaluate(v.Arguments[index]))
 			continue
 		}
 
@@ -74,18 +82,17 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 			value = i.evaluate(infix.Right)
 		}
 
-		envLocal.Set(ident.String(), value)
+		env.Set(ident.String(), value)
 	}
 
-	env := i.env
-	i.env = envLocal
-	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
-	i.env = env
+	return env
+}
 
-	if object.IsReturn(result) {
-		return result.(*object.ReturnValue).Value
+func (i *Interpreter) unwrapReturnValue(obj object.Object) object.Object {
+	if object.IsReturn(obj) {
+		return obj.(*object.ReturnValue).Value
 	}
-	return
+	return obj
 }
 
 func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []ast.Expression) object.Object {

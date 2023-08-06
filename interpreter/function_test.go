@@ -190,14 +190,18 @@ func TestCallFunction(t *testing.T) {
 			"function add(a, b) { function test(e, f) { return e + f }; return test(a + b, 10); } add(10, 20);",
 			40,
 		},
-		/*{
+		{
+			`function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); }; fib(2)`,
+			1,
+		},
+		{
 			"function add(a, b) { return function test(x, y) { return a + b + x + y }; } add(10, 10)(10, 10);",
 			40,
 		},
 		{
 			"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
 			2,
-		},*/
+		},
 	}
 
 	for i, tt := range tests {
