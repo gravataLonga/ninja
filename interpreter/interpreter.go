@@ -9,9 +9,7 @@ import (
 
 type Interpreter struct {
 	env       *object.Environment
-	globals   *object.Environment
 	innerLoop int
-	locals    map[ast.Expression]int
 	output    io.Writer
 }
 
@@ -30,7 +28,6 @@ func New(w io.Writer, env *object.Environment) *Interpreter {
 	return &Interpreter{
 		env:    env,
 		output: w,
-		locals: make(map[ast.Expression]int),
 	}
 }
 

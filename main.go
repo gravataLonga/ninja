@@ -73,7 +73,7 @@ func execCode(input string, writer io.Writer) {
 	env := object.NewEnvironment()
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
-	// s := semantic.New()
+	// s := resolver.New()
 
 	program := p.ParseProgram()
 	if len(p.Errors()) > 0 {
@@ -101,7 +101,7 @@ func printParserErrors(errors []string, writer io.Writer) {
 }
 
 func printSemanticErrorsErrors(errors []string, writer io.Writer) {
-	fmt.Fprintf(writer, "🔥 Fire at core! semantic errors:")
+	fmt.Fprintf(writer, "🔥 Fire at core! resolver errors:")
 	for _, msg := range errors {
 		fmt.Fprintf(writer, "\t %s\n", msg)
 	}

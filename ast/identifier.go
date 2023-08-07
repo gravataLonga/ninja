@@ -8,7 +8,6 @@ import (
 type Identifier struct {
 	Token token.Token // the token.IDENT token
 	Value string
-	Stack Stack
 }
 
 func (i *Identifier) expressionNode()      {}

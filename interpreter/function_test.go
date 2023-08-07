@@ -199,7 +199,7 @@ func TestCallFunction(t *testing.T) {
 			40,
 		},
 		{
-			"var a = 0; function add() { return function increment() { a++; return a; }}; var b = add()(); add()();",
+			"var a = 0; function add() { return function () { a++; return a; }}; var b = add()(); add()();",
 			2,
 		},
 	}
