@@ -290,7 +290,7 @@ import "testing.ninja";
 var lib = import "mylib.ninja"; // return function() {};  
 ```  
 
-## Operators && Logics Operators  
+## Logics Operators  
 
 `<expression> <operator> <expression>`  
 
@@ -312,7 +312,7 @@ Logic's Operators
 > **Note**: a value is considered truthy when a value is not nil or not false.  
 
 `<expression>? <operator> <expression>`  
-Arithmetics Operators  
+##  Operators  
 
 ```  
 1 + 1;      // SUM
@@ -370,6 +370,8 @@ a[] = 6;
 ```
 var a = {"key":"hello","key" + "key":"hello2", "other":["nice", "other"], 2: true};  
 ```  
+
+> **Note**: Hash don't preserve order.  
 
 #### Delete Key    
 

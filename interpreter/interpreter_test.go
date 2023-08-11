@@ -327,6 +327,10 @@ func interpreter(t *testing.T, input string) object.Object {
 	}
 
 	i := New(os.Stdout, object.NewEnvironment())
+
+	r := NewResolver(i)
+	r.Resolve(program)
+
 	return i.Interpreter(program)
 }
 

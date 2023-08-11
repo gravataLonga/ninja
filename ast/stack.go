@@ -5,15 +5,15 @@ package ast
 type Scope map[string]bool
 
 // Stack will keep track frames of a program, where a specific Scope
-// are in stack
+// are in analysis
 type Stack []*Scope
 
-// IsEmpty check if stack is empty
+// IsEmpty check if analysis is empty
 func (s *Stack) IsEmpty() bool {
 	return len(*s) == 0
 }
 
-// Push will push new Scope into stack, will create a new frame.
+// Push will push new Scope into analysis, will create a new frame.
 func (s *Stack) Push(i *Scope) {
 	*s = append(*s, i)
 }
@@ -44,7 +44,7 @@ func (s *Stack) Get(index int) *Scope {
 	return (*s)[index]
 }
 
-// Size will get total size of stack
+// Size will get total size of analysis
 func (s *Stack) Size() int {
 	return len(*s)
 }

@@ -101,7 +101,7 @@ func TestStack_Get(t *testing.T) {
 	_, ok := (*scopeGet)["hello"]
 
 	if !ok {
-		t.Fatalf("Unable to get stack by index")
+		t.Fatalf("Unable to get analysis by index")
 	}
 }
 

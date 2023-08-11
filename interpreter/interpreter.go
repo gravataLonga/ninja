@@ -11,6 +11,7 @@ type Interpreter struct {
 	env       *object.Environment
 	innerLoop int
 	output    io.Writer
+	locals    map[ast.Expression]int
 }
 
 func New(w io.Writer, env *object.Environment) *Interpreter {
@@ -41,6 +42,10 @@ func (i *Interpreter) ExitLoop() {
 
 func (i *Interpreter) InLoop() bool {
 	return i.innerLoop > 0
+}
+
+func (i *Interpreter) ResolveLocal(expr ast.Expression, depth int) {
+	i.locals[expr] = depth
 }
 
 func (i *Interpreter) Interpreter(node ast.Node) object.Object {
