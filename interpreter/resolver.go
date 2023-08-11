@@ -66,10 +66,10 @@ func (resolver *Resolver) VisitBooleanExpr(v *ast.Boolean) (result object.Object
 }
 
 func (resolver *Resolver) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
+	v.Function.Accept(resolver)
 	for _, arg := range v.Arguments {
 		arg.Accept(resolver)
 	}
-	v.Function.Accept(resolver)
 	return nil
 }
 
@@ -84,10 +84,12 @@ func (resolver *Resolver) VisitFloatExpr(v *ast.FloatLiteral) (result object.Obj
 }
 
 func (resolver *Resolver) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
+	resolver.BeginScope()
 	for _, params := range v.Parameters {
 		params.Accept(resolver)
 	}
 	v.Body.Accept(resolver)
+	resolver.EndScope()
 	return nil
 }
 

@@ -334,6 +334,22 @@ func interpreter(t *testing.T, input string) object.Object {
 	return i.Interpreter(program)
 }
 
+func resolver(t *testing.T, input string) *Resolver {
+	l := lexer.New(strings.NewReader(input))
+	p := parser.New(l)
+	program := p.ParseProgram()
+
+	if len(p.Errors()) > 0 {
+		t.Fatalf("Parsing program got some errors: %v", p.Errors()[0])
+	}
+
+	i := New(os.Stdout, object.NewEnvironment())
+
+	r := NewResolver(i)
+	r.Resolve(program)
+	return r
+}
+
 func testLiteralObject(t *testing.T, result object.Object, expected interface{}) bool {
 	switch expected := expected.(type) {
 	case int:
