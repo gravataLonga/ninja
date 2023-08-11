@@ -3,7 +3,7 @@ package object
 type FunctionLiteral struct {
 	Parameters interface{}
 	Body       interface{}
-	Env        *Environment
+	// Env        *Environment
 }
 
 func (f *FunctionLiteral) Type() ObjectType { return FUNCTION_OBJ }
