@@ -6,6 +6,7 @@ import (
 )
 
 func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
+	// When we are create a function object we capture current Environment.
 	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body, Closure: object.NewEnclosedEnvironment(i.env)}
 	if v.Name != nil {
 		i.env.Set(v.Name.Value, fn)
