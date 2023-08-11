@@ -6,7 +6,7 @@ import (
 )
 
 func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
-	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body}
+	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body, Closure: object.NewEnclosedEnvironment(i.env)}
 	if v.Name != nil {
 		i.env.Set(v.Name.Value, fn)
 	}
@@ -54,7 +54,7 @@ func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (r
 	}
 
 	env := i.env
-	i.env = i.extendedEnvironment(object.NewEnclosedEnvironment(i.env), v, parameters)
+	i.env = i.extendedEnvironment(object.NewEnclosedEnvironment(fn.Closure), v, parameters)
 	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
 	i.env = env
 
