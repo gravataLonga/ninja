@@ -225,11 +225,13 @@ func (resolver *Resolver) VisitEnum(v *ast.EnumStatement) (result object.Object)
 }
 
 func (resolver *Resolver) VisitExprStmt(v *ast.ExpressionStatement) (result object.Object) {
-	return v.Accept(resolver)
+	return v.Expression.Accept(resolver)
 }
 
 func (resolver *Resolver) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
-	v.ReturnValue.Accept(resolver)
+	if v.ReturnValue != nil {
+		return v.ReturnValue.Accept(resolver)
+	}
 	return nil
 }
 
