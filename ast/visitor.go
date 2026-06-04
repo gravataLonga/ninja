@@ -31,6 +31,7 @@ type StmtVisitor interface {
 	VisitProgram(v *Program) (result object.Object)
 	VisitBlock(v *BlockStatement) (result object.Object)
 	VisitBreak(v *BreakStatement) (result object.Object)
+	VisitContinue(v *ContinueStatement) (result object.Object)
 	VisitDelete(v *DeleteStatement) (result object.Object)
 	VisitEnum(v *EnumStatement) (result object.Object)
 	VisitExprStmt(v *ExpressionStatement) (result object.Object)

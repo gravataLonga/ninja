@@ -31,6 +31,8 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseVarStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
+	case token.CONTINUE:
+		return p.parseContinueStatement()
 	case token.BREAK:
 		return p.parseBreakStatement()
 	case token.ENUM:

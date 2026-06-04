@@ -19,7 +19,7 @@ break for enum case delete () [] {} . ; : :: ,
 /* 
 multiple comment 
 */ 
-function delete @ 
+function delete @ continue
 `
 	tests := []struct {
 		expectedType    token.TokenType
@@ -94,6 +94,7 @@ function delete @
 		{token.FUNCTION, "function"},
 		{token.DELETE, "delete"},
 		{token.ILLEGAL, "@"},
+		{token.CONTINUE, "continue"},
 
 		{token.EOF, "\x00"},
 	}

@@ -1,10 +1,11 @@
 package interpreter
 
 import (
+	"io"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/stdlib"
-	"io"
 )
 
 type Interpreter struct {
@@ -77,6 +78,9 @@ func (i *Interpreter) execute(node ast.Node) object.Object {
 	case *ast.BreakStatement:
 		result := node.Accept(i)
 		return result
+	case *ast.ContinueStatement:
+		result := node.Accept(i)
+		return result
 	case *ast.VarStatement:
 		result := node.Accept(i)
 		return result
@@ -124,6 +128,10 @@ func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
 			}
 
 			if result.Type() == object.BREAK_VALUE_OBJ {
+				return
+			}
+
+			if result.Type() == object.CONTINUE_OBJ {
 				return
 			}
 		}

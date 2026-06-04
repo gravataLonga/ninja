@@ -216,6 +216,10 @@ func (resolver *Resolver) VisitBreak(v *ast.BreakStatement) (result object.Objec
 	return nil
 }
 
+func (resolver *Resolver) VisitContinue(v *ast.ContinueStatement) (result object.Object) {
+	return nil
+}
+
 func (resolver *Resolver) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
 	v.Left.Accept(resolver)
 	v.Index.Accept(resolver)

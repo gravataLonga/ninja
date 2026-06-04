@@ -6,7 +6,7 @@ import (
 )
 
 type BreakStatement struct {
-	Token token.Token // the 'return' token
+	Token token.Token // the 'break' token
 }
 
 func (rs *BreakStatement) statementNode()       {}

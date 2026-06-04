@@ -24,6 +24,7 @@ func TestLookupIdentifier(t *testing.T) {
 		{[]byte("break"), BREAK},
 		{[]byte("enum"), ENUM},
 		{[]byte("case"), CASE},
+		{[]byte("continue"), CONTINUE},
 		{[]byte("testing_var"), IDENT},
 	}
 

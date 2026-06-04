@@ -2,8 +2,9 @@ package interpreter
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestForStatement(t *testing.T) {
@@ -30,6 +31,22 @@ func TestForStatement(t *testing.T) {
 		{
 			`var i = 0; for(;;) { if( i > 3) { break; } i = i + 1; }; i;`,
 			4,
+		},
+		{
+			`var skipped = 0; for(var i = 0; i < 5; i = i + 1) { if(i == 2) { continue; } skipped = skipped + 1; }; skipped;`,
+			4,
+		},
+		{
+			`var count = 0; for(var i = 0; i < 5; i = i + 1) { if(i > 1) { continue; } count = count + 1; }; count;`,
+			2,
+		},
+		{
+			`var x = 0; for(var i = 0; i < 3; i = i + 1) { continue; x = x + 1; }; x;`,
+			0,
+		},
+		{
+			`var last = 0; for(var i = 0; i < 5; i = i + 1) { continue; last = i; }; last;`,
+			0,
 		},
 	}
 

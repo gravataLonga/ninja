@@ -79,6 +79,7 @@ func (t TokenType) String() string {
 		"BREAK",
 		"ENUM",
 		"CASE",
+		"CONTINUE",
 	}
 
 	if len(list)-1 < int(t) {
@@ -160,6 +161,7 @@ const (
 	BREAK    // "BREAK"
 	ENUM     // "ENUM"
 	CASE     // "CASE"
+	CONTINUE
 
 	ENDTOKEN // Special token, only for testing purposes
 )
@@ -179,6 +181,7 @@ var keywords = map[string]TokenType{
 	"break":    BREAK,
 	"enum":     ENUM,
 	"case":     CASE,
+	"continue": CONTINUE,
 }
 
 // LookupIdentifier it will search from []byte() it's keyword token

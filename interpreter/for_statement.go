@@ -27,6 +27,14 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 				return nil
 			}
 
+			if result.Type() == object.CONTINUE_OBJ {
+				if v.Iteration != nil {
+					i.execute(v.Iteration)
+				}
+				condition = i.interpreterConditionForLoop(v.Condition)
+				continue
+			}
+
 			if object.IsError(result) {
 				i.ExitLoop()
 				return
