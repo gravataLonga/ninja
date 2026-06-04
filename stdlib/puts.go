@@ -20,7 +20,7 @@ func Puts(args ...object.Object) object.Object {
 			}
 			continue
 		}
-		fmt.Println(arg.Inspect())
+		fmt.Fprintln(object.StandardOutput, arg.Inspect())
 	}
 
 	return nil

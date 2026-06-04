@@ -19,8 +19,11 @@ func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.
 		return
 	}
 
-	ident := astIdent.Token
-	i.env.Set(ident.Literal, result)
+	if depth, ok := i.locals[astIdent]; ok {
+		i.env.SetAt(depth, astIdent.Value, result)
+	} else {
+		i.env.Assign(astIdent.Value, result)
+	}
 	return left
 }
 

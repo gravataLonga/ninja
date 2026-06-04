@@ -26,9 +26,12 @@ func New(w io.Writer, env *object.Environment) *Interpreter {
 	env.Set("args", object.NewBuiltin(stdlib.Args))
 	env.Set("plugin", object.NewBuiltin(stdlib.Plugin))
 
+	env.Set("exit", object.NewBuiltin(stdlib.Exit))
+
 	return &Interpreter{
 		env:    env,
 		output: w,
+		locals: make(map[ast.Expression]int),
 	}
 }
 

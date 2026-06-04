@@ -101,6 +101,12 @@ func (resolver *Resolver) VisitHashExpr(v *ast.HashLiteral) (result object.Objec
 }
 
 func (resolver *Resolver) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
+	for i := resolver.stack.Size() - 1; i >= 0; i-- {
+		if resolver.stack.At(i).Exists(v.Value) {
+			resolver.i.ResolveLocal(v, resolver.stack.Size()-1-i)
+			return nil
+		}
+	}
 	return nil
 }
 
@@ -200,11 +206,9 @@ func (resolver *Resolver) VisitProgram(v *ast.Program) (result object.Object) {
 }
 
 func (resolver *Resolver) VisitBlock(v *ast.BlockStatement) (result object.Object) {
-	resolver.BeginScope()
 	for _, stmt := range v.Statements {
 		stmt.Accept(resolver)
 	}
-	resolver.EndScope()
 	return
 }
 
@@ -250,9 +254,9 @@ func (resolver *Resolver) VisitVarStmt(v *ast.VarStatement) (result object.Objec
 }
 
 func (resolver *Resolver) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
-	// Check r.s.Peek().Exists() == false then give and error.
-	// Check r.s.Peek().Get() == false wasn't initilized yet, give and error.
-
 	v.Right.Accept(resolver)
+	if ident, ok := v.Left.(*ast.Identifier); ok {
+		ident.Accept(resolver)
+	}
 	return nil
 }

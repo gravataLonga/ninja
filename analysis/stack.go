@@ -40,6 +40,18 @@ func (s *Stack) Pop() *Scope {
 	return n.value
 }
 
+// At returns the scope at position index (0 = bottom/oldest, Size()-1 = top/newest)
+func (s *Stack) At(index int) *Scope {
+	if index < 0 || index >= s.size {
+		return nil
+	}
+	n := s.head
+	for i := 0; i < s.size-1-index; i++ {
+		n = n.prev
+	}
+	return n.value
+}
+
 // Push a value onto the head of the analysis
 func (s *Stack) Push(value *Scope) {
 	n := &leaf{value, s.head}
