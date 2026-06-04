@@ -1,10 +1,10 @@
 package repl
 
 import (
-	"bufio"
 	_ "embed"
 	"fmt"
 	"github.com/TheZoraiz/ascii-image-converter/aic_package"
+	"github.com/chzyer/readline"
 	"github.com/gravataLonga/ninja/interpreter"
 
 	// "github.com/gravataLonga/ninja/evaluator"
@@ -29,7 +29,7 @@ const NINJA_LICENSE = "Ninja Language - MIT LICENSE - Version: %s\n"
 type Repl struct {
 	out     io.Writer
 	in      io.Reader
-	scan    *bufio.Scanner
+	rl      *readline.Instance
 	env     *object.Environment
 	version string
 }
@@ -42,10 +42,15 @@ var colorName = map[string]*color.Color{
 }
 
 func NewRepel(out io.Writer, in io.Reader) *Repl {
-	scanner := bufio.NewScanner(in)
+	rl, _ := readline.NewEx(&readline.Config{
+		Prompt:          PROMPT,
+		HistoryLimit:    100,
+		InterruptPrompt: "^C",
+		EOFPrompt:       "exit",
+	})
 	env := object.NewEnvironment()
 
-	return &Repl{out: out, in: in, scan: scanner, env: env}
+	return &Repl{out: out, in: in, rl: rl, env: env}
 }
 
 func (r *Repl) Version(vs string) {
@@ -74,14 +79,15 @@ func (r *Repl) Start() {
 	r.Output("program", "Feel free to type in commands\n")
 	r.Output("program", "If found an error, open issue at github.com/gravataLonga/ninja\n")
 
+	if r.rl != nil {
+		defer r.rl.Close()
+	}
+
 	for {
-		r.Output("normal", PROMPT)
-		scanned := r.scan.Scan()
-		if !scanned {
+		line, err := r.rl.Readline()
+		if err != nil {
 			return
 		}
-
-		line := r.scan.Text()
 		l := lexer.New(strings.NewReader(line))
 		p := parser.New(l)
 

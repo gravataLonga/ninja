@@ -6,8 +6,11 @@ import (
 )
 
 func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
-	// When we are create a function object we capture current Environment.
-	fn := &object.FunctionLiteral{Parameters: v.Parameters, Body: v.Body, Closure: i.env}
+	params := make([]object.FunctionParameter, len(v.Parameters))
+	for idx, p := range v.Parameters {
+		params[idx] = p
+	}
+	fn := &object.FunctionLiteral{Parameters: params, Body: v.Body, Closure: i.env}
 	if v.Name != nil {
 		i.env.Set(v.Name.Value, fn)
 	}
@@ -46,23 +49,21 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 
 func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (result object.Object) {
 	fn, _ := obj.(*object.FunctionLiteral)
-	parameters := fn.Parameters.([]ast.Expression)
 
-	err := i.validateArguments(v, parameters)
-
+	err := i.validateArguments(v, fn.Parameters)
 	if object.IsError(err) {
 		return err
 	}
 
 	env := i.env
-	i.env = i.extendedEnvironment(object.NewEnclosedEnvironment(fn.Closure), v, parameters)
+	i.env = i.extendedEnvironment(object.NewEnclosedEnvironment(fn.Closure), v, fn.Parameters)
 	result = i.VisitBlock(fn.Body.(*ast.BlockStatement))
 	i.env = env
 
 	return i.unwrapReturnValue(result)
 }
 
-func (i *Interpreter) extendedEnvironment(env *object.Environment, v *ast.CallExpression, parameters []ast.Expression) *object.Environment {
+func (i *Interpreter) extendedEnvironment(env *object.Environment, v *ast.CallExpression, parameters []object.FunctionParameter) *object.Environment {
 	mParameter := len(v.Arguments)
 
 	for index, parameter := range parameters {
@@ -96,7 +97,7 @@ func (i *Interpreter) unwrapReturnValue(obj object.Object) object.Object {
 	return obj
 }
 
-func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []ast.Expression) object.Object {
+func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []object.FunctionParameter) object.Object {
 	// cases:
 	// 1. fn () {}(1);
 	// 2. fn (x) {}();
