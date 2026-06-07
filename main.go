@@ -70,7 +70,6 @@ func runRepl(in io.Reader, out io.Writer) {
 }
 
 func execCode(input string, writer io.Writer) {
-	object.StandardOutput = writer
 	env := object.NewEnvironment()
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
@@ -88,7 +87,6 @@ func execCode(input string, writer io.Writer) {
 		return
 	}*/
 	i := interpreter.New(os.Stdout, env)
-	interpreter.NewResolver(i).Resolve(program)
 	result := i.Interpreter(program)
 	if result != nil {
 		fmt.Fprintf(writer, result.Inspect())

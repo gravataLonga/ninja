@@ -17,12 +17,8 @@ func (i *Interpreter) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
 func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
 	ident, ok := v.Left.(*ast.Identifier)
 	if ok {
-		val := i.evaluate(v.Right)
-		if depth, found := i.locals[ident]; found {
-			i.env.SetAt(depth, ident.Value, val)
-		} else {
-			i.env.Assign(ident.Value, val)
-		}
+		left := ident.Value
+		i.env.Set(left, i.evaluate(v.Right))
 		return nil
 	}
 
@@ -93,12 +89,10 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 }
 
 func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
-	if depth, ok := i.locals[v]; ok {
-		return i.env.GetAt(depth, v.Value)
-	}
 	value, ok := i.env.Get(v.Value)
 	if !ok {
 		return object.NewErrorFormat("identifier not found: %s %s", v.Value, v.Token)
+		// return object.NULL
 	}
 	return value
 }
