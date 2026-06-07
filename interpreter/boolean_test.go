@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -62,7 +62,7 @@ func TestEvalBooleanExpression(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalBooleanExpression[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testBooleanObject(t, evaluated, tt.expected)
 		})
@@ -150,7 +150,7 @@ if (10 > 1) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestErrorBooleanHandling[%d]", i), func(t *testing.T) {
 
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -182,7 +182,7 @@ func TestBooleanMethod(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestBooleanMethod[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
@@ -203,7 +203,7 @@ func TestBooleanWrongMethod(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestBooleanMethod[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

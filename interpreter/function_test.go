@@ -1,8 +1,9 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
 	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/object"
 	"os"
 	"testing"
@@ -10,10 +11,11 @@ import (
 
 func TestFunctionLiteral(t *testing.T) {
 	p := createParser(t, `function add() { 1 }`)
-	i := New(os.Stdout, object.NewEnvironment())
+	env := object.NewEnvironment()
+	i := interpreter.New(os.Stdout, env)
 	i.Interpreter(p)
 
-	_, ok := i.env.Get("add")
+	_, ok := env.Get("add")
 	if !ok {
 		t.Fatalf("Expected add identifier on env")
 	}
@@ -21,7 +23,7 @@ func TestFunctionLiteral(t *testing.T) {
 
 func TestFunctionReturnVoid(t *testing.T) {
 	p := createParser(t, `function void() { }; void();`)
-	i := New(os.Stdout, object.NewEnvironment())
+	i := interpreter.New(os.Stdout, object.NewEnvironment())
 	result := i.Interpreter(p)
 
 	if result != nil {
@@ -32,7 +34,7 @@ func TestFunctionReturnVoid(t *testing.T) {
 func TestFunctionLiteralObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	fn, ok := evaluated.(*object.FunctionLiteral)
 	if !ok {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
@@ -61,7 +63,7 @@ func TestFunctionLiteralObject(t *testing.T) {
 func TestFunctionObject(t *testing.T) {
 	input := "function(x) { x + 2; };"
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	fn, ok := evaluated.(*object.FunctionLiteral)
 	if !ok {
 		t.Fatalf("object is not FunctionLiteral. got=%T (%+v)", evaluated, evaluated)
@@ -120,7 +122,7 @@ func TestFunctionWithDefaultArguments(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestFunctionWithDefaultArguments[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			if !testLiteralObject(t, evaluated, tt.result) {
 				t.Errorf("TestCallFunction unable to test")
@@ -195,7 +197,7 @@ func TestCallFunction(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestCallFunction[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.expression)
+			evaluated := evalProgram(t, tt.expression)
 
 			if !testLiteralObject(t, evaluated, tt.rs) {
 				t.Errorf("TestCallFunction unable to test")
@@ -222,7 +224,7 @@ func TestFunctionApplication(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("Test[%d]", i), func(t *testing.T) {
-			testIntegerObject(t, interpreter(t, tt.input), tt.expected)
+			testIntegerObject(t, evalProgram(t, tt.input), tt.expected)
 		})
 	}
 }
@@ -241,7 +243,7 @@ func TestCallWrongParameters(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestCallWrongParameters[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

@@ -1,15 +1,19 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/ast"
-	"github.com/gravataLonga/ninja/lexer"
-	"github.com/gravataLonga/ninja/object"
-	"github.com/gravataLonga/ninja/parser"
+
 	"math"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/interpreter"
+	"github.com/gravataLonga/ninja/lexer"
+	"github.com/gravataLonga/ninja/object"
+	"github.com/gravataLonga/ninja/parser"
+	"github.com/gravataLonga/ninja/resolver"
 )
 
 func TestLiteral(t *testing.T) {
@@ -78,7 +82,7 @@ func TestLiteral(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestLiteral[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -125,7 +129,7 @@ func TestIfExpression(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestIfExpression[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -198,7 +202,7 @@ func TestIndexExpression(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestIndexExpression[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -249,7 +253,7 @@ func TestTernaryOperatorExpression(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestTernaryOperatorExpression[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -288,7 +292,7 @@ func TestElvisOperatorExpression(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestElvisOperatorExpression[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -317,7 +321,7 @@ func createParser(t *testing.T, input string) ast.Node {
 	return program
 }
 
-func interpreter(t *testing.T, input string) object.Object {
+func evalProgram(t *testing.T, input string) object.Object {
 	l := lexer.New(strings.NewReader(input))
 	p := parser.New(l)
 	program := p.ParseProgram()
@@ -326,28 +330,12 @@ func interpreter(t *testing.T, input string) object.Object {
 		t.Fatalf("Parsing program got some errors: %v", p.Errors()[0])
 	}
 
-	i := New(os.Stdout, object.NewEnvironment())
+	i := interpreter.New(os.Stdout, object.NewEnvironment())
 
-	r := NewResolver(i)
+	r := resolver.NewResolver(i)
 	r.Resolve(program)
 
 	return i.Interpreter(program)
-}
-
-func resolver(t *testing.T, input string) *Resolver {
-	l := lexer.New(strings.NewReader(input))
-	p := parser.New(l)
-	program := p.ParseProgram()
-
-	if len(p.Errors()) > 0 {
-		t.Fatalf("Parsing program got some errors: %v", p.Errors()[0])
-	}
-
-	i := New(os.Stdout, object.NewEnvironment())
-
-	r := NewResolver(i)
-	r.Resolve(program)
-	return r
 }
 
 func testLiteralObject(t *testing.T, result object.Object, expected interface{}) bool {

@@ -1,4 +1,4 @@
-package analysis
+package resolver
 
 import "testing"
 

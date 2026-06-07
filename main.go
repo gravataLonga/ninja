@@ -3,7 +3,13 @@ package main
 import (
 	_ "embed"
 	"fmt"
+
 	"github.com/gravataLonga/ninja/interpreter"
+	"github.com/gravataLonga/ninja/resolver"
+
+	"io"
+	"os"
+	"strings"
 
 	// "github.com/gravataLonga/ninja/evaluator"
 	"github.com/gravataLonga/ninja/lexer"
@@ -11,9 +17,6 @@ import (
 	"github.com/gravataLonga/ninja/parser"
 	"github.com/gravataLonga/ninja/repl"
 	flag "github.com/spf13/pflag"
-	"io"
-	"os"
-	"strings"
 )
 
 //go:embed version.txt
@@ -81,12 +84,8 @@ func execCode(input string, writer io.Writer) {
 		return
 	}
 
-	/*program = s.Analysis(program)
-	if len(s.Errors()) != 0 {
-		printSemanticErrorsErrors(s.Errors(), writer)
-		return
-	}*/
 	i := interpreter.New(os.Stdout, env)
+	resolver.NewResolver(i).Resolve(program)
 	result := i.Interpreter(program)
 	if result != nil {
 		fmt.Fprintf(writer, result.Inspect())

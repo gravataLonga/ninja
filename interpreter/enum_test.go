@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -30,7 +30,7 @@ func TestEnum(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEnum[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testObjectLiteral(t, evaluated, tt.expectedValue)
 		})

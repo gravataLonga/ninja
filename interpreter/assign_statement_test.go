@@ -1,7 +1,8 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
+	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/object"
 	"os"
 	"testing"
@@ -56,13 +57,14 @@ func TestVarStmt(t *testing.T) {
 		t.Run(fmt.Sprintf("TestVarStmt[%d]", i), func(t *testing.T) {
 
 			nodes := createParser(t, tt.input)
-			i := New(os.Stdout, object.NewEnvironment())
+			env := object.NewEnvironment()
+			i := interpreter.New(os.Stdout, env)
 
 			v := i.Interpreter(nodes)
 
 			if len(tt.expectedEnvironment) > 0 {
 				for k, v := range tt.expectedEnvironment {
-					vEnv, ok := i.env.Get(k)
+					vEnv, ok := env.Get(k)
 					if !ok {
 						t.Errorf("not found env on interpreter")
 						continue

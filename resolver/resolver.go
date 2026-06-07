@@ -1,22 +1,22 @@
-package interpreter
+package resolver
 
 import (
-	"github.com/gravataLonga/ninja/analysis"
 	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/object"
 )
 
 type Resolver struct {
-	i     *Interpreter
-	stack *analysis.Stack
+	i     *interpreter.Interpreter
+	stack *Stack
 }
 
-func NewResolver(i *Interpreter) *Resolver {
-	return &Resolver{i: i, stack: analysis.NewStack()}
+func NewResolver(i *interpreter.Interpreter) *Resolver {
+	return &Resolver{i: i, stack: NewStack()}
 }
 
 func (resolver *Resolver) BeginScope() {
-	resolver.stack.Push(analysis.NewScope())
+	resolver.stack.Push(NewScope())
 }
 
 func (resolver *Resolver) EndScope() {
@@ -97,10 +97,6 @@ func (resolver *Resolver) VisitHashExpr(v *ast.HashLiteral) (result object.Objec
 	for _, exp := range v.Pairs {
 		exp.Accept(resolver)
 	}
-	return nil
-}
-
-func (resolver *Resolver) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 	return nil
 }
 
@@ -258,5 +254,15 @@ func (resolver *Resolver) VisitAssignStmt(v *ast.AssignStatement) (result object
 	// Check r.s.Peek().Get() == false wasn't initilized yet, give and error.
 
 	v.Right.Accept(resolver)
+	return nil
+}
+
+func (resolver *Resolver) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
+	for i := resolver.stack.Size() - 1; i >= 0; i-- {
+		if resolver.stack.At(i).Exists(v.Value) {
+			resolver.i.ResolveLocal(v, resolver.stack.Size()-1-i)
+			return nil
+		}
+	}
 	return nil
 }

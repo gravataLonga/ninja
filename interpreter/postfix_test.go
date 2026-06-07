@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -49,7 +49,7 @@ func TestPostfixOperator(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestPostfixOperator[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")

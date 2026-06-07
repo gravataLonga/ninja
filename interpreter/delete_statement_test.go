@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -31,7 +31,7 @@ func TestDeleteStatementArray(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestDeleteStatementArray[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			result, ok := evaluated.(*object.Array)
 			if !ok {
@@ -66,7 +66,7 @@ func TestWrongDeleteStatementArray(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestWrongDeleteStatementArray[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -92,7 +92,7 @@ func TestDeleteStatementHash(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestDeleteStatementHash[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			result, ok := evaluated.(*object.Hash)
 			if !ok {

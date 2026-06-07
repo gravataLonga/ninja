@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -83,7 +83,7 @@ func TestReturnStatements(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestReturnStatements[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			integer, ok := tt.expected.(int)
 			float, okFloat := tt.expected.(float64)

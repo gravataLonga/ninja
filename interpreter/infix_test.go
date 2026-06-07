@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -132,7 +132,7 @@ func TestInfixMathOperator(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestInfixOperator[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -703,7 +703,7 @@ func TestInfixLogicOperator(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestInfixOperator[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")

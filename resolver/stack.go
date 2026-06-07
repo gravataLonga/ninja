@@ -1,4 +1,4 @@
-package analysis
+package resolver
 
 type Stack struct {
 	head *leaf
@@ -45,4 +45,15 @@ func (s *Stack) Push(value *Scope) {
 	n := &leaf{value, s.head}
 	s.head = n
 	s.size++
+}
+
+func (s *Stack) At(index int) *Scope {
+	if index < 0 || index >= s.size {
+		return nil
+	}
+	n := s.head
+	for i := 0; i < s.size-1-index; i++ {
+		n = n.prev
+	}
+	return n.value
 }

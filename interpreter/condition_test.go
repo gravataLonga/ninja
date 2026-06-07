@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -43,7 +43,7 @@ func TestIfElseExpressions(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestIfElseExpressions[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 
@@ -63,7 +63,7 @@ func TestTernaryOperatorExpressions(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestTernaryOperatorExpressions[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 
@@ -82,7 +82,7 @@ func TestElvisOperatorExpressions(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestElvisOperatorExpressions[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 

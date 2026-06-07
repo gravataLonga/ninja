@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -52,7 +52,7 @@ func TestForStatement(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestForStatement[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			integer, ok := tt.expected.(int)
 			if ok {
@@ -68,7 +68,7 @@ func TestLoopStopWhenFoundError(t *testing.T) {
 	input := `for(var i = 0; i <= 2; i = i + 1) { i; if (i == 1) { 1 + "ola"; } }`
 	expected := "unknown operator: INTEGER + STRING + at [Line: 1, Offset: 56]"
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	if evaluated == nil {
 		t.Fatalf("evaluated is empty")
@@ -90,7 +90,7 @@ func TestBreakOutsideForLoop(t *testing.T) {
 	input := `break`
 	expected := "'break' not in the 'loop' context"
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	if evaluated == nil {
 		t.Fatalf("evaluated is empty")

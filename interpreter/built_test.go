@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -40,7 +40,7 @@ func TestBuiltinFunctions(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestBuiltinFunctions[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			switch expected := tt.expected.(type) {
 			case int:
@@ -84,7 +84,7 @@ func TestBuiltinFunctions(t *testing.T) {
 }
 
 func TestBuiltinTime(t *testing.T) {
-	evaluated := interpreter(t, `time()`)
+	evaluated := evalProgram(t, `time()`)
 
 	if _, ok := evaluated.(*object.Integer); !ok {
 		t.Fatalf("builtin time() expected got integer. Got: %T", evaluated)
@@ -92,7 +92,7 @@ func TestBuiltinTime(t *testing.T) {
 }
 
 func TestBuiltinRand(t *testing.T) {
-	evaluated := interpreter(t, `rand()`)
+	evaluated := evalProgram(t, `rand()`)
 
 	if _, ok := evaluated.(*object.Float); !ok {
 		t.Fatalf("builtin rand() expected got float. Got: %T", evaluated)
@@ -103,7 +103,7 @@ func TestArgs(t *testing.T) {
 	object.Arguments = []string{"test", "hello"}
 	input := `args();`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	arr, ok := evaluated.(*object.Array)
 	if !ok {
@@ -125,7 +125,7 @@ func TestArgs(t *testing.T) {
 func TestPlugin(t *testing.T) {
 	input := `plugin("../fixtures/hello")`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	_, ok := evaluated.(*object.Plugin)
 	if !ok {
@@ -141,7 +141,7 @@ func TestPlugin(t *testing.T) {
 func TestPluginCallSymbols(t *testing.T) {
 	input := `var h = plugin("../fixtures/hello"); h.hello();`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	str, ok := evaluated.(*object.String)
 	if !ok {

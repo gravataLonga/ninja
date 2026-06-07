@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func TestHashLiterals(t *testing.T) {
 		false: 6
 	}`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	result, ok := evaluated.(*object.Hash)
 	if !ok {
 		t.Fatalf("Eval didn't return Hash. got=%T (%+v)", evaluated, evaluated)
@@ -52,7 +52,7 @@ a["hello"] = "world";
 a;
 `
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	result, ok := evaluated.(*object.Hash)
 	if !ok {
 		t.Fatalf("Eval didn't return Hash. got=%T (%+v)", evaluated, evaluated)
@@ -125,7 +125,7 @@ func TestHashIndexExpressions(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestHashIndexExpressions[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			integer, ok := tt.expected.(int)
 			if ok {
 				testIntegerObject(t, evaluated, int64(integer))
@@ -163,7 +163,7 @@ func TestEvalHashExpression(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalHashExpression[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 
@@ -207,7 +207,7 @@ func TestErrorHashHandling(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestErrorHashHandling[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -253,7 +253,7 @@ func TestHashMethod(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestHashMethod_%d", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
@@ -273,7 +273,7 @@ func TestHashHasKeyMethod(t *testing.T) {
 		return false
 	}
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	arr, ok := evaluated.(*object.Array)
 	if !ok {
@@ -312,7 +312,7 @@ func TestHashHasValueMethod(t *testing.T) {
 		return false
 	}
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	arr, ok := evaluated.(*object.Array)
 	if !ok {
@@ -342,7 +342,7 @@ func TestHashHasMergeMethod(t *testing.T) {
 	input := `{"a": 1, "b": 2}.merge({"c": 3})`
 	contain := `{"a": 1, "b": 2, "c": 3}`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	expected := object.Hash{Pairs: make(map[object.HashKey]object.HashPair)}
 	aKey := &object.String{Value: "a"}
@@ -386,7 +386,7 @@ func TestHashMethodWrongUsage(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestHashMethodWrongUsage[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

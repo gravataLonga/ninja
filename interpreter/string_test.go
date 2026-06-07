@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 func TestStringLiteral(t *testing.T) {
 	input := `"Hello World!"`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
@@ -23,7 +23,7 @@ func TestStringLiteral(t *testing.T) {
 func TestStringConcatenation(t *testing.T) {
 	input := `"Hello" + " " + "World!"`
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	str, ok := evaluated.(*object.String)
 	if !ok {
 		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
@@ -56,7 +56,7 @@ func TestEvalStringExpression(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalStringExpression[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 	}
@@ -111,7 +111,7 @@ func TestErrorStringHandling(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestErrorStringHandling[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -150,7 +150,7 @@ func TestStringIndexExpressions(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringIndexExpressions[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			str, ok := tt.expected.(string)
 			if ok {
 				testStringObject(t, evaluated, string(str))
@@ -163,12 +163,12 @@ func TestStringIndexExpressions(t *testing.T) {
 }
 
 func TestStringMethodType(t *testing.T) {
-	evaluated := interpreter(t, `"ola".type()`)
+	evaluated := evalProgram(t, `"ola".type()`)
 	testObjectLiteral(t, evaluated, object.STRING_OBJ)
 }
 
 func TestStringMethodTypeWrongParameter(t *testing.T) {
-	evaluated := interpreter(t, `"ola".type(1)`)
+	evaluated := evalProgram(t, `"ola".type(1)`)
 
 	errObj, ok := evaluated.(*object.Error)
 	if !ok {
@@ -213,7 +213,7 @@ func TestStringMethodSplit(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodSplit[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			if evaluated.Inspect() != tt.expected {
 				t.Errorf("string.split() expected %s. Got: %s", tt.expected, evaluated.Inspect())
@@ -244,7 +244,7 @@ func TestStringMethodSplitWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodSplitWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -284,7 +284,7 @@ func TestStringMethodLength(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodLength_%d", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			if !testIntegerObject(t, evaluated, tt.expected) {
 				t.Errorf("string.length() expected %d. Got: %s", tt.expected, evaluated.Inspect())
@@ -306,7 +306,7 @@ func TestStringMethodLengthWrongParameter(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodLengthWrongParameter[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -345,7 +345,7 @@ func TestStringMethodContain(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodContain[%d]", o), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testBooleanObject(t, evaluated, tt.expected)
 		})
@@ -373,7 +373,7 @@ func TestStringMethodContainWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodContainWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -408,7 +408,7 @@ func TestStringMethodIndex(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodIndex[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testIntegerObject(t, evaluated, tt.expected)
 		})
@@ -436,7 +436,7 @@ func TestStringMethodIndexWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodIndexWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -467,7 +467,7 @@ func TestStringMethodUpper(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodUpper[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testStringObject(t, evaluated, tt.expected)
 		})
@@ -487,7 +487,7 @@ func TestStringMethodUpperWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodUpperWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -518,7 +518,7 @@ func TestStringMethodLower(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodLower[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testStringObject(t, evaluated, tt.expected)
 		})
@@ -538,7 +538,7 @@ func TestStringMethodLowerWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodLowerWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -566,7 +566,7 @@ func TestStringMethodTrim(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodTrim[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testStringObject(t, evaluated, tt.expected)
 		})
@@ -586,7 +586,7 @@ func TestStringMethodTrimWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodTrimWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -618,7 +618,7 @@ func TestStringMethodInteger(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodInteger[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testIntegerObject(t, evaluated, tt.expected)
 		})
@@ -643,7 +643,7 @@ func TestStringMethodIntegerWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodIntegerWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -675,7 +675,7 @@ func TestStringMethodFloat(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodFloat[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testFloatObject(t, evaluated, tt.expected)
 		})
@@ -699,7 +699,7 @@ func TestStringMethodFloatWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodFloatWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -731,7 +731,7 @@ func TestStringMethodReplace(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodReplace[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testStringObject(t, evaluated, tt.expected)
 		})
@@ -767,7 +767,7 @@ func TestStringMethodReplaceWrongParameter(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestStringMethodReplaceWrongParameter[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -786,7 +786,7 @@ func TestStringMethodNotFound(t *testing.T) {
 	input := `"a".ups()`
 	expected := ""
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 
 	errObj, ok := evaluated.(*object.Error)
 	if !ok {

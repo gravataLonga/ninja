@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ func TestImportStatements(t *testing.T) {
 
 	for o, tt := range tests {
 		t.Run(fmt.Sprintf("TestImportStatements[%d]", o), func(t *testing.T) {
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 			testObjectLiteral(t, v, tt.expected)
 		})
 
@@ -47,7 +47,7 @@ func TestErrorImportHandling(t *testing.T) {
 	for i, tt := range tests {
 
 		t.Run(fmt.Sprintf("TestErrorImportHandling_%d", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

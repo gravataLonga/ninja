@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 func TestArrayLiterals(t *testing.T) {
 	input := "[1, 2 * 2, 3 + 3, 34.4]"
 
-	evaluated := interpreter(t, input)
+	evaluated := evalProgram(t, input)
 	result, ok := evaluated.(*object.Array)
 	if !ok {
 		t.Fatalf("object is not Array. got=%T (%+v)", evaluated, evaluated)
@@ -74,7 +74,7 @@ func TestArrayIndexExpressions(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestArrayIndexExpressions[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			integer, ok := tt.expected.(int)
 			if ok {
 				testIntegerObject(t, evaluated, int64(integer))
@@ -110,7 +110,7 @@ func TestArrayLiteralsAssign(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestArrayLiteralsAssign[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			result, ok := evaluated.(*object.Array)
 			if !ok {
 				t.Errorf("Eval didn't return Array. got=%T (%+v)", evaluated, evaluated)
@@ -150,7 +150,7 @@ func TestEvalArrayExpression(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalArrayExpression[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 
@@ -206,7 +206,7 @@ func TestErrorArrayHandling(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestErrorArrayHandling[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -339,7 +339,7 @@ func TestArrayMethod(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestArrayMethod[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
@@ -388,7 +388,7 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestArrayMethodWrongUsage[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

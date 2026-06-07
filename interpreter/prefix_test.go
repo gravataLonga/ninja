@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -120,7 +120,7 @@ func TestPrefixOperator(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestPrefixOperator[%d]", i), func(t *testing.T) {
 
-			v := interpreter(t, tt.input)
+			v := evalProgram(t, tt.input)
 
 			if v == nil {
 				t.Fatalf("Interpreter return nil as result")
@@ -158,7 +158,7 @@ func TestBangOperator(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestBangOperator[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testBooleanObject(t, evaluated, tt.expected)
 		})

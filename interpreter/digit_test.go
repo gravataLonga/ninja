@@ -1,4 +1,4 @@
-package interpreter
+package interpreter_test
 
 import (
 	"fmt"
@@ -154,7 +154,7 @@ func TestEvalDigitExpression(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalDigitExpression[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
 	}
@@ -208,7 +208,7 @@ func TestEvalFloatExpression(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestEvalFloatExpression[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 			testFloatObject(t, evaluated, tt.expected)
 		})
 	}
@@ -255,7 +255,7 @@ func TestErrorFloatHandling(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestErrorFloatHandling[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {
@@ -303,7 +303,7 @@ func TestFloatMethod(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestFloatMethod[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			testObjectLiteral(t, evaluated, tt.expected)
 		})
@@ -335,7 +335,7 @@ func TestFloatMethodWrongUsage(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("TestFloatMethodWrongUsage[%d]", i), func(t *testing.T) {
-			evaluated := interpreter(t, tt.input)
+			evaluated := evalProgram(t, tt.input)
 
 			errObj, ok := evaluated.(*object.Error)
 			if !ok {

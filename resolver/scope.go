@@ -1,4 +1,4 @@
-package analysis
+package resolver
 
 type Scope struct {
 	s map[string]bool
