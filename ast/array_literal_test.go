@@ -1,8 +1,9 @@
 package ast
 
 import (
-	"github.com/gravataLonga/ninja/token"
 	"testing"
+
+	"github.com/gravataLonga/ninja/token"
 )
 
 func TestArrayLiteral_String(t *testing.T) {
@@ -33,7 +34,7 @@ func BenchmarkArrayLiteral_String(b *testing.B) {
 	arrLiteral := &ArrayLiteral{Token: token.Token{Type: token.LBRACKET, Literal: "["}, Elements: elements}
 
 	for i := 0; i < b.N; i++ {
-		arrLiteral.String()
+		_ = arrLiteral.String()
 	}
 }
 
@@ -50,6 +51,6 @@ func BenchmarkArrayLiteral_StringWithHash(b *testing.B) {
 	arrLiteral := &ArrayLiteral{Token: token.Token{Type: token.LBRACKET, Literal: "["}, Elements: elements}
 
 	for i := 0; i < b.N; i++ {
-		arrLiteral.String()
+		_ = arrLiteral.String()
 	}
 }
