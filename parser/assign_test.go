@@ -2,11 +2,12 @@ package parser
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/token"
-	"strings"
-	"testing"
 )
 
 func TestVarStatements(t *testing.T) {
@@ -193,8 +194,7 @@ i = i = 1;
 	}
 }
 
-/*
-@todo we need to validate when we are assign invalid objects
+// @todo we need to validate when we are assign invalid objects
 func TestIllegalAssignmentsErrors(t *testing.T) {
 	tests := []struct {
 		input         string
@@ -215,6 +215,10 @@ func TestIllegalAssignmentsErrors(t *testing.T) {
 		{
 			`{} = 1`,
 			`illegal "1" assignment to "{"`,
+		},
+		{
+			`h.name() = 1`,
+			`illegal "1" assignment to "("`,
 		},
 	}
 
@@ -243,4 +247,3 @@ func TestIllegalAssignmentsErrors(t *testing.T) {
 
 	}
 }
-*/

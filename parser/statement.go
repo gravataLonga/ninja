@@ -12,19 +12,7 @@ func (p *Parser) parseStatement() ast.Statement {
 		if p.peekTokenIs(token.ASSIGN) {
 			return p.parseAssignStatement()
 		}
-
-		expr := p.parseExpressionStatement()
-		if !p.peekTokenIs(token.ASSIGN) {
-			return expr
-		}
-
-		p.nextToken()
-		p.nextToken()
-		assign := &ast.AssignStatement{Token: p.curToken, Left: expr, Right: p.parseExpression(LOWEST)}
-		if p.peekTokenIs(token.SEMICOLON) {
-			p.nextToken()
-		}
-		return assign
+		return p.parseExpressionOrAssignStatement()
 	case token.DELETE:
 		return p.parseDeleteStatement()
 	case token.VAR:
@@ -38,6 +26,30 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.ENUM:
 		return p.parseEnum()
 	default:
-		return p.parseExpressionStatement()
+		return p.parseExpressionOrAssignStatement()
+	}
+}
+
+func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
+	expr := p.parseExpressionStatement()
+	if !p.peekTokenIs(token.ASSIGN) {
+		return expr
+	}
+
+	switch expr.Expression.(type) {
+	case *ast.Identifier, *ast.IndexExpression, *ast.Dot:
+		p.nextToken()
+		p.nextToken()
+		assign := &ast.AssignStatement{Token: p.curToken, Left: expr, Right: p.parseExpression(LOWEST)}
+		if p.peekTokenIs(token.SEMICOLON) {
+			p.nextToken()
+		}
+		return assign
+	default:
+		p.nextToken() // '='
+		p.nextToken() // RHS start
+		rhs := p.parseExpression(LOWEST)
+		p.newError("illegal %q assignment to %q", rhs.TokenLiteral(), expr.Expression.TokenLiteral())
+		return nil
 	}
 }

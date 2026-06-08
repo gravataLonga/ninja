@@ -2,11 +2,12 @@ package parser
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/ast"
-	"github.com/gravataLonga/ninja/lexer"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
 )
 
 // @todo ++a-- this must be illegal.
@@ -93,7 +94,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 		{
 			"-1.0.abs()",
-			"(-(1.0.abs()))",
+			"(-(1.0.abs)())",
 		},
 		{
 			"a << b",
@@ -245,19 +246,19 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		},
 		{
 			`"hello".type()`,
-			`(hello.type())`,
+			`(hello.type)()`,
 		},
 		{
 			`"hello" + "world".type()`,
-			`(hello + (world.type()))`,
+			`(hello + (world.type)())`,
 		},
 		{
 			`"hello" + 2.string()`,
-			`(hello + (2.string()))`,
+			`(hello + (2.string)())`,
 		},
 		{
 			`"hello".type().split("_")`,
-			`((hello.type()).split(_))`,
+			`((hello.type)().split)(_)`,
 		},
 	}
 

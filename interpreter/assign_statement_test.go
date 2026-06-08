@@ -90,3 +90,40 @@ func TestVarStmt(t *testing.T) {
 		})
 	}
 }
+
+func TestAssignDotPropertyOnHash(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`var h = {}; h.name = "ninja"; h.name;`,
+			"ninja",
+		},
+		{
+			`var h = {"name": "old"}; h.name = "new"; h.name;`,
+			"new",
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestAssignDotPropertyOnHash[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+
+			testStringObject(t, evaluated, tt.expected)
+		})
+	}
+}
+
+func TestAssignDotPropertyOnNonHash(t *testing.T) {
+	// `h.name() = 1` is covered by TestIllegalAssignmentsErrors (parser/assign_test.go)
+	// instead: with `.` binding tighter than a call, its LHS is a *ast.CallExpression
+	// (illegal assignment target altogether), never reaching the *ast.Dot write path.
+	input := `var a = [1]; a.x = 1;`
+
+	evaluated := evalProgram(t, input)
+
+	if _, ok := evaluated.(*object.Error); !ok {
+		t.Fatalf("expected *object.Error. got=%T (%+v)", evaluated, evaluated)
+	}
+}

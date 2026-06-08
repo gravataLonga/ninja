@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
 )
@@ -9,7 +10,7 @@ import (
 type Dot struct {
 	Token  token.Token
 	Object Expression
-	Right  Expression
+	Right  *Identifier
 }
 
 func (oc *Dot) expressionNode()      {}

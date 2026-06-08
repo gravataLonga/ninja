@@ -31,6 +31,19 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		return nil
 	}
 
+	if dot, ok := expr.Expression.(*ast.Dot); ok {
+		obj := i.evaluate(dot.Object)
+
+		hash, ok := obj.(*object.Hash)
+		if !ok {
+			return object.NewErrorFormat("cannot assign property %q on %s", dot.Right.Value, obj.Type())
+		}
+
+		key := &object.String{Value: dot.Right.Value}
+		hash.Pairs[key.HashKey()] = object.HashPair{Key: key, Value: i.evaluate(v.Right)}
+		return nil
+	}
+
 	idx, ok := expr.Expression.(*ast.IndexExpression)
 	if !ok {
 		return nil

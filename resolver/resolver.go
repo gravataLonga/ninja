@@ -75,7 +75,6 @@ func (r *Resolver) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
 
 func (r *Resolver) VisitDotExpr(v *ast.Dot) (result object.Object) {
 	v.Object.Accept(r)
-	v.Right.Accept(r)
 	return nil
 }
 

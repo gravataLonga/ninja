@@ -20,6 +20,27 @@ func (i *Interpreter) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Objec
 // VisitCallExpr
 // @todo arguments must be it's on AST structure.
 func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
+	if dot, ok := v.Function.(*ast.Dot); ok {
+		obj := i.evaluate(dot.Object)
+
+		var args []object.Object
+
+		for _, e := range v.Arguments {
+			evaluated := i.evaluate(e)
+			if object.IsError(evaluated) {
+				return evaluated
+			}
+			args = append(args, evaluated)
+		}
+
+		if callable, ok := obj.(object.CallableMethod); ok {
+			return callable.Call(dot.Right.Value, args...)
+		}
+
+		fn := i.VisitDotExpr(dot)
+		return i.applyFunction(fn, v)
+	}
+
 	obj := i.evaluate(v.Function)
 
 	if object.IsError(obj) {
@@ -144,26 +165,4 @@ func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []obje
 	}
 
 	return nil
-}
-
-func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
-	obj := i.evaluate(v.Object)
-	call, ok := v.Right.(*ast.CallExpression)
-	if !ok {
-		return object.NewErrorFormat("we expect to be a call on right of dot operation. Got: %t", v.Right)
-	}
-
-	objCallable, ok := obj.(object.CallableMethod)
-	if !ok {
-		return object.NewErrorFormat("object must implement callable.")
-	}
-
-	method, ok := call.Function.(*ast.Identifier)
-	if !ok {
-		return object.NewErrorFormat("method name isn't a identifier")
-	}
-
-	args := i.evaluateExpressions(call.Arguments)
-
-	return objCallable.Call(method.Value, args...)
 }

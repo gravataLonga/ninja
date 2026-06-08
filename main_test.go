@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strings"
+	"testing"
+
 	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
-	"io/ioutil"
-	"os"
-	"strings"
-	"testing"
 )
 
 var code = `function fib(n) { if (n < 2) { return n; } return fib(n-1) + fib(n-2); };`
@@ -63,7 +63,11 @@ func TestMain_execCode(t *testing.T) {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
 
-	execCode(`var a = 2 + 1; a;`, temporaryStdOut)
+	error, program := parseProgram("var a = 2 + 1; a;")
+	if error != nil {
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
+	}
+	execCode(program, temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -83,7 +87,12 @@ func TestMain_execCodeSpecialCharacter(t *testing.T) {
 		t.Fatalf("%s: %s", "TestMain_execCode", err)
 	}
 
-	execCode("import \"./testdata/multiple_lines.ninja\"; input.split(\"\n\")", temporaryStdOut)
+	error, program := parseProgram("import \"./testdata/multiple_lines.ninja\"; input.split(\"\n\")")
+	if error != nil {
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
+	}
+
+	execCode(program, temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -105,7 +114,12 @@ func TestMain_execCodeAssertions(t *testing.T) {
 
 	code := readFile(t, "./testdata/assertions.ninja")
 	expected := readFile(t, "./testdata/expected.txt")
-	execCode(code, temporaryStdOut)
+
+	error, program := parseProgram(code)
+	if error != nil {
+		t.Fatalf("%s: %s", "TestMain_execCode", err)
+	}
+	execCode(program, temporaryStdOut)
 
 	resultOut, err := os.ReadFile(temporaryStdOut.Name())
 	if err != nil {
@@ -118,7 +132,7 @@ func TestMain_execCodeAssertions(t *testing.T) {
 }
 
 func readFile(t *testing.T, filename string) string {
-	file, err := ioutil.ReadFile(filename)
+	file, err := os.ReadFile(filename)
 	if err != nil {
 		t.Fatalf("unable to open file %s", filename)
 	}
