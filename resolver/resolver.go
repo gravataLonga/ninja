@@ -15,252 +15,249 @@ func NewResolver(i *interpreter.Interpreter) *Resolver {
 	return &Resolver{i: i, stack: NewStack()}
 }
 
-func (resolver *Resolver) BeginScope() {
-	resolver.stack.Push(NewScope())
+func (r *Resolver) BeginScope() {
+	r.stack.Push(NewScope())
 }
 
-func (resolver *Resolver) EndScope() {
-	resolver.stack.Pop()
+func (r *Resolver) EndScope() {
+	r.stack.Pop()
 }
 
-func (resolver *Resolver) Resolve(node ast.Node) {
-	resolver.resolve(node)
+func (r *Resolver) Resolve(node ast.Node) {
+	r.resolve(node)
 }
 
-func (resolver *Resolver) resolve(node ast.Node) {
+func (r *Resolver) resolve(node ast.Node) {
 	switch node := node.(type) {
 
 	case *ast.Program:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.BlockStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.ExpressionStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.ReturnStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.BreakStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.VarStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	case *ast.AssignStatement:
-		node.Accept(resolver)
+		node.Accept(r)
 		break
 	}
 }
 
-func (resolver *Resolver) VisitArrayExpr(v *ast.ArrayLiteral) (result object.Object) {
+func (r *Resolver) VisitArrayExpr(v *ast.ArrayLiteral) (result object.Object) {
 	for _, item := range v.Elements {
-		item.Accept(resolver)
+		item.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
+func (r *Resolver) VisitBooleanExpr(v *ast.Boolean) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
-	v.Function.Accept(resolver)
+func (r *Resolver) VisitCallExpr(v *ast.CallExpression) (result object.Object) {
+	v.Function.Accept(r)
 	for _, arg := range v.Arguments {
-		arg.Accept(resolver)
+		arg.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitDotExpr(v *ast.Dot) (result object.Object) {
-	v.Object.Accept(resolver)
-	v.Right.Accept(resolver)
+func (r *Resolver) VisitDotExpr(v *ast.Dot) (result object.Object) {
+	v.Object.Accept(r)
+	v.Right.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitFloatExpr(v *ast.FloatLiteral) (result object.Object) {
+func (r *Resolver) VisitFloatExpr(v *ast.FloatLiteral) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
-	resolver.BeginScope()
+func (r *Resolver) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) {
+	r.BeginScope()
 	for _, params := range v.Parameters {
-		params.Accept(resolver)
+		params.Accept(r)
 	}
-	v.Body.Accept(resolver)
-	resolver.EndScope()
+	v.Body.Accept(r)
+	r.EndScope()
 	return nil
 }
 
-func (resolver *Resolver) VisitHashExpr(v *ast.HashLiteral) (result object.Object) {
+func (r *Resolver) VisitHashExpr(v *ast.HashLiteral) (result object.Object) {
 	for _, exp := range v.Pairs {
-		exp.Accept(resolver)
+		exp.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
+func (r *Resolver) VisitIfExpr(v *ast.IfExpression) (result object.Object) {
 	if v.Condition != nil {
-		v.Condition.Accept(resolver)
+		v.Condition.Accept(r)
 	}
 
 	if v.Consequence != nil {
-		v.Consequence.Accept(resolver)
+		v.Consequence.Accept(r)
 	}
 
 	if v.Alternative != nil {
-		v.Alternative.Accept(resolver)
+		v.Alternative.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpression) (result object.Object) {
-	v.PropertyIdentifier.Accept(resolver)
-	v.AccessIdentifier.Accept(resolver)
+func (r *Resolver) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpression) (result object.Object) {
+	v.PropertyIdentifier.Accept(r)
+	v.AccessIdentifier.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitImportExpr(v *ast.Import) (result object.Object) {
-	v.Filename.Accept(resolver)
+func (r *Resolver) VisitImportExpr(v *ast.Import) (result object.Object) {
+	v.Filename.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitIndexExpr(v *ast.IndexExpression) (result object.Object) {
-	v.Left.Accept(resolver)
-	v.Index.Accept(resolver)
+func (r *Resolver) VisitIndexExpr(v *ast.IndexExpression) (result object.Object) {
+	v.Left.Accept(r)
+	v.Index.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitIntegerExpr(v *ast.IntegerLiteral) (result object.Object) {
+func (r *Resolver) VisitIntegerExpr(v *ast.IntegerLiteral) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
-	v.Left.Accept(resolver)
+func (r *Resolver) VisitPostfixExpr(v *ast.PostfixExpression) (result object.Object) {
+	v.Left.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
-	v.Right.Accept(resolver)
+func (r *Resolver) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Object) {
+	v.Right.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitStringExpr(v *ast.StringLiteral) (result object.Object) {
+func (r *Resolver) VisitStringExpr(v *ast.StringLiteral) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (result object.Object) {
-	v.Condition.Accept(resolver)
-	v.Consequence.Accept(resolver)
-	v.Alternative.Accept(resolver)
+func (r *Resolver) VisitTernaryOperator(v *ast.TernaryOperatorExpression) (result object.Object) {
+	v.Condition.Accept(r)
+	v.Consequence.Accept(r)
+	v.Alternative.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result object.Object) {
-	v.Left.Accept(resolver)
-	v.Right.Accept(resolver)
+func (r *Resolver) VisitElvisOperator(v *ast.ElvisOperatorExpression) (result object.Object) {
+	v.Left.Accept(r)
+	v.Right.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitFor(v *ast.ForStatement) (result object.Object) {
+func (r *Resolver) VisitFor(v *ast.ForStatement) (result object.Object) {
 	if v.InitialCondition != nil {
-		v.InitialCondition.Accept(resolver)
+		v.InitialCondition.Accept(r)
 	}
 
 	if v.Condition != nil {
-		v.Condition.Accept(resolver)
+		v.Condition.Accept(r)
 	}
 
 	if v.Iteration != nil {
-		v.Iteration.Accept(resolver)
+		v.Iteration.Accept(r)
 	}
 
 	if v.Body != nil {
-		v.Body.Accept(resolver)
+		v.Body.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitInfix(v *ast.InfixExpression) (result object.Object) {
-	v.Left.Accept(resolver)
-	v.Right.Accept(resolver)
+func (r *Resolver) VisitInfix(v *ast.InfixExpression) (result object.Object) {
+	v.Left.Accept(r)
+	v.Right.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitProgram(v *ast.Program) (result object.Object) {
+func (r *Resolver) VisitProgram(v *ast.Program) (result object.Object) {
 	for _, stmt := range v.Statements {
-		result = stmt.Accept(resolver)
+		result = stmt.Accept(r)
 	}
 	return
 }
 
-func (resolver *Resolver) VisitBlock(v *ast.BlockStatement) (result object.Object) {
-	resolver.BeginScope()
+func (r *Resolver) VisitBlock(v *ast.BlockStatement) (result object.Object) {
+	r.BeginScope()
 	for _, stmt := range v.Statements {
-		stmt.Accept(resolver)
+		stmt.Accept(r)
 	}
-	resolver.EndScope()
+	r.EndScope()
 	return
 }
 
-func (resolver *Resolver) VisitBreak(v *ast.BreakStatement) (result object.Object) {
+func (r *Resolver) VisitBreak(v *ast.BreakStatement) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitContinue(v *ast.ContinueStatement) (result object.Object) {
+func (r *Resolver) VisitContinue(v *ast.ContinueStatement) (result object.Object) {
 	return nil
 }
 
-func (resolver *Resolver) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
-	v.Left.Accept(resolver)
-	v.Index.Accept(resolver)
+func (r *Resolver) VisitDelete(v *ast.DeleteStatement) (result object.Object) {
+	v.Left.Accept(r)
+	v.Index.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitEnum(v *ast.EnumStatement) (result object.Object) {
-	v.Identifier.Accept(resolver)
+func (r *Resolver) VisitEnum(v *ast.EnumStatement) (result object.Object) {
+	v.Identifier.Accept(r)
 	for _, a := range v.Branches {
-		a.Accept(resolver)
+		a.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitExprStmt(v *ast.ExpressionStatement) (result object.Object) {
-	return v.Expression.Accept(resolver)
+func (r *Resolver) VisitExprStmt(v *ast.ExpressionStatement) (result object.Object) {
+	return v.Expression.Accept(r)
 }
 
-func (resolver *Resolver) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
+func (r *Resolver) VisitReturn(v *ast.ReturnStatement) (result object.Object) {
 	if v.ReturnValue != nil {
-		return v.ReturnValue.Accept(resolver)
+		return v.ReturnValue.Accept(r)
 	}
 	return nil
 }
 
-func (resolver *Resolver) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
-	if resolver.stack.Size() == 0 {
-		return v.Value.Accept(resolver)
+func (r *Resolver) VisitVarStmt(v *ast.VarStatement) (result object.Object) {
+	if r.stack.Size() == 0 {
+		return v.Value.Accept(r)
 	}
-	resolver.stack.Peek().Put(v.Name.Value, false)
-	result = v.Value.Accept(resolver)
-	resolver.stack.Peek().Put(v.Name.Value, true)
+	r.stack.Peek().Put(v.Name.Value, false)
+	result = v.Value.Accept(r)
+	r.stack.Peek().Put(v.Name.Value, true)
 	// inform *Interpreter about this AST where is located.
 
 	return
 }
 
-func (resolver *Resolver) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
-	// Check r.s.Peek().Exists() == false then give and error.
-	// Check r.s.Peek().Get() == false wasn't initilized yet, give and error.
-
-	v.Right.Accept(resolver)
+func (r *Resolver) VisitAssignStmt(v *ast.AssignStatement) (result object.Object) {
+	v.Right.Accept(r)
 	return nil
 }
 
-func (resolver *Resolver) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
-	for i := resolver.stack.Size() - 1; i >= 0; i-- {
-		if resolver.stack.At(i).Exists(v.Value) {
-			resolver.i.ResolveLocal(v, resolver.stack.Size()-1-i)
+func (r *Resolver) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
+	for i := r.stack.Size() - 1; i >= 0; i-- {
+		if r.stack.At(i).Exists(v.Value) {
+			r.i.ResolveLocal(v, r.stack.Size()-1-i)
 			return nil
 		}
 	}

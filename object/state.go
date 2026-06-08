@@ -14,4 +14,7 @@ var (
 
 	// ExitFunction where function responsible for exit
 	ExitFunction func(int)
+
+	// Version of the application
+	Version string
 )
