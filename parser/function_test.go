@@ -1,10 +1,11 @@
 package parser
 
 import (
-	"github.com/gravataLonga/ninja/ast"
-	"github.com/gravataLonga/ninja/lexer"
 	"strings"
 	"testing"
+
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
 )
 
 func TestFunctionNamedLiteralParsing(t *testing.T) {
@@ -37,8 +38,8 @@ func TestFunctionNamedLiteralParsing(t *testing.T) {
 		t.Fatalf("function literal parameters wrong. want 2, got=%d\n", len(function.Parameters))
 	}
 
-	testLiteralExpression(t, function.Parameters[0], "x")
-	testLiteralExpression(t, function.Parameters[1], "y")
+	testIdentifier(t, function.Parameters[0].Name, "x")
+	testIdentifier(t, function.Parameters[1].Name, "y")
 
 	if len(function.Body.Statements) != 1 {
 		t.Fatalf("function.Body.Statements has not 1 statements. got=%d\n", len(function.Body.Statements))

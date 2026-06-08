@@ -1,9 +1,10 @@
 package ast
 
 import (
-	"github.com/gravataLonga/ninja/token"
 	"strconv"
 	"testing"
+
+	"github.com/gravataLonga/ninja/token"
 )
 
 func TestFunctionLiteral_String(t *testing.T) {
@@ -30,10 +31,11 @@ func TestFunctionLiteral_String(t *testing.T) {
 		}
 
 		blockStatement := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: "{"}, Statements: stmts}
-		var argumentsIdentifier []Expression
+		var argumentsIdentifier []*Parameter
 		for _, arg := range tt.parameters {
 			integerLiteral := &Identifier{Token: token.Token{Type: token.INT, Literal: strconv.FormatInt(arg, 10)}, Value: strconv.FormatInt(arg, 10)}
-			argumentsIdentifier = append(argumentsIdentifier, integerLiteral)
+			parameter := &Parameter{Name: integerLiteral}
+			argumentsIdentifier = append(argumentsIdentifier, parameter)
 		}
 		fn := &FunctionLiteral{
 			Token:      token.Token{Type: token.FUNCTION, Literal: "function"},
@@ -71,10 +73,11 @@ func TestFunctionLiteralWithIdentifier_String(t *testing.T) {
 		}
 
 		blockStatement := &BlockStatement{Token: token.Token{Type: token.LBRACE, Literal: "{"}, Statements: stmts}
-		var argumentsIdentifier []Expression
+		var argumentsIdentifier []*Parameter
 		for _, arg := range tt.parameters {
 			integerLiteral := &Identifier{Token: token.Token{Type: token.INT, Literal: strconv.FormatInt(arg, 10)}, Value: strconv.FormatInt(arg, 10)}
-			argumentsIdentifier = append(argumentsIdentifier, integerLiteral)
+			parameter := &Parameter{Name: integerLiteral}
+			argumentsIdentifier = append(argumentsIdentifier, parameter)
 		}
 		fn := &FunctionLiteral{
 			Token:      token.Token{Type: token.FUNCTION, Literal: "function"},

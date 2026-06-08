@@ -88,24 +88,16 @@ func (i *Interpreter) extendedEnvironment(env *object.Environment, v *ast.CallEx
 	mParameter := len(v.Arguments)
 
 	for index, parameter := range parameters {
-		ident, ok := parameter.(*ast.Identifier)
-		if ok {
-			env.Set(ident.String(), i.evaluate(v.Arguments[index]))
-			continue
-		}
-
-		infix, ok := parameter.(*ast.InfixExpression)
-		ident, _ = infix.Left.(*ast.Identifier)
+		param := parameter.(*ast.Parameter)
 
 		var value object.Object
 		if mParameter > index {
-			argument := v.Arguments[index]
-			value = i.evaluate(argument)
+			value = i.evaluate(v.Arguments[index])
 		} else {
-			value = i.evaluate(infix.Right)
+			value = i.evaluate(param.Default)
 		}
 
-		env.Set(ident.String(), value)
+		env.Set(param.Name.String(), value)
 	}
 
 	return env
@@ -137,10 +129,10 @@ func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []obje
 	totalArguments := len(v.Arguments)
 
 	for _, p := range parameters {
-		if _, ok := p.(*ast.InfixExpression); ok {
+		param := p.(*ast.Parameter)
+		if param.Default != nil {
 			totalParametersDefault++
-		}
-		if _, ok := p.(*ast.Identifier); ok {
+		} else {
 			totalParametersRequireBeforeDefault++
 		}
 	}

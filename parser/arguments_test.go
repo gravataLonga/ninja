@@ -2,10 +2,11 @@ package parser
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/ast"
-	"github.com/gravataLonga/ninja/lexer"
 	"strings"
 	"testing"
+
+	"github.com/gravataLonga/ninja/ast"
+	"github.com/gravataLonga/ninja/lexer"
 )
 
 func TestFunctionLiteralParameterParsing(t *testing.T) {
@@ -32,7 +33,7 @@ func TestFunctionLiteralParameterParsing(t *testing.T) {
 		}
 
 		for i, ident := range tt.expectedParams {
-			testLiteralExpression(t, function.Parameters[i], ident)
+			testIdentifier(t, function.Parameters[i].Name, ident)
 		}
 	}
 }
@@ -63,7 +64,7 @@ func TestFunctionParameterParsing(t *testing.T) {
 			}
 
 			for i, ident := range tt.expectedParams {
-				testLiteralExpression(t, function.Parameters[i], ident)
+				testIdentifier(t, function.Parameters[i].Name, ident)
 			}
 
 			if function.Name.String() != tt.ident {
@@ -94,10 +95,26 @@ func TestFunctionParameterOptionalParsing(t *testing.T) {
 		t.Fatalf("Arguments of function isn't equal 4. Got: %d", len(fn.Parameters))
 	}
 
-	testInfixExpression(t, fn.Parameters[1], "y", "=", 0)
-	testInfixExpression(t, fn.Parameters[2], "z", "=", "hello")
-	testInfixExpression(t, fn.Parameters[3], "k", "=", true)
-	testInfixExpression(t, fn.Parameters[4], "a", "=", "b")
+	testIdentifier(t, fn.Parameters[0].Name, "x")
+	if fn.Parameters[0].Default != nil {
+		t.Fatalf("Arguments of function isn't equal nil. Got: %v", fn.Parameters[0].Default)
+	}
+	testIdentifier(t, fn.Parameters[1].Name, "y")
+	if fn.Parameters[1].Default == nil {
+		t.Fatalf("Arguments of function is equal nil. Got: %v", fn.Parameters[0].Default)
+	}
+	testIdentifier(t, fn.Parameters[2].Name, "z")
+	if fn.Parameters[2].Default == nil {
+		t.Fatalf("Arguments of function is equal nil. Got: %v", fn.Parameters[0].Default)
+	}
+	testIdentifier(t, fn.Parameters[3].Name, "k")
+	if fn.Parameters[3].Default == nil {
+		t.Fatalf("Arguments of function is equal nil. Got: %v", fn.Parameters[0].Default)
+	}
+	testIdentifier(t, fn.Parameters[4].Name, "a")
+	if fn.Parameters[4].Default == nil {
+		t.Fatalf("Arguments of function is equal nil. Got: %v", fn.Parameters[0].Default)
+	}
 }
 
 func TestArgumentErrorMessageWhenDeclareOptionalArgumentFirst(t *testing.T) {

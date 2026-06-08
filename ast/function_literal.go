@@ -2,14 +2,15 @@ package ast
 
 import (
 	"bytes"
+	"strings"
+
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/token"
-	"strings"
 )
 
 type FunctionLiteral struct {
 	Token      token.Token // The 'function' token
-	Parameters []Expression
+	Parameters []*Parameter
 	Body       *BlockStatement
 	Name       *Identifier
 }
