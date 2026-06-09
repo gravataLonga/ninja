@@ -6,12 +6,12 @@ import (
 )
 
 func (p *Parser) parseDeleteStatement() *ast.DeleteStatement {
-
+	curToken := p.curToken
 	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
 
-	stmt := &ast.DeleteStatement{Token: p.curToken}
+	stmt := &ast.DeleteStatement{Token: curToken}
 
 	if !p.curTokenIs(token.IDENT) {
 		p.newError("expected current token to be %s, got %s instead.", token.IDENT, p.curToken.Type)

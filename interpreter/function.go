@@ -145,22 +145,22 @@ func (i *Interpreter) validateArguments(v *ast.CallExpression, parameters []obje
 	}
 
 	if totalArguments > totalParameters {
-		return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+		return object.NewErrorFormat("Function expected %d parameters, got %d %s", totalParameters, totalArguments, v.Token.HumanLocation())
 	}
 
 	if totalParametersDefault > 0 {
 		if totalParametersDefault != totalParameters-totalParametersRequireBeforeDefault {
-			return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+			return object.NewErrorFormat("Function expected %d parameters, got %d %s", totalParameters, totalArguments, v.Token.HumanLocation())
 		}
 		if totalParametersDefault+totalParametersRequireBeforeDefault != totalParameters {
-			return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParametersDefault+totalParametersRequireBeforeDefault, totalArguments, v.Token)
+			return object.NewErrorFormat("Function expected %d parameters, got %d %s", totalParametersDefault+totalParametersRequireBeforeDefault, totalArguments, v.Token.HumanLocation())
 		}
 
 		return nil
 	}
 
 	if totalArguments != totalParameters {
-		return object.NewErrorFormat("Function expected %d parameters, got %d at %s", totalParameters, totalArguments, v.Token)
+		return object.NewErrorFormat("Function expected %d parameters, got %d %s", totalParameters, totalArguments, v.Token.HumanLocation())
 	}
 
 	return nil

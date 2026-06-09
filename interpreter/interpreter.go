@@ -167,7 +167,7 @@ func (i *Interpreter) VisitIndexExpr(v *ast.IndexExpression) (result object.Obje
 	if object.IsError(index) {
 		return index
 	}
-	return indexExpression(left, index)
+	return indexExpression(left, index, v)
 }
 
 func (i *Interpreter) evaluateExpressions(exprs []ast.Expression) []object.Object {

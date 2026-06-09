@@ -2,10 +2,11 @@ package lexer
 
 import (
 	"encoding/hex"
-	"github.com/gravataLonga/ninja/token"
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/gravataLonga/ninja/token"
 )
 
 type Lexer struct {
@@ -43,8 +44,7 @@ func (l *Lexer) NextToken() token.Token {
 		if err != nil {
 			tok = l.newToken(token.ILLEGAL, []byte{l.ch})
 		} else {
-			tok.Type = token.STRING
-			tok.Literal = str
+			tok = l.newToken(token.STRING, []byte(str))
 		}
 	case '*':
 		tok = l.newTokenPeekOrDefault(token.ASTERISK, map[byte]token.TokenType{

@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
 )
 
-func indexExpression(left, index object.Object) object.Object {
+func indexExpression(left, index object.Object, v *ast.IndexExpression) object.Object {
 	switch left.Type() {
 	case object.ARRAY_OBJ:
 		obj, err := indexArrayExpression(left.(*object.Array), index)
@@ -24,7 +25,7 @@ func indexExpression(left, index object.Object) object.Object {
 	case object.STRING_OBJ:
 		obj, err := indexStringExpression(left.(*object.String), index)
 		if err != nil {
-			return object.NewErrorFormat(err.Error())
+			return object.NewErrorFormat(err.Error()+" %s", v.Token.HumanLocation())
 		}
 		return obj
 	}

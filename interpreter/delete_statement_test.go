@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestDeleteStatementArray(t *testing.T) {
@@ -52,23 +53,23 @@ func TestWrongDeleteStatementArray(t *testing.T) {
 	}{
 		{
 			`var a = ""; delete a[0];`,
-			"DeleteStatement.left only work with array or hash object. Got: *object.String",
+			"DeleteStatement.left only work with array or hash object. Got: *object.String at [Line: 1, Offset: 19]",
 		},
 		{
 			`var a = []; delete a[{}];`,
-			"DeleteStatement.index must be a Integer. Got: *object.Hash",
+			"DeleteStatement.index must be a Integer. Got: *object.Hash at [Line: 1, Offset: 19]",
 		},
 		{
 			`var a = ""; delete b[0];`,
-			"DeleteStatement.left b identifier not found.",
+			"DeleteStatement.left b identifier not found. at [Line: 1, Offset: 19]",
 		},
 		{
 			`var a = [0, 1, 2]; delete a[5];`,
-			"DeleteStatement.index must be equal or less than the total of the items. Got: *object.Integer",
+			"DeleteStatement.index must be equal or less than the total of the items. Got: *object.Integer at [Line: 1, Offset: 26]",
 		},
 		{
 			`var a = [0, 1, 2]; delete a[-1];`,
-			"DeleteStatement.index must be equal or greater than the 0. Got: *object.Integer",
+			"DeleteStatement.index must be equal or greater than the 0. Got: *object.Integer at [Line: 1, Offset: 26]",
 		},
 	}
 

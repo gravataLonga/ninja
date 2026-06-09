@@ -41,7 +41,7 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 
 		hash, ok := obj.(*object.Hash)
 		if !ok {
-			return object.NewErrorFormat("cannot assign property %q on %s", dot.Right.Value, obj.Type())
+			return object.NewErrorFormat("cannot assign property %q on %s %s", dot.Right.Value, obj.Type(), v.Token.HumanLocation())
 		}
 
 		key := &object.String{Value: dot.Right.Value}
@@ -86,11 +86,11 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		lenElements := len(arr.Elements)
 
 		if indexInteger <= -1 {
-			return object.NewErrorFormat("index out of range, got %d not positive index", indexInteger)
+			return object.NewErrorFormat("index out of range, got %d not positive index %s", indexInteger, v.Token.HumanLocation())
 		}
 
 		if lenElements < indexInteger {
-			return object.NewErrorFormat("index out of range, got %d but array has only %d elements", indexInteger, lenElements)
+			return object.NewErrorFormat("index out of range, got %d but array has only %d elements %s", indexInteger, lenElements, v.Token.HumanLocation())
 		}
 
 		if indexInteger > lenElements-1 {
@@ -128,7 +128,7 @@ func (i *Interpreter) VisitIdentExpr(v *ast.Identifier) (result object.Object) {
 
 	value, ok := i.env.Get(v.Value)
 	if !ok {
-		return object.NewErrorFormat("identifier not found: %s %s", v.Value, v.Token)
+		return object.NewErrorFormat("identifier not found: %s %s", v.Value, v.Token.HumanLocation())
 		// return object.NULL
 	}
 	return value

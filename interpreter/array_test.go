@@ -189,11 +189,11 @@ func TestErrorArrayHandling(t *testing.T) {
 		},
 		{
 			`var a = []; a[1] = 2;`,
-			`index out of range, got 1 but array has only 0 elements`,
+			`index out of range, got 1 but array has only 0 elements at [Line: 1, Offset: 18]`,
 		},
 		{
 			`var a = []; a[-1] = 2;`,
-			`index out of range, got -1 not positive index`,
+			`index out of range, got -1 not positive index at [Line: 1, Offset: 19]`,
 		},
 		{
 			`[1, 2 + "ola", 3]`,

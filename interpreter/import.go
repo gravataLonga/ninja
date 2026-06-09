@@ -1,12 +1,13 @@
 package interpreter
 
 import (
+	"os"
+	"strings"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/object"
 	"github.com/gravataLonga/ninja/parser"
-	"os"
-	"strings"
 )
 
 func (i *Interpreter) VisitImportExpr(v *ast.Import) (result object.Object) {
@@ -21,7 +22,7 @@ func (i *Interpreter) VisitImportExpr(v *ast.Import) (result object.Object) {
 	readFile, err := os.Open(filename.Value)
 
 	if err != nil {
-		return object.NewErrorFormat("IO Error: error reading file '%s': %s %s", filename.Value, err, v.Token)
+		return object.NewErrorFormat("IO Error: error reading file '%s': %s %s", filename.Value, err, v.Token.HumanLocation())
 	}
 
 	l := lexer.New(readFile)

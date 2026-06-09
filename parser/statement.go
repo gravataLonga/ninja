@@ -39,8 +39,9 @@ func (p *Parser) parseExpressionOrAssignStatement() ast.Statement {
 	switch expr.Expression.(type) {
 	case *ast.Identifier, *ast.IndexExpression, *ast.Dot:
 		p.nextToken()
+		tokenAssign := p.curToken
 		p.nextToken()
-		assign := &ast.AssignStatement{Token: p.curToken, Left: expr, Right: p.parseExpression(LOWEST)}
+		assign := &ast.AssignStatement{Token: tokenAssign, Left: expr, Right: p.parseExpression(LOWEST)}
 		if p.peekTokenIs(token.SEMICOLON) {
 			p.nextToken()
 		}

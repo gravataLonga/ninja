@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestImportStatements(t *testing.T) {
@@ -32,7 +33,7 @@ func TestErrorImportHandling(t *testing.T) {
 	}{
 		{
 			`import "non-exists-file"`,
-			"IO Error: error reading file 'non-exists-file': open non-exists-file: no such file or directory IMPORT at [Line: 1, Offset: 7]",
+			"IO Error: error reading file 'non-exists-file': open non-exists-file: no such file or directory at [Line: 1, Offset: 7]",
 		},
 		{
 			`import "../fixtures/stub-with-error.nj"`,
@@ -40,7 +41,7 @@ func TestErrorImportHandling(t *testing.T) {
 		},
 		{
 			`import "../fixtures/stub-with-error-in-function.nj"`,
-			"../fixtures/stub-with-error-in-function.nj: Function expected 2 parameters, got 3 at ( at [Line: 25, Offset: 27]",
+			"../fixtures/stub-with-error-in-function.nj: Function expected 2 parameters, got 3 at [Line: 25, Offset: 27]",
 		},
 	}
 

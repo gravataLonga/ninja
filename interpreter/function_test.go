@@ -256,11 +256,11 @@ func TestCallWrongParameters(t *testing.T) {
 		expectedErrorMessage string
 	}{
 		{"var x = 5; x();", "TypeError: callable() expected argument to be `FUNCTION,BUILTIN` got `INTEGER`"},
-		{"function (x) {}();", "Function expected 1 parameters, got 0 at ( at [Line: 1, Offset: 16]"},
-		{"function () {}(0);", "Function expected 0 parameters, got 1 at ( at [Line: 1, Offset: 15]"},
-		{"function () { return add(); }();", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},
-		{"function (x, y) { }(1, 2, 3);", "Function expected 2 parameters, got 3 at ( at [Line: 1, Offset: 20]"},
-		{"function (x, y = 1) { }(1, 2, 3);", "Function expected 2 parameters, got 3 at ( at [Line: 1, Offset: 24]"},
+		{"function (x) {}();", "Function expected 1 parameters, got 0 at [Line: 1, Offset: 16]"},
+		{"function () {}(0);", "Function expected 0 parameters, got 1 at [Line: 1, Offset: 15]"},
+		{"function () { return add(); }();", "identifier not found: add at [Line: 1, Offset: 25]"},
+		{"function (x, y) { }(1, 2, 3);", "Function expected 2 parameters, got 3 at [Line: 1, Offset: 20]"},
+		{"function (x, y = 1) { }(1, 2, 3);", "Function expected 2 parameters, got 3 at [Line: 1, Offset: 24]"},
 	}
 
 	for i, tt := range tests {

@@ -47,7 +47,7 @@ func postfixExpression(v *ast.PostfixExpression, obj object.Object) object.Objec
 		}
 		return obj
 	}
-	return object.NewErrorFormat("Postfix operation not allowed on %s", obj.Type())
+	return object.NewErrorFormat("Postfix operation not allowed on %s %s", obj.Type(), v.Token.HumanLocation())
 }
 
 func postfixIntegerExpression(operator string, obj object.Object) (object.Object, error) {

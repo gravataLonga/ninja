@@ -33,7 +33,7 @@ func (i *Interpreter) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpressio
 
 	obj, ok := i.env.Get(access.Value)
 	if !ok {
-		return object.NewErrorFormat("identifier not found: " + access.Value)
+		return object.NewErrorFormat("identifier not found: %s %s", access.Value, v.Token.HumanLocation())
 	}
 
 	enum, ok := obj.(*object.Enum)
@@ -43,7 +43,7 @@ func (i *Interpreter) VisitScopeOperatorExpression(v *ast.ScopeOperatorExpressio
 
 	brancheValue, ok := enum.Branches[property.Value]
 	if !ok {
-		return object.NewErrorFormat("identifier %s don't exists on enum object", property.Value)
+		return object.NewErrorFormat("identifier %s don't exists on enum object %s", property.Value, v.Token.HumanLocation())
 	}
 
 	return brancheValue
