@@ -1,0 +1,3 @@
+// `array.slice` doesn't clamp bounds against the array length, causing a panic
+// when the requested range exceeds the backing slice's capacity.
+return [1, 2, 3].slice(1, 10);

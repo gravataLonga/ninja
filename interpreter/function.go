@@ -94,7 +94,10 @@ func (i *Interpreter) extendedEnvironment(env *object.Environment, v *ast.CallEx
 		if mParameter > index {
 			value = i.evaluate(v.Arguments[index])
 		} else {
+			oldEnv := i.env
+			i.env = env
 			value = i.evaluate(param.Default)
+			i.env = oldEnv
 		}
 
 		env.Set(param.Name.String(), value)

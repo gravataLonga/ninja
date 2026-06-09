@@ -1,0 +1,3 @@
+// The operator symbol appears twice in "unknown operator" error messages,
+// e.g. `unknown operator: INTEGER < STRING < at [Line: 1, Offset: 10]`.
+return 1 < "a";

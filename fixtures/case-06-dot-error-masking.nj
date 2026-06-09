@@ -1,0 +1,3 @@
+// When the dot target expression evaluates to an error, that error is swallowed
+// and replaced with `cannot access property "foo" on ERROR` instead of propagating the real failure.
+return (1 + "a").foo;

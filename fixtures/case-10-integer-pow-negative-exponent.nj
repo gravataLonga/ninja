@@ -1,0 +1,2 @@
+// `**` with a negative exponent silently truncates to 0 instead of returning a fractional float.
+return 2 ** -1;

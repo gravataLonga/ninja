@@ -22,7 +22,12 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 			i.env.SetAt(depth, ident.Value, i.evaluate(v.Right))
 			return nil
 		}
-		i.env.Assign(left, i.evaluate(v.Right))
+
+		rs := i.evaluate(v.Right)
+		if object.IsError(rs) {
+			return rs
+		}
+		i.env.Assign(left, rs)
 		return nil
 	}
 
@@ -61,9 +66,17 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		return nil
 	}
 
+	if !object.IsArray(obj) && !object.IsHash(obj) {
+		return object.NewErrorFormat("cannot assign property %q on %s", ident.Value, obj.Type())
+	}
+
 	if object.IsArray(obj) {
 		arr, _ := obj.(*object.Array)
 		index := i.evaluate(idx.Index)
+		if object.IsError(index) {
+			return index
+		}
+
 		indexIntegerObject, ok := index.(*object.Integer)
 		if !ok {
 			return nil
@@ -95,6 +108,9 @@ func (i *Interpreter) VisitAssignStmt(v *ast.AssignStatement) (result object.Obj
 		hashObject, _ := obj.(*object.Hash)
 
 		objIndex := i.evaluate(idx.Index)
+		if object.IsError(objIndex) {
+			return objIndex
+		}
 		h, ok := objIndex.(object.Hashable)
 		if !ok {
 			return object.NewErrorFormat("expected index to be hashable")

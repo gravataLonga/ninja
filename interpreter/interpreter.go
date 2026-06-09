@@ -108,6 +108,10 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 }
 
 func (i *Interpreter) VisitBlock(v *ast.BlockStatement) (result object.Object) {
+	env := i.env
+	i.env = object.NewEnclosedEnvironment(env)
+	defer func() { i.env = env }()
+
 	for _, stmt := range v.Statements {
 		result = i.execute(stmt)
 

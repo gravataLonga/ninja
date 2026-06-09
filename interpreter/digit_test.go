@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestEvalDigitExpression(t *testing.T) {
@@ -221,35 +222,35 @@ func TestErrorFloatHandling(t *testing.T) {
 	}{
 		{
 			"50.50 + true;",
-			"unknown operator: FLOAT + BOOLEAN + at [Line: 1, Offset: 7]",
+			"unknown operator: FLOAT + BOOLEAN at [Line: 1, Offset: 7]",
 		},
 		{
 			"5.0 + true; 5.3;",
-			"unknown operator: FLOAT + BOOLEAN + at [Line: 1, Offset: 5]",
+			"unknown operator: FLOAT + BOOLEAN at [Line: 1, Offset: 5]",
 		},
 		{
 			"[] + 10.3",
-			"unknown operator: ARRAY + FLOAT + at [Line: 1, Offset: 4]",
+			"unknown operator: ARRAY + FLOAT at [Line: 1, Offset: 4]",
 		},
 		{
 			"10.3 + []",
-			"unknown operator: FLOAT + ARRAY + at [Line: 1, Offset: 6]",
+			"unknown operator: FLOAT + ARRAY at [Line: 1, Offset: 6]",
 		},
 		{
 			"10.3 + {}",
-			"unknown operator: FLOAT + HASH + at [Line: 1, Offset: 6]",
+			"unknown operator: FLOAT + HASH at [Line: 1, Offset: 6]",
 		},
 		{
 			"{} + 10.3",
-			"unknown operator: HASH + FLOAT + at [Line: 1, Offset: 4]",
+			"unknown operator: HASH + FLOAT at [Line: 1, Offset: 4]",
 		},
 		{
 			"function () {} + 10.3",
-			"unknown operator: FUNCTION + FLOAT + at [Line: 1, Offset: 16]",
+			"unknown operator: FUNCTION + FLOAT at [Line: 1, Offset: 16]",
 		},
 		{
 			"10.3 + function () {}",
-			"unknown operator: FLOAT + FUNCTION + at [Line: 1, Offset: 6]",
+			"unknown operator: FLOAT + FUNCTION at [Line: 1, Offset: 6]",
 		},
 	}
 

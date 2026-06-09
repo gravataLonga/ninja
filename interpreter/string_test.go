@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestStringLiteral(t *testing.T) {
@@ -69,43 +70,43 @@ func TestErrorStringHandling(t *testing.T) {
 	}{
 		{
 			"-\"hello\"",
-			"unknown operator: -STRING - at [Line: 1, Offset: 1]",
+			"unknown operator: -STRING at [Line: 1, Offset: 1]",
 		},
 		{
 			`"Hello" - "Nice"`,
-			"unknown operator: STRING - STRING - at [Line: 1, Offset: 9]",
+			"unknown operator: STRING - STRING at [Line: 1, Offset: 9]",
 		},
 		{
 			`"Hello" * "Nice"`,
-			"unknown operator: STRING * STRING * at [Line: 1, Offset: 9]",
+			"unknown operator: STRING * STRING at [Line: 1, Offset: 9]",
 		},
 		{
 			`"Hello" / "Nice"`,
-			"unknown operator: STRING / STRING / at [Line: 1, Offset: 9]",
+			"unknown operator: STRING / STRING at [Line: 1, Offset: 9]",
 		},
 		{
 			`++"Nice"`,
-			"unknown operator: ++STRING ++ at [Line: 1, Offset: 2]",
+			"unknown operator: ++STRING at [Line: 1, Offset: 2]",
 		},
 		{
 			`--"Nice"`,
-			"unknown operator: --STRING -- at [Line: 1, Offset: 2]",
+			"unknown operator: --STRING at [Line: 1, Offset: 2]",
 		},
 		{
 			`"1" < "2"`,
-			"unknown operator: STRING < STRING < at [Line: 1, Offset: 5]",
+			"unknown operator: STRING < STRING at [Line: 1, Offset: 5]",
 		},
 		{
 			`"1" > "2"`,
-			"unknown operator: STRING > STRING > at [Line: 1, Offset: 5]",
+			"unknown operator: STRING > STRING at [Line: 1, Offset: 5]",
 		},
 		{
 			`"1" <= "2"`,
-			"unknown operator: STRING <= STRING <= at [Line: 1, Offset: 6]",
+			"unknown operator: STRING <= STRING at [Line: 1, Offset: 6]",
 		},
 		{
 			`"1" >= "2"`,
-			"unknown operator: STRING >= STRING >= at [Line: 1, Offset: 6]",
+			"unknown operator: STRING >= STRING at [Line: 1, Offset: 6]",
 		},
 	}
 

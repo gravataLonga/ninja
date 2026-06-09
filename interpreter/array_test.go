@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestArrayLiterals(t *testing.T) {
@@ -164,27 +165,27 @@ func TestErrorArrayHandling(t *testing.T) {
 	}{
 		{
 			"-[];",
-			"unknown operator: -ARRAY - at [Line: 1, Offset: 1]",
+			"unknown operator: -ARRAY at [Line: 1, Offset: 1]",
 		},
 		{
 			"[] + [];",
-			"unknown operator: ARRAY + ARRAY + at [Line: 1, Offset: 4]",
+			"unknown operator: ARRAY + ARRAY at [Line: 1, Offset: 4]",
 		},
 		{
 			"[] < [];",
-			"unknown operator: ARRAY < ARRAY < at [Line: 1, Offset: 4]",
+			"unknown operator: ARRAY < ARRAY at [Line: 1, Offset: 4]",
 		},
 		{
 			"[] > [];",
-			"unknown operator: ARRAY > ARRAY > at [Line: 1, Offset: 4]",
+			"unknown operator: ARRAY > ARRAY at [Line: 1, Offset: 4]",
 		},
 		{
 			"[] <= [];",
-			"unknown operator: ARRAY <= ARRAY <= at [Line: 1, Offset: 5]",
+			"unknown operator: ARRAY <= ARRAY at [Line: 1, Offset: 5]",
 		},
 		{
 			"[] >= [];",
-			"unknown operator: ARRAY >= ARRAY >= at [Line: 1, Offset: 5]",
+			"unknown operator: ARRAY >= ARRAY at [Line: 1, Offset: 5]",
 		},
 		{
 			`var a = []; a[1] = 2;`,
@@ -196,11 +197,11 @@ func TestErrorArrayHandling(t *testing.T) {
 		},
 		{
 			`[1, 2 + "ola", 3]`,
-			`unknown operator: INTEGER + STRING + at [Line: 1, Offset: 7]`,
+			`unknown operator: INTEGER + STRING at [Line: 1, Offset: 7]`,
 		},
 		{
 			`var a = [1, 2 + "ola", 3]; a`,
-			`unknown operator: INTEGER + STRING + at [Line: 1, Offset: 15]`,
+			`unknown operator: INTEGER + STRING at [Line: 1, Offset: 15]`,
 		},
 	}
 
@@ -382,7 +383,7 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 		},
 		{
 			`[1].slice(1, 2, 3)`,
-			`TypeError: array.push() takes at least 1 arguments at most 2 (3 given)`,
+			`TypeError: array.slice() takes at least 1 arguments at most 2 (3 given)`,
 		},
 	}
 

@@ -1,0 +1,10 @@
+// `&&` does not short-circuit — the right operand is always evaluated even when the left is false.
+var called = false;
+var sideEffect = function() {
+    called = true;
+    return true;
+};
+
+var result = false && sideEffect();
+
+return called;

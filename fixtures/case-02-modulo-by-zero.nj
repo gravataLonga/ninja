@@ -1,0 +1,2 @@
+// `%` with a zero divisor panics instead of returning a runtime error.
+return 1 % 0;

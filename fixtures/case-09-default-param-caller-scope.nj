@@ -1,0 +1,7 @@
+// Default parameter expressions are evaluated in the caller's environment,
+// so a default can't reference an earlier parameter from the same call.
+var f = function(a, b = a + 1) {
+    return b;
+};
+
+return f(5);

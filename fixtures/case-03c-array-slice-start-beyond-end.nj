@@ -1,0 +1,2 @@
+// Same slice bounds panic when the start index is past the array's length.
+return [1, 2, 3].slice(5, 2);

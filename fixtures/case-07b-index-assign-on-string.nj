@@ -1,0 +1,5 @@
+// Same silent no-op when index-assigning on a string target.
+var x = "hello";
+x[0] = "y";
+
+return x;

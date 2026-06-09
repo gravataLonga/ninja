@@ -1,0 +1,2 @@
+// Same dot error masking with a subtraction type error as the target.
+return (1 - "a").bar;

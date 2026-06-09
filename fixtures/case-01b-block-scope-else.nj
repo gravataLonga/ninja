@@ -1,0 +1,12 @@
+// Same scope-depth mismatch as case-01, triggered from an else branch.
+var f = function() {
+    var x = 5;
+    if (false) {
+        return 0;
+    } else {
+        return x;
+    }
+    return 0;
+};
+
+return f();

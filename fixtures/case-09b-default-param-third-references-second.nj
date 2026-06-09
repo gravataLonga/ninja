@@ -1,0 +1,6 @@
+// Same default-param scoping issue: the third parameter's default can't reference the second.
+var f = function(a, b = a * 2, c = b + 1) {
+    return c;
+};
+
+return f(3);

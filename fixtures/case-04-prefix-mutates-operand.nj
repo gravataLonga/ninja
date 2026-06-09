@@ -1,0 +1,5 @@
+// `-x` overwrites `x` with the negated value instead of just producing a derived result.
+var x = 5;
+var y = -x;
+
+return x;

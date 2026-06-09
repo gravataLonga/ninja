@@ -196,6 +196,10 @@ func (t Token) String() string {
 	return fmt.Sprintf("%s at [Line: %d, Offset: %d]", t.Type, t.Line, t.Offset)
 }
 
+func (t Token) HumanLocation() string {
+	return fmt.Sprintf("at [Line: %d, Offset: %d]", t.Line, t.Offset)
+}
+
 func (d DigitType) IsEqual(digitType DigitType) bool {
 	return d == digitType
 }

@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestEvalBooleanExpression(t *testing.T) {
@@ -76,43 +77,43 @@ func TestErrorBooleanHandling(t *testing.T) {
 	}{
 		{
 			"-true",
-			"unknown operator: -BOOLEAN - at [Line: 1, Offset: 1]",
+			"unknown operator: -BOOLEAN at [Line: 1, Offset: 1]",
 		},
 		{
 			"true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 6]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 6]",
 		},
 		{
 			"true - false;",
-			"unknown operator: BOOLEAN - BOOLEAN - at [Line: 1, Offset: 6]",
+			"unknown operator: BOOLEAN - BOOLEAN at [Line: 1, Offset: 6]",
 		},
 		{
 			"true < false;",
-			"unknown operator: BOOLEAN < BOOLEAN < at [Line: 1, Offset: 6]",
+			"unknown operator: BOOLEAN < BOOLEAN at [Line: 1, Offset: 6]",
 		},
 		{
 			"true > false;",
-			"unknown operator: BOOLEAN > BOOLEAN > at [Line: 1, Offset: 6]",
+			"unknown operator: BOOLEAN > BOOLEAN at [Line: 1, Offset: 6]",
 		},
 		{
 			"true >= false;",
-			"unknown operator: BOOLEAN >= BOOLEAN >= at [Line: 1, Offset: 7]",
+			"unknown operator: BOOLEAN >= BOOLEAN at [Line: 1, Offset: 7]",
 		},
 		{
 			"true <= false;",
-			"unknown operator: BOOLEAN <= BOOLEAN <= at [Line: 1, Offset: 7]",
+			"unknown operator: BOOLEAN <= BOOLEAN at [Line: 1, Offset: 7]",
 		},
 		{
 			"true + false + true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 6]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 6]",
 		},
 		{
 			"5; true + false; 5",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 9]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 9]",
 		},
 		{
 			"if (10 > 1) { true + false; }",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 20]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 20]",
 		},
 		{
 			`
@@ -123,27 +124,27 @@ if (10 > 1) {
   return 1;
 }
 `,
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 4, Offset: 17]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 4, Offset: 17]",
 		},
 		{
 			"[true, false][0] + true",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 18]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 18]",
 		},
 		{
 			"{0: true, 1: false}[0] + true",
-			"unknown operator: BOOLEAN + BOOLEAN + at [Line: 1, Offset: 24]",
+			"unknown operator: BOOLEAN + BOOLEAN at [Line: 1, Offset: 24]",
 		},
 		{
 			"[] + true",
-			"unknown operator: ARRAY + BOOLEAN + at [Line: 1, Offset: 4]",
+			"unknown operator: ARRAY + BOOLEAN at [Line: 1, Offset: 4]",
 		},
 		{
 			"{} + true",
-			"unknown operator: HASH + BOOLEAN + at [Line: 1, Offset: 4]",
+			"unknown operator: HASH + BOOLEAN at [Line: 1, Offset: 4]",
 		},
 		{
 			"function () {} + true",
-			"unknown operator: FUNCTION + BOOLEAN + at [Line: 1, Offset: 16]",
+			"unknown operator: FUNCTION + BOOLEAN at [Line: 1, Offset: 16]",
 		},
 	}
 

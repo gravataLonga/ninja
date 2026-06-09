@@ -1,0 +1,5 @@
+// Index-assignment on a non-array/hash target silently does nothing instead of returning an error.
+var x = 5;
+x[0] = 1;
+
+return x;

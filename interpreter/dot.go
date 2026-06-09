@@ -7,6 +7,10 @@ import (
 
 func (i *Interpreter) VisitDotExpr(v *ast.Dot) (result object.Object) {
 	obj := i.evaluate(v.Object)
+	if object.IsError(obj) {
+		return obj
+	}
+
 	hash, ok := obj.(*object.Hash)
 	if !ok {
 		return object.NewErrorFormat("cannot access property %q on %s", v.Right.Value, obj.Type())

@@ -66,7 +66,7 @@ func TestForStatement(t *testing.T) {
 
 func TestLoopStopWhenFoundError(t *testing.T) {
 	input := `for(var i = 0; i <= 2; i = i + 1) { i; if (i == 1) { 1 + "ola"; } }`
-	expected := "unknown operator: INTEGER + STRING + at [Line: 1, Offset: 56]"
+	expected := "unknown operator: INTEGER + STRING at [Line: 1, Offset: 56]"
 
 	evaluated := evalProgram(t, input)
 

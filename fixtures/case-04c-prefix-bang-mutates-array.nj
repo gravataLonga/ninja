@@ -1,0 +1,5 @@
+// `!x` replaces an array operand with the boolean result, destroying the original value.
+var x = [1, 2];
+var y = !x;
+
+return x;

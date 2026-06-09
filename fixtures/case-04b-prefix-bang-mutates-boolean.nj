@@ -1,0 +1,5 @@
+// `!x` overwrites a boolean operand with its negation instead of leaving it untouched.
+var x = true;
+var y = !x;
+
+return x;

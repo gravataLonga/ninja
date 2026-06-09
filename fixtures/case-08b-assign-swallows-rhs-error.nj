@@ -1,0 +1,9 @@
+// Same swallowed error when the RHS is a type-error comparison.
+var reachedAfterAssignmentError = false;
+
+var x = 1;
+x = 1 > "a";
+
+reachedAfterAssignmentError = true;
+
+return reachedAfterAssignmentError;

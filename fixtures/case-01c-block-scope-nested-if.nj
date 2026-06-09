@@ -1,0 +1,13 @@
+// Same scope-depth mismatch as case-01 with two levels of nested if blocks.
+// Each extra block adds another phantom hop, drifting further from the correct environment.
+var f = function() {
+    var x = 5;
+    if (true) {
+        if (true) {
+            return x;
+        }
+    }
+    return 0;
+};
+
+return f();

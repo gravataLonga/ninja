@@ -1,0 +1,2 @@
+// Same modulo-by-zero panic with a negative dividend.
+return -5 % 0;

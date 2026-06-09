@@ -86,6 +86,9 @@ func (r *Resolver) VisitFuncExpr(v *ast.FunctionLiteral) (result object.Object) 
 	r.BeginScope()
 	for _, params := range v.Parameters {
 		params.Name.Accept(r)
+		if params.Default != nil {
+			params.Default.Accept(r)
+		}
 	}
 	v.Body.Accept(r)
 	r.EndScope()

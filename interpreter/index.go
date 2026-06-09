@@ -3,6 +3,7 @@ package interpreter
 import (
 	"errors"
 	"fmt"
+
 	"github.com/gravataLonga/ninja/object"
 )
 
@@ -35,10 +36,10 @@ func indexArrayExpression(left *object.Array, index object.Object) (object.Objec
 	if _, ok := index.(*object.Integer); !ok {
 		return nil, errors.New(fmt.Sprintf("index operator not supported: %s", left.Type()))
 	}
-	max := len(left.Elements)
+	maxE := len(left.Elements)
 	idx := index.(*object.Integer).Value
 
-	if idx < 0 || idx >= int64(max) {
+	if idx < 0 || idx >= int64(maxE) {
 		return object.NULL, nil
 	}
 

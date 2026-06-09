@@ -1,0 +1,12 @@
+// Variable declared in a function body returns nil when read inside an if block.
+// Resolver creates a scope per block but the interpreter never creates a matching environment,
+// so the variable lookup walks one hop too far.
+var f = function() {
+    var x = 5;
+    if (true) {
+        return x;
+    }
+    return 0;
+};
+
+return f();

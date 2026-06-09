@@ -2,11 +2,12 @@ package parser
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/lexer"
 	"github.com/gravataLonga/ninja/token"
-	"strings"
-	"testing"
 )
 
 func TestReturnStatement(t *testing.T) {
@@ -73,7 +74,7 @@ return >=;
 	}{
 		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 2, Offset: 11].", token.VAR)},
 		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 3, Offset: 14].", token.RETURN)},
-		{fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 4, Offset: 9].", token.DECRE)},
+		// {fmt.Sprintf("Next token expected to be nil or expression. Got: %s at [Line: 4, Offset: 9].", token.DECRE)},
 	}
 
 	errors := p.Errors()

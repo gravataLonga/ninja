@@ -3,6 +3,7 @@ package interpreter
 import (
 	"errors"
 	"fmt"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
 )
@@ -14,6 +15,11 @@ func (i *Interpreter) VisitPrefixExpr(v *ast.PrefixExpression) (result object.Ob
 	}
 
 	result = prefixExpression(v, right)
+	// @todo check if we have more prefix, that not change the variable
+	if v.Operator == "!" || v.Operator == "-" {
+		return result
+	}
+
 	astIdent, ok := v.Right.(*ast.Identifier)
 	if !ok {
 		return
@@ -29,41 +35,41 @@ func prefixExpression(v *ast.PrefixExpression, obj object.Object) object.Object 
 	case object.STRING_OBJ:
 		obj, err := prefixStringExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	case object.INTEGER_OBJ:
 		obj, err := prefixIntegerExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	case object.FLOAT_OBJ:
 		obj, err := prefixFloatExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	case object.BOOLEAN_OBJ:
 		obj, err := prefixBooleanExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	case object.ARRAY_OBJ:
 		obj, err := prefixArrayExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	case object.HASH_OBJ:
 		obj, err := prefixHashExpression(v.Operator, obj)
 		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+			return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 		}
 		return obj
 	}
-	return object.NewErrorFormat("unknown operator: %s%s %s", v.Operator, obj.Type(), v.Token)
+	return object.NewErrorFormat("unknown operator: %s%s %s", v.Operator, obj.Type(), v.Token.HumanLocation())
 }
 
 func prefixStringExpression(operator string, obj object.Object) (object.Object, error) {

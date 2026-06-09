@@ -13,8 +13,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 		return stmt
 	}
 
-	// @todo probably i'm doing something wrong.
-	if p.peekTokenAny(token.VAR, token.RETURN, token.DECRE, token.INCRE, token.NEQ, token.PLUS, token.MINUS, token.LTE, token.LT, token.GT, token.GTE) {
+	if _, ok := p.prefixParseFns[p.peekToken.Type]; !ok && !p.peekTokenIs(token.SEMICOLON) && !p.peekTokenIs(token.EOF) {
 		p.newError("Next token expected to be nil or expression. Got: %s.", p.peekToken)
 		p.nextToken()
 		if p.peekTokenIs(token.SEMICOLON) {

@@ -1,0 +1,5 @@
+// Same silent no-op when index-assigning on a boolean target.
+var x = true;
+x[0] = 1;
+
+return x;

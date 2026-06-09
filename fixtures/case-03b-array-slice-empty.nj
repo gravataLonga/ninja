@@ -1,0 +1,2 @@
+// Same slice bounds panic when slicing an empty array with a non-zero count.
+return [].slice(0, 1);

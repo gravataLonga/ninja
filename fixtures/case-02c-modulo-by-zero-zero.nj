@@ -1,0 +1,2 @@
+// Same modulo-by-zero panic when both operands are zero.
+return 0 % 0;

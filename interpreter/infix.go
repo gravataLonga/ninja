@@ -3,144 +3,184 @@ package interpreter
 import (
 	"errors"
 	"fmt"
+	"math"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/object"
-	"math"
 )
 
 func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) {
-	left := i.evaluate(v.Left)
-	right := i.evaluate(v.Right)
-
-	if object.IsError(left) {
-		return left
-	}
-
-	if object.IsError(right) {
-		return right
-	}
-
-	return infixExpression(v, v.Operator, left, right)
-}
-
-func infixExpression(v *ast.InfixExpression, operator string, left object.Object, right object.Object) object.Object {
-	switch operator {
-	case "+":
-		obj, err := infixPlusExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "-":
-		obj, err := infixMinusExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "*":
-		obj, err := infixMulExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "/":
-		obj, err := infixDivExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "%":
-		obj, err := infixModExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "**":
-		obj, err := infixPowExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "|":
-		obj, err := infixOrBitExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "&":
-		obj, err := infixAndBitExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "^":
-		obj, err := infixXorExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "<<":
-		obj, err := infixShiftLeftExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case ">>":
-		obj, err := infixShiftRightExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "==":
-		obj, err := infixEqualExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "!=":
-		obj, err := infixNotEqualExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "<":
-		obj, err := infixLessExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case ">":
-		obj, err := infixGreaterExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case "<=":
-		obj, err := infixLessOrEqualExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
-	case ">=":
-		obj, err := infixGreaterOrEqualExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
-		}
-		return obj
+	switch v.Operator {
 	case "&&":
-		obj, err := infixAndExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+		left := i.evaluate(v.Left)
+
+		if object.IsError(left) {
+			return left
 		}
-		return obj
+
+		if !object.IsTruthy(left) {
+			return object.FALSE
+		}
+
+		right := i.evaluate(v.Right)
+
+		if object.IsError(right) {
+			return right
+		}
+
+		if !object.IsTruthy(right) {
+			return object.FALSE
+		}
+		return object.TRUE
 	case "||":
-		obj, err := infixOrExpression(left, right)
-		if err != nil {
-			return object.NewErrorFormat("%s %s", err, v.Token)
+		left := i.evaluate(v.Left)
+
+		if object.IsError(left) {
+			return left
 		}
-		return obj
+
+		if object.IsTruthy(left) {
+			return object.TRUE
+		}
+
+		right := i.evaluate(v.Right)
+
+		if object.IsError(right) {
+			return right
+		}
+
+		if object.IsTruthy(right) {
+			return object.TRUE
+		}
+
+		return object.FALSE
+	default:
+		left := i.evaluate(v.Left)
+		right := i.evaluate(v.Right)
+
+		if object.IsError(left) {
+			return left
+		}
+
+		if object.IsError(right) {
+			return right
+		}
+
+		switch v.Operator {
+
+		case "+":
+
+			obj, err := infixPlusExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "-":
+			obj, err := infixMinusExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "*":
+			obj, err := infixMulExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "/":
+			obj, err := infixDivExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "%":
+			obj, err := infixModExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "**":
+			obj, err := infixPowExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "|":
+			obj, err := infixOrBitExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "&":
+			obj, err := infixAndBitExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "^":
+			obj, err := infixXorExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "<<":
+			obj, err := infixShiftLeftExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case ">>":
+			obj, err := infixShiftRightExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "==":
+			obj, err := infixEqualExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "!=":
+			obj, err := infixNotEqualExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "<":
+			obj, err := infixLessExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case ">":
+			obj, err := infixGreaterExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "<=":
+			obj, err := infixLessOrEqualExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case ">=":
+			obj, err := infixGreaterOrEqualExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		case "||":
+			obj, err := infixOrExpression(left, right)
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
+			return obj
+		}
 	}
-	return object.NewErrorFormat("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+
+	return object.NewErrorFormat("unknown operator: %s %s %s", v.Left.String(), v.Operator, v.Right.String())
 }
 
 func infixPlusExpression(left, right object.Object) (object.Object, error) {
@@ -215,6 +255,9 @@ func infixMulExpression(left, right object.Object) (object.Object, error) {
 }
 
 func infixDivExpression(left, right object.Object) (object.Object, error) {
+	if err := dividedByZero(right); err != nil {
+		return err, nil
+	}
 	switch left.Type() {
 	case object.INTEGER_OBJ:
 		switch right.Type() {
@@ -239,6 +282,9 @@ func infixDivExpression(left, right object.Object) (object.Object, error) {
 }
 
 func infixModExpression(left, right object.Object) (object.Object, error) {
+	if err := dividedByZero(right); err != nil {
+		return err, nil
+	}
 	switch left.Type() {
 	case object.INTEGER_OBJ:
 		switch right.Type() {
@@ -261,13 +307,33 @@ func infixModExpression(left, right object.Object) (object.Object, error) {
 	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "%", right.Type()))
 }
 
+func dividedByZero(right object.Object) *object.Error {
+	switch right.Type() {
+	case object.INTEGER_OBJ:
+		v := right.(*object.Integer).Value
+		if v == 0 {
+			return object.NewErrorFormat("integer division by zero")
+		}
+	case object.FLOAT_OBJ:
+		v := right.(*object.Float).Value
+		if v == 0 {
+			return object.NewErrorFormat("integer division by zero")
+		}
+	}
+	return nil
+}
+
 func infixPowExpression(left, right object.Object) (object.Object, error) {
 	switch left.Type() {
 	case object.INTEGER_OBJ:
 		switch right.Type() {
 		case object.INTEGER_OBJ:
 			result := math.Pow(float64(left.(*object.Integer).Value), float64(right.(*object.Integer).Value))
-			return &object.Integer{Value: int64(result)}, nil
+			// Promote to Float only when the result isn't a whole number
+			if isWholeNumber(result) {
+				return &object.Integer{Value: int64(result)}, nil
+			}
+			return &object.Float{Value: result}, nil
 		case object.FLOAT_OBJ:
 			return &object.Float{Value: math.Pow(float64(left.(*object.Integer).Value), right.(*object.Float).Value)}, nil
 		}
@@ -280,6 +346,10 @@ func infixPowExpression(left, right object.Object) (object.Object, error) {
 		}
 	}
 	return nil, errors.New(fmt.Sprintf("unknown operator: %s %s %s", left.Type(), "**", right.Type()))
+}
+
+func isWholeNumber(f float64) bool {
+	return f == math.Trunc(f) && !math.IsInf(f, 0) && !math.IsNaN(f)
 }
 
 func infixOrBitExpression(left, right object.Object) (object.Object, error) {

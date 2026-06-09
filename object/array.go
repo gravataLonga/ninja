@@ -192,7 +192,7 @@ func arrayShift(array *Array, args ...Object) Object {
 
 func arraySlice(elements []Object, args ...Object) Object {
 	err := Check(
-		"array.push", args,
+		"array.slice", args,
 		RangeOfArgs(1, 2),
 		WithTypes(INTEGER_OBJ, INTEGER_OBJ),
 	)
@@ -201,10 +201,12 @@ func arraySlice(elements []Object, args ...Object) Object {
 		return NewError(err.Error())
 	}
 
-	start, _ := args[0].(*Integer)
+	startArgument, _ := args[0].(*Integer)
 
 	maxLength := int64(len(elements))
 	offset := maxLength
+	hasOffset := false
+	start := startArgument.Value
 
 	if len(args) >= 2 && args[1] != nil {
 		offsetInteger, ok := args[1].(*Integer)
@@ -212,14 +214,28 @@ func arraySlice(elements []Object, args ...Object) Object {
 			return NewErrorFormat("array.slice(start, offset) second argument must be integer. Got: %s", args[1].Inspect())
 		}
 
-		offset = offsetInteger.Value + start.Value
+		offset = offsetInteger.Value + start
+		hasOffset = true
 	}
 
-	if offset <= start.Value {
-		offset = start.Value
+	if !hasOffset && start > maxLength {
+		return &Array{Elements: []Object{}}
 	}
 
-	newElements := elements[start.Value:offset]
+	if offset > maxLength {
+		offset = maxLength
+	}
+
+	if offset <= start {
+		_offset := offset
+		offset = start
+		start = _offset
+		if offset > maxLength {
+			offset = maxLength
+		}
+	}
+
+	newElements := elements[start:offset]
 
 	return &Array{Elements: newElements}
 }

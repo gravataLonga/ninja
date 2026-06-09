@@ -1,0 +1,10 @@
+// Plain assignment doesn't check the RHS for an error, so execution continues
+// past a failing assignment instead of halting.
+var reachedAfterAssignmentError = false;
+
+var x = 1;
+x = "a" + 1; // <- evaluates to an *object.Error, but VisitAssignStmt stores it and returns nil
+
+reachedAfterAssignmentError = true;
+
+return reachedAfterAssignmentError;

@@ -1,0 +1,2 @@
+// Same duplicated operator in error messages, with `>`.
+return 1 > "a";
