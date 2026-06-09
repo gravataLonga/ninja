@@ -15,6 +15,10 @@ func (i *Interpreter) VisitPostfixExpr(v *ast.PostfixExpression) (result object.
 	}
 
 	result = postfixExpression(v, left)
+	if object.IsError(result) {
+		return result
+	}
+
 	astIdent, ok := v.Left.(*ast.Identifier)
 	if !ok {
 		return
@@ -43,7 +47,7 @@ func postfixExpression(v *ast.PostfixExpression, obj object.Object) object.Objec
 		}
 		return obj
 	}
-	return nil
+	return object.NewErrorFormat("Postfix operation not allowed on %s", obj.Type())
 }
 
 func postfixIntegerExpression(operator string, obj object.Object) (object.Object, error) {

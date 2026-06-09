@@ -2,8 +2,9 @@ package interpreter_test
 
 import (
 	"fmt"
-	"github.com/gravataLonga/ninja/object"
 	"testing"
+
+	"github.com/gravataLonga/ninja/object"
 )
 
 func TestInfixMathOperator(t *testing.T) {
@@ -698,6 +699,26 @@ func TestInfixLogicOperator(t *testing.T) {
 			`2 >> 1`,
 			1,
 		},
+		{
+			`2 ** -1`,
+			0.5,
+		},
+		{
+			`2 ** -2`,
+			0.25,
+		},
+		{
+			`3 ** -1`,
+			1.0 / 3.0,
+		},
+		{
+			`var called = false; var se = function() { called = true; return true; }; false && se(); called;`,
+			false,
+		},
+		{
+			`var called = false; var se = function() { called = true; return false; }; true || se(); called;`,
+			false,
+		},
 	}
 
 	for i, tt := range tests {
@@ -715,6 +736,35 @@ func TestInfixLogicOperator(t *testing.T) {
 
 			if !testLiteralObject(t, v, tt.expected) {
 				t.Fatalf("testLiteralObject got false, expected true.")
+			}
+		})
+	}
+}
+
+func TestInfixOperatorErrors(t *testing.T) {
+	tests := []struct {
+		input           string
+		expectedMessage string
+	}{
+		{`1 % 0`, "integer division by zero"},
+		{`-5 % 0`, "integer division by zero"},
+		{`0 % 0`, "integer division by zero"},
+		{`1 < "a"`, "unknown operator: INTEGER < STRING at [Line: 1, Offset: 3]"},
+		{`1 > "a"`, "unknown operator: INTEGER > STRING at [Line: 1, Offset: 3]"},
+		{`1 - "a"`, "unknown operator: INTEGER - STRING at [Line: 1, Offset: 3]"},
+		{`1 * "a"`, "unknown operator: INTEGER * STRING at [Line: 1, Offset: 3]"},
+		{`"a" << 1`, "TypeError: <<() expected argument #1 to be `INTEGER` got `STRING` at [Line: 1, Offset: 6]"}, // @todo uniform all the errors message
+		{`1 >> "b"`, "TypeError: <<() expected argument #2 to be `INTEGER` got `STRING` at [Line: 1, Offset: 4]"}, // @todo uniform all the errors message
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestInfixOperatorErrors[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
 			}
 		})
 	}

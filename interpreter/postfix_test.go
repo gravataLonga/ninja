@@ -65,3 +65,20 @@ func TestPostfixOperator(t *testing.T) {
 		})
 	}
 }
+
+func TestPostfixOperatorErrors(t *testing.T) {
+	tests := []struct {
+		input string
+	}{
+		{`var s = "hello"; s++;`},
+		{`var b = true; b++;`},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestPostfixOperatorErrors[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			if _, ok := evaluated.(*object.Error); !ok {
+				t.Fatalf("expected *object.Error, got=%T(%+v)", evaluated, evaluated)
+			}
+		})
+	}
+}

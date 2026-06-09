@@ -2,11 +2,12 @@ package interpreter_test
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/gravataLonga/ninja/ast"
 	"github.com/gravataLonga/ninja/interpreter"
 	"github.com/gravataLonga/ninja/object"
-	"os"
-	"testing"
 )
 
 func TestFunctionLiteral(t *testing.T) {
@@ -118,6 +119,14 @@ func TestFunctionWithDefaultArguments(t *testing.T) {
 			`function (a, b = 1) { return a + b;}(1, 2);`,
 			3,
 		},
+		{
+			`var f = function(a, b = a + 1) { return b; }; f(5);`,
+			6,
+		},
+		{
+			`var f = function(a, b = a * 2, c = b + 1) { return c; }; f(3);`,
+			7,
+		},
 	}
 
 	for i, tt := range tests {
@@ -137,6 +146,18 @@ func TestCallFunction(t *testing.T) {
 		rs         interface{}
 	}{
 
+		{
+			`var f = function() { var x = 5; if (true) { return x; } return 0; }; f();`,
+			5,
+		},
+		{
+			`var f = function() { var x = 5; if (false) { return 0; } else { return x; } return 0; }; f();`,
+			5,
+		},
+		{
+			`var f = function() { var x = 5; if (true) { if (true) { return x; } } return 0; }; f();`,
+			5,
+		},
 		{
 			"function(x) { x + 2; }(10);",
 			12,
@@ -234,6 +255,7 @@ func TestCallWrongParameters(t *testing.T) {
 		input                string
 		expectedErrorMessage string
 	}{
+		{"var x = 5; x();", "TypeError: callable() expected argument to be `FUNCTION,BUILTIN` got `INTEGER`"},
 		{"function (x) {}();", "Function expected 1 parameters, got 0 at ( at [Line: 1, Offset: 16]"},
 		{"function () {}(0);", "Function expected 0 parameters, got 1 at ( at [Line: 1, Offset: 15]"},
 		{"function () { return add(); }();", "identifier not found: add IDENT at [Line: 1, Offset: 25]"},

@@ -223,6 +223,80 @@ func TestEdgeCases(t *testing.T) {
 			wantError: true,
 			errOpOnce: "*",
 		},
+
+		// --- case-12: delete with out-of-bounds / negative array index ---
+		{
+			name:      "delete array out-of-bounds index — panic risk",
+			fixture:   "case-12-delete-array-oob.nj",
+			wantError: true,
+		},
+		{
+			name:      "delete array negative index — panic risk",
+			fixture:   "case-12b-delete-array-negative-index.nj",
+			wantError: true,
+		},
+
+		// --- case-13: array.slice with negative indices ---
+		{
+			name:      "array.slice negative start — panic risk",
+			fixture:   "case-13-array-slice-negative-start.nj",
+			wantError: true,
+		},
+		{
+			name:      "array.slice negative offset — panic risk",
+			fixture:   "case-13b-array-slice-negative-offset.nj",
+			wantError: true,
+		},
+
+		// --- case-14: continue outside loop ---
+		{
+			name:      "continue outside loop — should error like break",
+			fixture:   "case-14-continue-outside-loop.nj",
+			wantError: true,
+		},
+
+		// --- case-15: postfix on non-numeric type silently corrupts variable ---
+		{
+			name:      "postfix ++ on string — should error",
+			fixture:   "case-15-postfix-on-string.nj",
+			wantError: true,
+		},
+		{
+			name:      "postfix ++ on boolean — should error",
+			fixture:   "case-15b-postfix-on-boolean.nj",
+			wantError: true,
+		},
+
+		// --- case-16: shift operator error message reports wrong types ---
+		{
+			name:        "shift left wrong type — error must mention actual left type",
+			fixture:     "case-16-shift-left-wrong-type-error.nj",
+			wantError:   true,
+			errContains: "STRING",
+		},
+		{
+			name:        "shift right wrong type — error must mention actual right type",
+			fixture:     "case-16b-shift-right-wrong-type-error.nj",
+			wantError:   true,
+			errContains: "STRING",
+		},
+
+		// --- case-17: calling a non-function value ---
+		{
+			name:           "call non-function value — should give useful error",
+			fixture:        "case-17-call-non-function.nj",
+			wantError:      true,
+			errNotContains: "Not implement",
+		},
+
+		// --- case-18: index expression masks upstream error ---
+		{
+			name:           "index error masking — original error must propagate",
+			fixture:        "case-18-index-error-masking.nj",
+			wantError:      true,
+			errContains:    "unknown operator",
+			errNotContains: "index operator not supported",
+		},
 	}
 
 	for _, tt := range tests {

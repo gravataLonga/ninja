@@ -127,3 +127,48 @@ func TestAssignDotPropertyOnNonHash(t *testing.T) {
 		t.Fatalf("expected *object.Error. got=%T (%+v)", evaluated, evaluated)
 	}
 }
+
+func TestIndexAssignOnNonCollection(t *testing.T) {
+	tests := []struct {
+		input           string
+		expectedMessage string
+	}{
+		{`var x = 5; x[0] = 1;`, `cannot assign property "x" on INTEGER`},
+		{`var x = "hello"; x[0] = "y";`, `cannot assign property "x" on STRING`},
+		{`var x = true; x[0] = 1;`, `cannot assign property "x" on BOOLEAN`},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestIndexAssignOnNonCollection[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+	}
+}
+
+func TestAssignErrorPropagation(t *testing.T) {
+	tests := []struct {
+		input           string
+		expectedMessage string
+	}{
+		{`var x = 1; x = "a" + 1;`, "unknown operator: STRING + INTEGER at [Line: 1, Offset: 20]"},
+		{`var x = 1; x = 1 > "a";`, "unknown operator: INTEGER > STRING at [Line: 1, Offset: 18]"},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestAssignErrorPropagation[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+	}
+}

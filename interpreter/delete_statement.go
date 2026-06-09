@@ -25,6 +25,13 @@ func (i *Interpreter) VisitDelete(v *ast.DeleteStatement) (result object.Object)
 			return object.NewErrorFormat("DeleteStatement.index must be a Integer. Got: %T", index)
 		}
 		index, _ := index.(*object.Integer)
+		total := int64(len(arr.Elements))
+		if total < index.Value {
+			return object.NewErrorFormat("DeleteStatement.index must be equal or less than the total of the items. Got: %T", index)
+		}
+		if index.Value < 0 {
+			return object.NewErrorFormat("DeleteStatement.index must be equal or greater than the 0. Got: %T", index)
+		}
 		arr.Elements = removeIndexFromArray(arr.Elements, index.Value)
 		i.env.Set(ident.Value, arr)
 	case *object.Hash:

@@ -107,3 +107,24 @@ func TestBreakOutsideForLoop(t *testing.T) {
 	}
 
 }
+
+func TestContinueOutsideForLoop(t *testing.T) {
+	input := `continue`
+	expected := "'continue' not in the 'loop' context"
+
+	evaluated := evalProgram(t, input)
+
+	if evaluated == nil {
+		t.Fatalf("evaluated is empty")
+	}
+
+	err, ok := evaluated.(*object.Error)
+
+	if !ok {
+		t.Fatalf("expected error. Got: %T(%+v)", evaluated, evaluated)
+	}
+
+	if err.Message != expected {
+		t.Fatalf("expected error message to be %s, got: %s", expected, err.Message)
+	}
+}

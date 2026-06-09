@@ -124,12 +124,20 @@ func (i *Interpreter) VisitInfix(v *ast.InfixExpression) (result object.Object) 
 			}
 			return obj
 		case "<<":
+			err := object.Check("<<", []object.Object{left, right}, object.WithTypes(object.INTEGER_OBJ, object.INTEGER_OBJ))
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
 			obj, err := infixShiftLeftExpression(left, right)
 			if err != nil {
 				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
 			}
 			return obj
 		case ">>":
+			err := object.Check("<<", []object.Object{left, right}, object.WithTypes(object.INTEGER_OBJ, object.INTEGER_OBJ))
+			if err != nil {
+				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())
+			}
 			obj, err := infixShiftRightExpression(left, right)
 			if err != nil {
 				return object.NewErrorFormat("%s %s", err, v.Token.HumanLocation())

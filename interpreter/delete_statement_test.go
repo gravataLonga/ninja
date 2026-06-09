@@ -62,6 +62,14 @@ func TestWrongDeleteStatementArray(t *testing.T) {
 			`var a = ""; delete b[0];`,
 			"DeleteStatement.left b identifier not found.",
 		},
+		{
+			`var a = [0, 1, 2]; delete a[5];`,
+			"DeleteStatement.index must be equal or less than the total of the items. Got: *object.Integer",
+		},
+		{
+			`var a = [0, 1, 2]; delete a[-1];`,
+			"DeleteStatement.index must be equal or greater than the 0. Got: *object.Integer",
+		},
 	}
 
 	for o, tt := range tests {

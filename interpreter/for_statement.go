@@ -32,6 +32,7 @@ func (i *Interpreter) VisitFor(v *ast.ForStatement) (result object.Object) {
 					i.execute(v.Iteration)
 				}
 				condition = i.interpreterConditionForLoop(v.Condition)
+				result = nil
 				continue
 			}
 

@@ -219,6 +219,27 @@ func TestIndexExpression(t *testing.T) {
 	}
 }
 
+func TestIndexExpressionErrors(t *testing.T) {
+	tests := []struct {
+		input           string
+		expectedMessage string
+	}{
+		{`(1 + "x")[0]`, "unknown operator: INTEGER + STRING at [Line: 1, Offset: 4]"},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestIndexExpressionErrors[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+	}
+}
+
 func TestTernaryOperatorExpression(t *testing.T) {
 	tests := []struct {
 		input    string

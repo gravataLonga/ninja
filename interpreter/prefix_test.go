@@ -116,6 +116,18 @@ func TestPrefixOperator(t *testing.T) {
 			`!!"hello ninja warrior"`,
 			true,
 		},
+		{
+			`var a = 5; -a; a;`,
+			5,
+		},
+		{
+			`var b = true; !b; b;`,
+			true,
+		},
+		{
+			`var c = [1, 2]; !c; c;`,
+			[]interface{}{1, 2},
+		},
 	}
 
 	for i, tt := range tests {

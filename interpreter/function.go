@@ -47,6 +47,11 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		return obj
 	}
 
+	err := object.Check("callable", []object.Object{obj}, object.OneOfType(object.FUNCTION_OBJ, object.BUILTIN_OBJ))
+	if err != nil {
+		return object.NewError(err.Error())
+	}
+
 	switch obj.Type() {
 	case object.FUNCTION_OBJ:
 		return i.applyFunction(obj, v)
@@ -63,9 +68,8 @@ func (i *Interpreter) VisitCallExpr(v *ast.CallExpression) (result object.Object
 		}
 
 		return obj.(*object.Builtin).Fn(args...)
-	default:
-		return object.NewErrorFormat("Not implement yet VisitCallExpr")
 	}
+	return object.NewError("unable to call function")
 }
 
 func (i *Interpreter) applyFunction(obj object.Object, v *ast.CallExpression) (result object.Object) {

@@ -47,3 +47,25 @@ func TestDotPropertyAccessOnNonHash(t *testing.T) {
 		t.Fatalf("expected *object.Error for property access on non-hash. got=%T (%+v)", evaluated, evaluated)
 	}
 }
+
+func TestDotErrorMasking(t *testing.T) {
+	tests := []struct {
+		input           string
+		expectedMessage string
+	}{
+		{`(1 + "a").foo`, "unknown operator: INTEGER + STRING at [Line: 1, Offset: 4]"},
+		{`(1 - "a").bar`, "unknown operator: INTEGER - STRING at [Line: 1, Offset: 4]"},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("TestDotErrorMasking[%d]", i), func(t *testing.T) {
+			evaluated := evalProgram(t, tt.input)
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Fatalf("no error object returned. got=%T(%+v)", evaluated, evaluated)
+			}
+			if errObj.Message != tt.expectedMessage {
+				t.Errorf("wrong error message. expected=%q, got=%q", tt.expectedMessage, errObj.Message)
+			}
+		})
+	}
+}

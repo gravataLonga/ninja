@@ -313,14 +313,6 @@ func TestArrayMethod(t *testing.T) {
 			object.Array{Elements: []object.Object{&object.Integer{Value: 2}, &object.Integer{Value: 3}}},
 		},
 		{
-			`[1, 2, 3].slice(4)`,
-			object.Array{Elements: []object.Object{}},
-		},
-		{
-			`var a = [1, 2, 3]; a.slice(4)`,
-			object.Array{Elements: []object.Object{}},
-		},
-		{
 			`[1, 2, 3].slice(1, 1)`,
 			object.Array{Elements: []object.Object{&object.Integer{Value: 2}}},
 		},
@@ -384,6 +376,26 @@ func TestArrayMethodWrongUsage(t *testing.T) {
 		{
 			`[1].slice(1, 2, 3)`,
 			`TypeError: array.slice() takes at least 1 arguments at most 2 (3 given)`,
+		},
+		{
+			`[1, 2, 3].slice(4)`,
+			`Argument to array slice offset need to be less or equal to length`,
+		},
+		{
+			`var a = [1, 2, 3]; a.slice(4)`,
+			`Argument to array slice offset need to be less or equal to length`,
+		},
+		{
+			`[0, 1, 2].slice(10)`,
+			`Argument to array slice offset need to be less or equal to length`,
+		},
+		{
+			`[].slice(0, 5)`,
+			`Argument to array slice offset need to be less or equal to length`,
+		},
+		{
+			`[0, 1, 2].slice(5, 3)`,
+			`Argument to array slice offset need to be less or equal to length`,
 		},
 	}
 

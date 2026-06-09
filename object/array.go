@@ -201,38 +201,37 @@ func arraySlice(elements []Object, args ...Object) Object {
 		return NewError(err.Error())
 	}
 
-	startArgument, _ := args[0].(*Integer)
+	var start int64 = 0
+	var maxLength int64 = int64(len(elements))
+	var offset int64 = maxLength
 
-	maxLength := int64(len(elements))
-	offset := maxLength
-	hasOffset := false
-	start := startArgument.Value
+	startArgument, ok := args[0].(*Integer)
+	if !ok {
+		return NewError("Argument to array slice must be an integer")
+	}
 
-	if len(args) >= 2 && args[1] != nil {
-		offsetInteger, ok := args[1].(*Integer)
+	start = startArgument.Value
+
+	if len(args) == 2 {
+		offsetArgument, ok := args[1].(*Integer)
 		if !ok {
-			return NewErrorFormat("array.slice(start, offset) second argument must be integer. Got: %s", args[1].Inspect())
+			return NewError("Argument to array slice must be an integer")
 		}
-
-		offset = offsetInteger.Value + start
-		hasOffset = true
+		offset = start + offsetArgument.Value
 	}
 
-	if !hasOffset && start > maxLength {
-		return &Array{Elements: []Object{}}
-	}
-
-	if offset > maxLength {
-		offset = maxLength
-	}
-
-	if offset <= start {
+	if start > offset {
 		_offset := offset
 		offset = start
 		start = _offset
-		if offset > maxLength {
-			offset = maxLength
-		}
+	}
+
+	if start < 0 {
+		return NewError("Argument to array slice must be a positive integer")
+	}
+
+	if offset > maxLength {
+		return NewError("Argument to array slice offset need to be less or equal to length")
 	}
 
 	newElements := elements[start:offset]

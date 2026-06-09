@@ -98,6 +98,8 @@ func (i *Interpreter) VisitProgram(v *ast.Program) (result object.Object) {
 		switch result := result.(type) {
 		case *object.ReturnValue:
 			return result.Value
+		case *object.Continue:
+			return object.NewErrorFormat("'continue' not in the 'loop' context")
 		case *object.Break:
 			return object.NewErrorFormat("'break' not in the 'loop' context")
 		case *object.Error:
@@ -158,7 +160,13 @@ func (i *Interpreter) VisitExprStmt(v *ast.ExpressionStatement) (result object.O
 
 func (i *Interpreter) VisitIndexExpr(v *ast.IndexExpression) (result object.Object) {
 	left := i.evaluate(v.Left)
+	if object.IsError(left) {
+		return left
+	}
 	index := i.evaluate(v.Index)
+	if object.IsError(index) {
+		return index
+	}
 	return indexExpression(left, index)
 }
 
